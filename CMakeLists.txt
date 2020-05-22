@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(random-3d-city)
+project(prime-city)
 
 if (WIN32)
     set(FREEGLUT_INCLUDE_DIRS "C:/Program\ Files/Common\ Files/freeglut/include")
@@ -26,7 +26,8 @@ file(GLOB SOURCE_FILES
         *.h
         )
 
-add_executable(graphics graphics.h graphics.cpp)
+add_executable(graphics graphics.h graphics.cpp gameManager.h gameManager.cpp player.h player.cpp
+        perlinNoiseGenerator.h perlinNoiseGenerator.cpp structs.h chunk.h chunk.cpp)
 
 if (WIN32)
     target_link_libraries (graphics ${OPENGL_LIBRARIES} freeglut)
