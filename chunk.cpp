@@ -6,7 +6,8 @@ Chunk::Chunk()
     sideLength = 1024;
     perlinSeed = 0.5;
     initializeCenter();
-    propertySize = sideLength / 8;
+    plotSize = sideLength / plotsPerSide;
+    initializePlotEmpty();
     makeBuildings();
 }
 Chunk::Chunk(Point2D inputBottomLeft, int inputSideLength,  double inputPerlinSeed)
@@ -15,13 +16,24 @@ Chunk::Chunk(Point2D inputBottomLeft, int inputSideLength,  double inputPerlinSe
     sideLength = inputSideLength;
     perlinSeed = inputPerlinSeed;
     initializeCenter();
-    propertySize = sideLength / 8;
+    initializePlotEmpty();
+    plotSize = sideLength / plotsPerSide;
     makeBuildings();
 }
 
 void Chunk::initializeCenter()
 {
     center = {sideLength*bottomLeft.x + sideLength/2, sideLength*bottomLeft.z - sideLength/2};
+}
+void Chunk::initializePlotEmpty()
+{
+    for(int i = 0; i < plotsPerSide; i++)
+    {
+        for(int j = 0; j < plotsPerSide; j++)
+        {
+            plotEmpty[i][j] = true;
+        }
+    }
 }
 void Chunk::makeBuildings()
 {
@@ -107,6 +119,14 @@ int Chunk::getSideLength() const
 Point2D Chunk::getCenter() const
 {
     return center;
+}
+int Chunk::getPlotsPerSide() const
+{
+    return plotsPerSide;
+}
+int Chunk::getPlotSize() const
+{
+    return plotSize;
 }
 /*std::vector<Building> Chunk::getBuildings() const
 {

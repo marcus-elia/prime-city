@@ -1,9 +1,6 @@
 #ifndef PRIME_CITY_CHUNK_H
 #define PRIME_CITY_CHUNK_H
 
-
-
-
 #include "graphics.h"
 #include "structs.h"
 #include <experimental/optional>
@@ -28,19 +25,28 @@ private:
     // The value of the Perlin noise map for this chunk
     double perlinSeed;
 
-    int propertySize; // = side length of square assigned to each building
+    // How many plots are in a side of the chunk (so 8 would mean 64  plots per chunk)
+    const static int plotsPerSide = 8;
+    int plotSize;
+
+    // True if the plot at i,j is empty
+    bool plotEmpty[plotsPerSide][plotsPerSide];
+
     //std::vector<Building> buildings;
 public:
     Chunk();
     Chunk(Point2D inputBottomLeft, int inputSideLength, double inputPerlinSeed);
 
     void initializeCenter();
+    void initializePlotEmpty();
     void makeBuildings();
 
     // Getters
     Point2D getBottomLeft() const;
     int getSideLength() const;
     Point2D getCenter() const;
+    int getPlotsPerSide() const;
+    int getPlotSize() const;
     //std::vector<Building> getBuildings() const;
 
     void draw() const;
