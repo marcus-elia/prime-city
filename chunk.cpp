@@ -37,6 +37,28 @@ void Chunk::initializePlotEmpty()
 }
 void Chunk::makeBuildings()
 {
+    srand(time(NULL));
+    for(int i = 0; i < plotsPerSide; i++)
+    {
+        for(int j = 0; j < plotsPerSide; j++)
+        {
+            if(abs(bottomLeft.x*sideLength + i*plotSize) < sideLength/3 &&
+               abs((bottomLeft.z + 1)*sideLength - (j+1)*plotSize) < sideLength/3)
+            {
+                continue;
+            }
+
+            double r1 = (double)(rand() % 100) / 100;
+
+            if(r1 < perlinSeed && plotEmpty[i][j])
+            {
+                Point2D topLeftOfBuilding = {bottomLeft.x*sideLength + i*plotSize,
+                                             (bottomLeft.z + 1)*sideLength - (j+1)*plotSize};
+                buildings.push_back(Building(topLeftOfBuilding, plotSize, r1*100 + perlinSeed*100,
+                                             {r1, 0, perlinSeed, 1}, {1,1,1,1}, Plain));
+            }
+        }
+    }
     /*srand(time(NULL));
     for(int i = 0; i < sideLength / propertySize; i++)
     {
@@ -153,10 +175,10 @@ void Chunk::draw() const
 
     glEnd();
 
-    /*for(const Building &b : buildings)
+    for(const Building &b : buildings)
     {
         b.draw();
-    }*/
+    }
 }
 
 int Chunk::chunkToInt() const
@@ -225,13 +247,13 @@ std::vector<Point2D> getChunksAroundPointByPoint(Point2D p, int radius)
 
 std::experimental::optional<Point> Chunk::correctCollision(Point p, int buffer)
 {
-    /*for(Building& b : buildings)
+    for(Building& b : buildings)
     {
         std::experimental::optional<Point> newPoint = b.correctCollision(p, buffer);
         if(newPoint)
         {
             return newPoint;
         }
-    }*/
+    }
     return std::experimental::nullopt;
 }

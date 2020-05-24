@@ -4,7 +4,7 @@
 #include "graphics.h"
 #include "structs.h"
 #include <experimental/optional>
-//#include "building.h"
+#include "building.h"
 #include <vector>
 #include <stdlib.h>
 #include <time.h>
@@ -32,7 +32,7 @@ private:
     // True if the plot at i,j is empty
     bool plotEmpty[plotsPerSide][plotsPerSide];
 
-    //std::vector<Building> buildings;
+    std::vector<Building> buildings;
 public:
     Chunk();
     Chunk(Point2D inputBottomLeft, int inputSideLength, double inputPerlinSeed);
