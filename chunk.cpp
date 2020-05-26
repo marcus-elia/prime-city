@@ -50,12 +50,15 @@ void Chunk::makeBuildings()
 
             double r1 = (double)(rand() % 100) / 100;
 
-            if(r1 < perlinSeed && plotEmpty[i][j])
+            RGBAcolor color = {0.65, 0.65, 0.65, 1};
+            RGBAcolor edgeColor = {0.7, 0.7, 1.0, 1.0};
+
+            if(r1 < perlinSeed/2 && plotEmpty[i][j])
             {
                 Point2D topLeftOfBuilding = {bottomLeft.x*sideLength + i*plotSize,
                                              (bottomLeft.z + 1)*sideLength - (j+1)*plotSize};
-                buildings.push_back(Building(topLeftOfBuilding, plotSize, r1*100 + perlinSeed*100,
-                                             {r1, 0, perlinSeed, 1}, {1,1,1,1}, Plain));
+                buildings.push_back(Building(topLeftOfBuilding, plotSize, 100 + r1*100 + perlinSeed*100,
+                                             color, edgeColor, Plain));
             }
         }
     }
@@ -167,7 +170,7 @@ void Chunk::draw() const
         glColor4f(0, 1, 0.8, 1);
     }*/
     //glColor4f(perlinSeed, 0, 1, 1);
-    glColor4f(0.5, 0.5, 0.5, 1);
+    glColor4f(0.0, 0.2, 0.45, 1); // Navy blue
     glVertex3f(sideLength*bottomLeft.x,0, sideLength*bottomLeft.z);
     glVertex3f(sideLength*bottomLeft.x,0, sideLength*bottomLeft.z + sideLength);
     glVertex3f(sideLength*bottomLeft.x + sideLength,0, sideLength*bottomLeft.z + sideLength);

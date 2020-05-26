@@ -19,7 +19,7 @@ void init()
 void initGL()
 {
     // Set "clearing" or background color
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // Black and opaque
+    glClearColor(1.0f, 1.0f, 0.0f, 1.0f); // Yellow
     glEnable(GL_DEPTH_TEST);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -33,7 +33,7 @@ void initGL()
 
 void draw_axes()
 {
-    glLineWidth(2.0);
+    glLineWidth(3.0);
     glBegin(GL_LINES);
     glColor3f(1.0, 0.0, 0.0);
     glVertex3f(-width/2.0, 0.0, 0.0);
