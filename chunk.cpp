@@ -53,7 +53,7 @@ void Chunk::makeBuildings()
             RGBAcolor color = {0.65, 0.65, 0.65, 1};
             RGBAcolor edgeColor = {0.7, 0.7, 1.0, 1.0};
 
-            if(r1 < perlinSeed/2 && plotEmpty[i][j])
+            if(r1 < 0.35 && plotEmpty[i][j])
             {
                 Point2D topLeftOfBuilding = {bottomLeft.x*sideLength + i*plotSize,
                                              (bottomLeft.z + 1)*sideLength - (j+1)*plotSize};
@@ -153,10 +153,166 @@ int Chunk::getPlotSize() const
 {
     return plotSize;
 }
-/*std::vector<Building> Chunk::getBuildings() const
+std::vector<Building> Chunk::getBuildings() const
 {
     return buildings;
-}*/
+}
+
+bool Chunk::shouldConsiderBuilding(int i, int j) const
+{
+    int neighbors = 0;
+
+    // Left
+    if(i == 0)
+    {
+        if((rand() % 100) / 100.0 < buildingDensity)
+        {
+            neighbors++;
+        }
+
+        // Up Left
+        if((rand() % 100) / 100.0 < buildingDensity)
+        {
+            neighbors++;
+        }
+        // Down left
+        if((rand() % 100) / 100.0 < buildingDensity)
+        {
+            neighbors++;
+        }
+    }
+    else
+    {
+        if(!plotEmpty[i-1][j])
+        {
+            neighbors++;
+        }
+
+        // Up left
+        if(j == 0)
+        {
+            if((rand() % 100) / 100.0 < buildingDensity)
+            {
+                neighbors++;
+            }
+        }
+        else
+        {
+            if(!plotEmpty[i-1][j-1])
+            {
+                neighbors++;
+            }
+        }
+        // Down left
+        if(j == plotsPerSide-1)
+        {
+            if((rand() % 100) / 100.0 < buildingDensity)
+            {
+                neighbors++;
+            }
+        }
+        else
+        {
+            if(!plotEmpty[i-1][j+1])
+            {
+                neighbors++;
+            }
+        }
+    }
+
+    // Right
+    if(i == plotsPerSide-1)
+    {
+        if((rand() % 100) / 100.0 < buildingDensity)
+        {
+            neighbors++;
+        }
+
+        // Up Right
+        if((rand() % 100) / 100.0 < buildingDensity)
+        {
+            neighbors++;
+        }
+        // Down Right
+        if((rand() % 100) / 100.0 < buildingDensity)
+        {
+            neighbors++;
+        }
+    }
+    else
+    {
+        if(!plotEmpty[i+1][j])
+        {
+            neighbors++;
+        }
+
+        // Up Right
+        if(j == 0)
+        {
+            if((rand() % 100) / 100.0 < buildingDensity)
+            {
+                neighbors++;
+            }
+        }
+        else
+        {
+            if(!plotEmpty[i+1][j-1])
+            {
+                neighbors++;
+            }
+        }
+        // Down right
+        if(j == plotsPerSide-1)
+        {
+            if((rand() % 100) / 100.0 < buildingDensity)
+            {
+                neighbors++;
+            }
+        }
+        else
+        {
+            if(!plotEmpty[i+1][j+1])
+            {
+                neighbors++;
+            }
+        }
+    }
+
+    // Up
+    if(j == 0)
+    {
+        if((rand() % 100) / 100.0 < buildingDensity)
+        {
+            neighbors++;
+        }
+    }
+    else
+    {
+        if(!plotEmpty[i][j-1])
+        {
+            neighbors++;
+        }
+    }
+
+    // Down
+    if(j == plotsPerSide-1)
+    {
+        if((rand() % 100) / 100.0 < buildingDensity)
+        {
+            neighbors++;
+        }
+    }
+    else
+    {
+        if(!plotEmpty[i][j+1])
+        {
+            neighbors++;
+        }
+    }
+    return neighbors;
+}
+
+
 
 void Chunk::draw() const
 {

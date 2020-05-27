@@ -29,6 +29,10 @@ private:
     const static int plotsPerSide = 8;
     int plotSize;
 
+    // How common/dense buildings are. Approximately this proportion of
+    // plots will have a building
+    const static int buildingDensity = 0.25;
+
     // True if the plot at i,j is empty
     bool plotEmpty[plotsPerSide][plotsPerSide];
 
@@ -47,7 +51,7 @@ public:
     Point2D getCenter() const;
     int getPlotsPerSide() const;
     int getPlotSize() const;
-    //std::vector<Building> getBuildings() const;
+    std::vector<Building> getBuildings() const;
 
     void draw() const;
 
@@ -56,6 +60,10 @@ public:
 
     // Divides by size and converts resulting ordered pair to int
     int chunkToInt() const;
+
+    // Returns true if a building should be consider in plot i,j,
+    // given the current state of the plotEmpty 2d array
+    bool shouldConsiderBuilding(int i, int j) const;
 
 
     // Calls correctCollision() on every Building in this chunk. Returns nullopt
