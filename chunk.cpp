@@ -53,7 +53,7 @@ void Chunk::makeBuildings()
             RGBAcolor color = {0.65, 0.65, 0.65, 1};
             RGBAcolor edgeColor = {0.7, 0.7, 1.0, 1.0};
 
-            if(r1 < 0.35 && plotEmpty[i][j])
+            if(r1 < buildingDensity && plotEmpty[i][j] && shouldConsiderBuilding(i,j))
             {
                 Point2D topLeftOfBuilding = {bottomLeft.x*sideLength + i*plotSize,
                                              (bottomLeft.z + 1)*sideLength - (j+1)*plotSize};
@@ -309,7 +309,7 @@ bool Chunk::shouldConsiderBuilding(int i, int j) const
             neighbors++;
         }
     }
-    return neighbors;
+    return neighbors < buildingDensity*8;
 }
 
 
