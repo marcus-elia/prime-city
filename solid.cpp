@@ -148,6 +148,11 @@ double distance2d(Point p1, Point p2)
     return sqrt((p1.x - p2.x)*(p1.x - p2.x) + (p1.z - p2.z)*(p1.z - p2.z));
 }
 
+double distance(Point2D p1, Point2D p2)
+{
+    return sqrt((p1.x - p2.x)*(p1.x - p2.x) + (p1.z - p2.z)*(p1.z - p2.z));
+}
+
 double directedDistance(double A, double B, double C, double x, double y)
 {
     return (A*x + B*y + C) / sqrt(A*A + B*B);
