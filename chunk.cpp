@@ -50,86 +50,31 @@ void Chunk::makeBuildings()
 
             double r1 = (double)(rand() % 100) / 100;
 
-            RGBAcolor color = {0.65, 0.65, 0.65, 1};
-            RGBAcolor edgeColor = {0.7, 0.7, 1.0, 1.0};
+            RGBAcolor color = {0.65, 0.65, 0.65, 1};    // Silver
+            RGBAcolor edgeColor = {1.0, 1.0, 0.0, 1.0}; // Yellow
 
-            if(r1 < buildingDensity && plotEmpty[i][j] && shouldConsiderBuilding(i,j))
+            double height;
+            if(perlinSeed < 1.0)
+            {
+                height = 200 + r1*100 + perlinSeed*100;
+            }
+            else // If we are at a max height seeded plot, make buidlings taller at the center
+            {
+                Point2D currentPlot = {i, j};
+                Point2D chunkCenter = {plotsPerSide/2,plotsPerSide/2};
+                height = 200 + r1*100 + perlinSeed*100 + 25*(1.4*plotsPerSide/2 - distance(currentPlot, chunkCenter));
+            }
+
+            if((r1 < buildingDensity || perlinSeed == 1.0) && plotEmpty[i][j] && shouldConsiderBuilding(i,j))
             {
                 Point2D topLeftOfBuilding = {bottomLeft.x*sideLength + i*plotSize,
                                              (bottomLeft.z + 1)*sideLength - (j+1)*plotSize};
-                buildings.push_back(Building(topLeftOfBuilding, plotSize, 100 + r1*100 + perlinSeed*100,
+                buildings.push_back(Building(topLeftOfBuilding, plotSize, height,
                                              color, edgeColor, Plain));
+                plotEmpty[i][j] = false;
             }
         }
     }
-    /*srand(time(NULL));
-    for(int i = 0; i < sideLength / propertySize; i++)
-    {
-        for(int j = 0; j < sideLength / propertySize; j++)
-        {
-            // If the building is too close to the origin, don't build it
-            if(abs(bottomLeft.x*sideLength + i*propertySize) < sideLength/3 &&
-               abs((bottomLeft.z + 1)*sideLength - (j+1)*propertySize) < sideLength/3)
-            {
-                continue;
-            }
-
-            double r1 = (double)(rand() % 100) / 100;
-            double r2 = (double)(rand() % 100) / 100;
-
-            // Make a building if r says yes, more likely when perlin noise is high
-            if(r1 < perlinSeed && r2 > 0.8)
-            {
-                Point2D topLeftOfBuilding = {bottomLeft.x*sideLength + i*propertySize,
-                                   (bottomLeft.z + 1)*sideLength - (j+1)*propertySize};
-                // What type of building is it? How high is it?
-                typeOfBuilding buildingType;
-                int height;
-                if(perlinSeed < 0.25 || (perlinSeed < 0.5 && r1 < 0.1))
-                {
-                    buildingType = House;
-                    height = propertySize/2;
-                }
-                else if(r1 > 0.85 && perlinSeed > 0.75)
-                {
-                    buildingType = Skyscraper;
-                    height =  (int)(perlinSeed*180 + r1*80 + r2*80);
-                }
-                else if(0.55 < r1 && r1 < 0.6 && perlinSeed > 0.4)
-                {
-                    buildingType = Pyramid;
-                    height =  (int)(perlinSeed*180 + r1*80 + r2*80);
-                }
-                else if(0.7 < r1 && r1 < 0.75 && perlinSeed > 0.65)
-                {
-                    buildingType = Hourglass;
-                    height =  (int)(perlinSeed*180 + r1*80 + r2*80);
-                }
-                else if(0.1 < r1  && r1 < 0.15 && perlinSeed > 0.65)
-                {
-                    buildingType = Empire;
-                    height =  (int)(perlinSeed*180 + r1*80 + r2*80);
-                }
-                else if(0.45 < r1 && r1 < 0.5 && perlinSeed > 0.65)
-                {
-                    buildingType = UFO;
-                    height =  (int)(perlinSeed*180 + r1*80 + r2*80);
-                }
-                else if(perlinSeed > 0.95 && r1 < 0.05 && r2 > 0.9)
-                {
-                    buildingType = CN;
-                    height =  (int)(perlinSeed*180 + r1*80 + r2*80);
-                }
-                else
-                {
-                    buildingType = Plain;
-                    height =  (int)(perlinSeed*180 + r1*80 + r2*80);
-                }
-                buildings.push_back(Building(topLeftOfBuilding, propertySize, height,
-                        {r1, 0, perlinSeed, 1}, {1,1,1,1}, buildingType));
-            }
-        }
-    }*/
 }
 
 // Getters
