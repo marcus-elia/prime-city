@@ -8,6 +8,9 @@
 #include <experimental/optional>
 #include <cmath>
 
+// How many lines are drawn on the solid
+enum linesDrawnEnum {NoLines, Normal, Low, Medium, High};
+
 class Solid : public MovableComponent
 {
 protected:
@@ -18,15 +21,17 @@ protected:
     double yWidth;
     double zWidth;
     RGBAcolor lineColor;
+    linesDrawnEnum linesDrawn;
 public:
     // Constructors
     Solid();
     Solid(Point inputCenter, RGBAcolor inputColor,
-          double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor);
+          double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
+          linesDrawnEnum inputLinesDrawn=Normal);
     Solid(Point inputCenter, RGBAcolor inputColor,
           double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
           Point inputLocation, Point inputLookingAt, double inputSpeed, Point inputVelocity,
-          Point inputOwnerCenter);
+          Point inputOwnerCenter, linesDrawnEnum inputLinesDrawn=Normal);
 
     // Initialization
     virtual void initializeCorners();
