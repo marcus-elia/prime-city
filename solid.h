@@ -22,6 +22,9 @@ protected:
     double zWidth;
     RGBAcolor lineColor;
     linesDrawnEnum linesDrawn;
+
+    // When drawing lines on a plane, move the line a little in front of the plane so it shows up
+    constexpr const static double lineOffset = 0.5;
 public:
     // Constructors
     Solid();

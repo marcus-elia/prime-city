@@ -72,9 +72,9 @@ void RecPrism::initializeXLinePoints()
 
     // Top front line
     x = corners[1].x;
-    y = corners[1].y;
-    z = corners[1].z;
-    for(int i = 0; i < numPoints - 2; i++)
+    y = corners[1].y + lineOffset;
+    z = corners[1].z + lineOffset;
+    for(int i = 0; i < numPoints - 1; i++)
     {
         x += distanceBetweenPointsX;
         xLinePoints.push_back({x, y, z});
@@ -82,9 +82,9 @@ void RecPrism::initializeXLinePoints()
 
     // Bottom Front line
     x = corners[3].x;
-    y = corners[3].y;
-    z = corners[3].z;
-    for(int i = 0; i < numPoints - 2; i++)
+    y = corners[3].y - lineOffset;
+    z = corners[3].z + lineOffset;
+    for(int i = 0; i < numPoints - 1; i++)
     {
         x += distanceBetweenPointsX;
         xLinePoints.push_back({x, y, z});
@@ -92,9 +92,9 @@ void RecPrism::initializeXLinePoints()
 
     // Bottom back line
     x = corners[7].x;
-    y = corners[7].y;
-    z = corners[7].z;
-    for(int i = 0; i < numPoints - 2; i++)
+    y = corners[7].y - lineOffset;
+    z = corners[7].z - lineOffset;
+    for(int i = 0; i < numPoints - 1; i++)
     {
         x += distanceBetweenPointsX;
         xLinePoints.push_back({x, y, z});
@@ -102,9 +102,9 @@ void RecPrism::initializeXLinePoints()
 
     // Top Back line
     x = corners[5].x;
-    y = corners[5].y;
-    z = corners[5].z;
-    for(int i = 0; i < numPoints - 2; i++)
+    y = corners[5].y + lineOffset;
+    z = corners[5].z - lineOffset;
+    for(int i = 0; i < numPoints - 1; i++)
     {
         x += distanceBetweenPointsX;
         xLinePoints.push_back({x, y, z});
@@ -138,40 +138,40 @@ void RecPrism::initializeYLinePoints()
     double distanceBetweenPointsY = yWidth / numPoints;
 
     // Front left line
-    x = corners[3].x;
+    x = corners[3].x - lineOffset;
     y = corners[3].y;
-    z = corners[3].z;
-    for(int i = 0; i < numPoints - 2; i++)
+    z = corners[3].z + lineOffset;
+    for(int i = 0; i < numPoints - 1; i++)
     {
         y += distanceBetweenPointsY;
         yLinePoints.push_back({x, y, z});
     }
 
     // Front Right line
-    x = corners[2].x;
+    x = corners[2].x + lineOffset;
     y = corners[2].y;
-    z = corners[2].z;
-    for(int i = 0; i < numPoints - 2; i++)
+    z = corners[2].z + lineOffset;
+    for(int i = 0; i < numPoints - 1; i++)
     {
         y += distanceBetweenPointsY;
         yLinePoints.push_back({x, y, z});
     }
 
     // Back right line
-    x = corners[6].x;
+    x = corners[6].x + lineOffset;
     y = corners[6].y;
-    z = corners[6].z;
-    for(int i = 0; i < numPoints - 2; i++)
+    z = corners[6].z - lineOffset;
+    for(int i = 0; i < numPoints - 1; i++)
     {
         y += distanceBetweenPointsY;
         yLinePoints.push_back({x, y, z});
     }
 
     // Back Left line
-    x = corners[7].x;
+    x = corners[7].x - lineOffset;
     y = corners[7].y;
-    z = corners[7].z;
-    for(int i = 0; i < numPoints - 2; i++)
+    z = corners[7].z - lineOffset;
+    for(int i = 0; i < numPoints - 1; i++)
     {
         y += distanceBetweenPointsY;
         yLinePoints.push_back({x, y, z});
@@ -205,40 +205,40 @@ void RecPrism::initializeZLinePoints()
     double distanceBetweenPointsZ = zWidth / numPoints;
 
     // Top Right line
-    x = corners[4].x;
-    y = corners[4].y;
+    x = corners[4].x + lineOffset;
+    y = corners[4].y + lineOffset;
     z = corners[4].z;
-    for(int i = 0; i < numPoints - 2; i++)
+    for(int i = 0; i < numPoints - 1; i++)
     {
         z += distanceBetweenPointsZ;
         zLinePoints.push_back({x, y, z});
     }
 
     // Bottom right line
-    x = corners[6].x;
-    y = corners[6].y;
+    x = corners[6].x + lineOffset;
+    y = corners[6].y - lineOffset;
     z = corners[6].z;
-    for(int i = 0; i < numPoints - 2; i++)
+    for(int i = 0; i < numPoints - 1; i++)
     {
         z += distanceBetweenPointsZ;
         zLinePoints.push_back({x, y, z});
     }
 
     // Bottom Left line
-    x = corners[7].x;
-    y = corners[7].y;
+    x = corners[7].x - lineOffset;
+    y = corners[7].y - lineOffset;
     z = corners[7].z;
-    for(int i = 0; i < numPoints - 2; i++)
+    for(int i = 0; i < numPoints - 1; i++)
     {
         z += distanceBetweenPointsZ;
         zLinePoints.push_back({x, y, z});
     }
 
     // Top Left line
-    x = corners[5].x;
-    y = corners[5].y;
+    x = corners[5].x - lineOffset;
+    y = corners[5].y + lineOffset;
     z = corners[5].z;
-    for(int i = 0; i < numPoints - 2; i++)
+    for(int i = 0; i < numPoints - 1; i++)
     {
         z += distanceBetweenPointsZ;
         zLinePoints.push_back({x, y, z});
