@@ -278,6 +278,11 @@ void RecPrism::draw() const
 
 void RecPrism::drawLines() const
 {
+    if(linesDrawn == NoLines)
+    {
+        return;
+    }
+
     glColor4f(lineColor.r, lineColor.g, lineColor.b, lineColor.a);
     glBegin(GL_LINES);
     drawPoint(corners[1]);
@@ -318,7 +323,7 @@ void RecPrism::drawLines() const
 
     glEnd();
 
-    if(linesDrawn != Normal && linesDrawn != NoLines)
+    if(linesDrawn != Normal)
     {
         drawGridLines();
     }
