@@ -143,14 +143,25 @@ void Cylinder::drawLines() const
         drawPoint(corners[i + 3]);
 
         // Verticals
-        drawPoint(corners[i]);
-        drawPoint(corners[i+1]);
+        if(((linesDrawn == Low || linesDrawn == Normal) && i % 12 == 0) || (linesDrawn == Medium && i % 6 == 0) ||
+        linesDrawn == High)
+        {
+            drawPoint(corners[i]);
+            drawPoint(corners[i+1]);
+        }
     }
     // Connect the end to the start
     drawPoint(corners[2*smoothness-2]);
     drawPoint(corners[0]);
     drawPoint(corners[2*smoothness-1]);
     drawPoint(corners[1]);
+
+    // Vertical
+    if(linesDrawn == High)
+    {
+        drawPoint(corners[2*smoothness-2]);
+        drawPoint(corners[2*smoothness-1]);
+    }
 
     glEnd();
 
@@ -211,7 +222,7 @@ void Cylinder::drawGridLines() const
 
     int pointsPerSide;
 
-    pointsPerSide = linePoints.size();
+    pointsPerSide = linePoints[0].size();
     for(int i = 0; i < pointsPerSide; i++)
     {
         drawPoint(linePoints[0][i]);

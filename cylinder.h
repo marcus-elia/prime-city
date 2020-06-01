@@ -13,13 +13,13 @@
 class Cylinder : public Solid
 {
 private:
-    const static int smoothness = 25;
+    const static int smoothness = 24;
     double topXWidth;
     double topZWidth;
 
     const static int distanceBetweenHighLines = 8;
-    const static int distanceBetweenMediumLines = 16;
-    const static int distanceBetweenLowLines = 24;
+    const static int distanceBetweenMediumLines = 32;
+    const static int distanceBetweenLowLines = 56;
 
     std::vector<std::vector<Point>> linePoints;
 public:
