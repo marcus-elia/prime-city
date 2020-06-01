@@ -4,7 +4,6 @@ Cylinder::Cylinder() : Solid()
 {
     topXWidth = xWidth;
     topZWidth = zWidth;
-    smoothness = 25;
     initializeCorners();
 }
 Cylinder::Cylinder(Point inputCenter, RGBAcolor inputColor,
@@ -13,7 +12,6 @@ Cylinder::Cylinder(Point inputCenter, RGBAcolor inputColor,
 {
     topXWidth = xWidth;
     topZWidth = zWidth;
-    smoothness = 25;
     initializeCorners();
 }
 Cylinder::Cylinder(Point inputCenter, RGBAcolor inputColor,
@@ -23,7 +21,6 @@ Cylinder::Cylinder(Point inputCenter, RGBAcolor inputColor,
 {
     topXWidth = inputTopXWidth;
     topZWidth = inputTopZWidth;
-    smoothness = 25;
     initializeCorners();
 }
 Cylinder::Cylinder(Point inputCenter, RGBAcolor inputColor,
@@ -34,7 +31,6 @@ Cylinder::Cylinder(Point inputCenter, RGBAcolor inputColor,
 {
     topXWidth = xWidth;
     topZWidth = zWidth;
-    smoothness = 25;
     initializeCorners();
 }
 Cylinder::Cylinder(Point inputCenter, RGBAcolor inputColor,
@@ -47,7 +43,6 @@ Cylinder::Cylinder(Point inputCenter, RGBAcolor inputColor,
 {
     topXWidth = inputTopXWidth;
     topZWidth = inputTopZWidth;
-    smoothness = 25;
     initializeCorners();
 }
 
@@ -66,6 +61,47 @@ void Cylinder::initializeCorners()
     }
 }
 
+void Cylinder::initializeLinePoints()
+{
+    int numPoints;
+    double x,y,z;
+
+    // Decide how far apart to make the lines
+    if(linesDrawn == Low)
+    {
+        numPoints = floor(yWidth / distanceBetweenLowLines);
+    }
+    else if(linesDrawn == Medium)
+    {
+        numPoints = floor(yWidth / distanceBetweenMediumLines);
+    }
+    else if(linesDrawn == High)
+    {
+        numPoints = floor(yWidth / distanceBetweenHighLines);
+    }
+    else // If linesDrawn = Normal or NoLines, do not add any gridlines on the planes
+    {
+        return;
+    }
+
+    double distanceBetweenPoints = yWidth / numPoints;
+
+    // Iterate through the bottom of the ellipse and add points above it
+    for(int i = 1; i < corners.size(); i += 2)
+    {
+        x = corners[i].x;
+        y = corners[i].y;
+        z = corners[i].z;
+
+        linePoints.emplace_back();
+        for(int j = 0; j < numPoints - 1; j++)
+        {
+            y += distanceBetweenPoints;
+            linePoints.back().push_back({x, y, z});
+        }
+    }
+}
+
 
 
 void Cylinder::lookAt(Point &p)
@@ -81,6 +117,11 @@ void Cylinder::draw() const
 
 void Cylinder::drawLines() const
 {
+    if(linesDrawn == NoLines)
+    {
+        return;
+    }
+
     glColor4f(lineColor.r, lineColor.g, lineColor.b, lineColor.a);
     glBegin(GL_LINES);
     for(int i = 0; i < 2*smoothness - 3; i += 2)
@@ -100,6 +141,11 @@ void Cylinder::drawLines() const
     drawPoint(corners[1]);
 
     glEnd();
+
+    if(linesDrawn != Normal)
+    {
+        drawGridLines();
+    }
 }
 
 void Cylinder::drawFaces() const
@@ -145,6 +191,29 @@ void Cylinder::drawFaces() const
 
     glEnable(GL_CULL_FACE);
 }
+
+void Cylinder::drawGridLines() const
+{
+    glColor4f(lineColor.r, lineColor.g, lineColor.b, lineColor.a);
+    glBegin(GL_LINES);
+
+    int pointsPerSide;
+
+    pointsPerSide = linePoints.size()/smoothness;
+    for(int i = 0; i < pointsPerSide; i++)
+    {
+        for(int j = 0; j < smoothness; j++)
+        {
+            drawPoint(linePoints[j][i]);
+        }
+        drawPoint(linePoints[0][i]);
+    }
+
+    glEnd();
+}
+
+
+
 
 std::experimental::optional<Point> Cylinder::correctCollision(Point p, int buffer)
 {
