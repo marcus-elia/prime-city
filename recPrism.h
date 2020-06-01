@@ -38,6 +38,7 @@ public:
     void draw() const;
     void drawLines() const;
     void drawFaces() const;
+    void drawGridLines() const;
 
     std::experimental::optional<Point> correctCollision(Point p, int buffer);
 

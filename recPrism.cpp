@@ -3,6 +3,7 @@
 RecPrism::RecPrism() : Solid()
 {
     initializeCorners();
+    initializeLinePoints();
 }
 RecPrism::RecPrism(Point inputCenter, RGBAcolor inputColor,
                    double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
@@ -10,6 +11,7 @@ RecPrism::RecPrism(Point inputCenter, RGBAcolor inputColor,
         Solid(inputCenter, inputColor, inputXWidth, inputYWidth, inputZWidth, inputLineColor, inputLinesDrawn)
 {
     initializeCorners();
+    initializeLinePoints();
 }
 
 RecPrism::RecPrism(Point inputCenter, RGBAcolor inputColor,
@@ -20,6 +22,7 @@ RecPrism::RecPrism(Point inputCenter, RGBAcolor inputColor,
                          inputLocation, inputLookingAt, inputSpeed, inputVelocity, inputOwnerCenter, inputLinesDrawn)
 {
     initializeCorners();
+    initializeLinePoints();
 }
 
 void RecPrism::initializeCorners()
@@ -314,6 +317,11 @@ void RecPrism::drawLines() const
     drawPoint(corners[5]);
 
     glEnd();
+
+    if(linesDrawn != Normal && linesDrawn != NoLines)
+    {
+        drawGridLines();
+    }
 }
 
 void RecPrism::drawFaces() const
@@ -351,6 +359,56 @@ void RecPrism::drawFaces() const
     drawPoint(corners[5]);
     drawPoint(corners[7]);
     glEnd();
+}
+
+void RecPrism::drawGridLines() const
+{
+    glColor4f(lineColor.r, lineColor.g, lineColor.b, lineColor.a);
+    glBegin(GL_LINES);
+
+    int pointsPerSide;
+
+    // x lines
+    pointsPerSide = xLinePoints.size()/4;
+    for(int i = 0; i < pointsPerSide; i++)
+    {
+        drawPoint(xLinePoints[i]);
+        drawPoint(xLinePoints[i + pointsPerSide]);
+        drawPoint(xLinePoints[i + pointsPerSide]);
+        drawPoint(xLinePoints[i + 2*pointsPerSide]);
+        drawPoint(xLinePoints[i + 2*pointsPerSide]);
+        drawPoint(xLinePoints[i + 3*pointsPerSide]);
+        drawPoint(xLinePoints[i + 3*pointsPerSide]);
+        drawPoint(xLinePoints[i]);
+    }
+
+    // y lines
+    pointsPerSide = yLinePoints.size()/4;
+    for(int i = 0; i < pointsPerSide; i++)
+    {
+        drawPoint(yLinePoints[i]);
+        drawPoint(yLinePoints[i + pointsPerSide]);
+        drawPoint(yLinePoints[i + pointsPerSide]);
+        drawPoint(yLinePoints[i + 2*pointsPerSide]);
+        drawPoint(yLinePoints[i + 2*pointsPerSide]);
+        drawPoint(yLinePoints[i + 3*pointsPerSide]);
+        drawPoint(yLinePoints[i + 3*pointsPerSide]);
+        drawPoint(yLinePoints[i]);
+    }
+
+    // z lines
+    pointsPerSide = zLinePoints.size()/4;
+    for(int i = 0; i < pointsPerSide; i++)
+    {
+        drawPoint(zLinePoints[i]);
+        drawPoint(zLinePoints[i + pointsPerSide]);
+        drawPoint(zLinePoints[i + pointsPerSide]);
+        drawPoint(zLinePoints[i + 2*pointsPerSide]);
+        drawPoint(zLinePoints[i + 2*pointsPerSide]);
+        drawPoint(zLinePoints[i + 3*pointsPerSide]);
+        drawPoint(zLinePoints[i + 3*pointsPerSide]);
+        drawPoint(zLinePoints[i]);
+    }
 }
 
 // Wrapper function
