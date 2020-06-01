@@ -25,19 +25,23 @@ private:
 public:
     Cylinder();
     Cylinder(Point inputCenter, RGBAcolor inputColor,
-             double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor);
+             double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
+             linesDrawnEnum inputLinesDrawn=Normal);
     Cylinder(Point inputCenter, RGBAcolor inputColor,
              double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
-             double inputTopXWidth, double inputTopZWidth);
+             double inputTopXWidth, double inputTopZWidth,
+             linesDrawnEnum inputLinesDrawn=Normal);
     Cylinder(Point inputCenter, RGBAcolor inputColor,
              double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
              Point inputLocation, Point inputLookingAt, double inputSpeed, Point inputVelocity,
-             Point inputOwnerCenter);
+             Point inputOwnerCenter,
+             linesDrawnEnum inputLinesDrawn=Normal);
     Cylinder(Point inputCenter, RGBAcolor inputColor,
              double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
              double inputTopXWidth, double inputTopZWidth,
              Point inputLocation, Point inputLookingAt, double inputSpeed, Point inputVelocity,
-             Point inputOwnerCenter);
+             Point inputOwnerCenter,
+             linesDrawnEnum inputLinesDrawn=Normal);
 
     // Make the corners, which in this case are the points along the circumference of the
     // top and bottom ellipses (the 2i th entry is a top point, and the 2i+1 th entry is the

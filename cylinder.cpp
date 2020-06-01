@@ -5,45 +5,53 @@ Cylinder::Cylinder() : Solid()
     topXWidth = xWidth;
     topZWidth = zWidth;
     initializeCorners();
+    initializeLinePoints();
 }
 Cylinder::Cylinder(Point inputCenter, RGBAcolor inputColor,
-                   double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor) :
-        Solid(inputCenter, inputColor, inputXWidth, inputYWidth, inputZWidth, inputLineColor)
+                   double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
+                   linesDrawnEnum inputLinesDrawn) :
+        Solid(inputCenter, inputColor, inputXWidth, inputYWidth, inputZWidth, inputLineColor, inputLinesDrawn)
 {
     topXWidth = xWidth;
     topZWidth = zWidth;
     initializeCorners();
+    initializeLinePoints();
 }
 Cylinder::Cylinder(Point inputCenter, RGBAcolor inputColor,
                    double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
-                   double inputTopXWidth, double inputTopZWidth) :
-        Solid(inputCenter, inputColor, inputXWidth, inputYWidth, inputZWidth, inputLineColor)
+                   double inputTopXWidth, double inputTopZWidth, linesDrawnEnum inputLinesDrawn) :
+        Solid(inputCenter, inputColor, inputXWidth, inputYWidth, inputZWidth, inputLineColor, inputLinesDrawn)
 {
     topXWidth = inputTopXWidth;
     topZWidth = inputTopZWidth;
     initializeCorners();
+    initializeLinePoints();
 }
 Cylinder::Cylinder(Point inputCenter, RGBAcolor inputColor,
                    double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
                    Point inputLocation, Point inputLookingAt, double inputSpeed, Point inputVelocity,
-                   Point inputOwnerCenter) : Solid(inputCenter, inputColor, inputXWidth, inputYWidth, inputZWidth, inputLineColor,
-                                                   inputLocation, inputLookingAt, inputSpeed, inputVelocity, inputOwnerCenter)
+                   Point inputOwnerCenter, linesDrawnEnum inputLinesDrawn) :
+                   Solid(inputCenter, inputColor, inputXWidth, inputYWidth, inputZWidth, inputLineColor,
+                                                   inputLocation, inputLookingAt, inputSpeed, inputVelocity, inputOwnerCenter,
+                                                   inputLinesDrawn)
 {
     topXWidth = xWidth;
     topZWidth = zWidth;
     initializeCorners();
+    initializeLinePoints();
 }
 Cylinder::Cylinder(Point inputCenter, RGBAcolor inputColor,
                    double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
                    double inputTopXWidth, double inputTopZWidth,
                    Point inputLocation, Point inputLookingAt, double inputSpeed, Point inputVelocity,
-                   Point inputOwnerCenter) :
+                   Point inputOwnerCenter, linesDrawnEnum inputLinesDrawn) :
         Solid(inputCenter, inputColor, inputXWidth, inputYWidth, inputZWidth, inputLineColor,
-              inputLocation, inputLookingAt, inputSpeed, inputVelocity, inputOwnerCenter)
+              inputLocation, inputLookingAt, inputSpeed, inputVelocity, inputOwnerCenter, inputLinesDrawn)
 {
     topXWidth = inputTopXWidth;
     topZWidth = inputTopZWidth;
     initializeCorners();
+    initializeLinePoints();
 }
 
 
@@ -133,6 +141,10 @@ void Cylinder::drawLines() const
         // Lower face
         drawPoint(corners[i + 1]);
         drawPoint(corners[i + 3]);
+
+        // Verticals
+        drawPoint(corners[i]);
+        drawPoint(corners[i+1]);
     }
     // Connect the end to the start
     drawPoint(corners[2*smoothness-2]);
@@ -199,11 +211,13 @@ void Cylinder::drawGridLines() const
 
     int pointsPerSide;
 
-    pointsPerSide = linePoints.size()/smoothness;
+    pointsPerSide = linePoints.size();
     for(int i = 0; i < pointsPerSide; i++)
     {
-        for(int j = 0; j < smoothness; j++)
+        drawPoint(linePoints[0][i]);
+        for(int j = 1; j < smoothness; j++)
         {
+            drawPoint(linePoints[j][i]);
             drawPoint(linePoints[j][i]);
         }
         drawPoint(linePoints[0][i]);
