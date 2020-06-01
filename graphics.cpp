@@ -51,6 +51,7 @@ void draw_axes()
  whenever the window needs to be re-painted. */
 void display()
 {
+    glLineWidth(3.0);
 
     // tell OpenGL to use the whole window for drawing
     glViewport(0, 0, width, height);
