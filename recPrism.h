@@ -11,8 +11,9 @@ private:
     const static int distanceBetweenMediumLines = 16;
     const static int distanceBetweenLowLines = 24;
     // Points for drawing extra gridlines on the faces of the rectangular prism
-    std::vector<Point> verticalLinePoints;
-    std::vector<Point> horiztonalLinePoints;
+    std::vector<Point> xLinePoints;
+    std::vector<Point> yLinePoints;
+    std::vector<Point> zLinePoints;
 public:
     RecPrism();
     RecPrism(Point inputCenter, RGBAcolor inputColor,
@@ -23,8 +24,14 @@ public:
              Point inputLocation, Point inputLookingAt, double inputSpeed, Point inputVelocity,
              Point inputOwnerCenter, linesDrawnEnum inputLinesDrawn=Normal);
 
+    // Make the corners of the rec prism
     void initializeCorners();
+
+    // Make points for drawing gridlines, if applicable
     void initializeLinePoints();
+    void initializeXLinePoints();
+    void initializeYLinePoints();
+    void initializeZLinePoints();
 
     void lookAt(Point &p);
 

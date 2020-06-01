@@ -36,10 +36,84 @@ void RecPrism::initializeCorners()
 
 void RecPrism::initializeLinePoints()
 {
+    initializeXLinePoints();
+    initializeYLinePoints();
+    initializeZLinePoints();
+}
+
+void RecPrism::initializeXLinePoints()
+{
     int numPoints;
     double x,y,z;
 
-    // The vertical lines
+    // Decide how far apart to make the lines
+    if(linesDrawn == Low)
+    {
+        numPoints = floor(xWidth / distanceBetweenLowLines);
+    }
+    else if(linesDrawn == Medium)
+    {
+        numPoints = floor(xWidth / distanceBetweenMediumLines);
+    }
+    else if(linesDrawn == High)
+    {
+        numPoints = floor(xWidth / distanceBetweenHighLines);
+    }
+    else // If linesDrawn = Normal or NoLines, do not add any gridlines on the planes
+    {
+        return;
+    }
+
+    // The x lines (circling around the x-axis)
+    double distanceBetweenPointsX = xWidth / numPoints;
+
+    // Top front line
+    x = corners[1].x;
+    y = corners[1].y;
+    z = corners[1].z;
+    for(int i = 0; i < numPoints - 2; i++)
+    {
+        x += distanceBetweenPointsX;
+        xLinePoints.push_back({x, y, z});
+    }
+
+    // Bottom Front line
+    x = corners[3].x;
+    y = corners[3].y;
+    z = corners[3].z;
+    for(int i = 0; i < numPoints - 2; i++)
+    {
+        x += distanceBetweenPointsX;
+        xLinePoints.push_back({x, y, z});
+    }
+
+    // Bottom back line
+    x = corners[7].x;
+    y = corners[7].y;
+    z = corners[7].z;
+    for(int i = 0; i < numPoints - 2; i++)
+    {
+        x += distanceBetweenPointsX;
+        xLinePoints.push_back({x, y, z});
+    }
+
+    // Top Back line
+    x = corners[5].x;
+    y = corners[5].y;
+    z = corners[5].z;
+    for(int i = 0; i < numPoints - 2; i++)
+    {
+        x += distanceBetweenPointsX;
+        xLinePoints.push_back({x, y, z});
+    }
+}
+
+void RecPrism::initializeYLinePoints()
+{
+    int numPoints;
+    double x,y,z;
+
+    // Decide how far apart to make the lines
     if(linesDrawn == Low)
     {
         numPoints = floor(yWidth / distanceBetweenLowLines);
@@ -56,7 +130,9 @@ void RecPrism::initializeLinePoints()
     {
         return;
     }
-    double distanceBetweenPoints = yWidth / numPoints;
+
+    // The y lines (circling around the y-axis)
+    double distanceBetweenPointsY = yWidth / numPoints;
 
     // Front left line
     x = corners[3].x;
@@ -64,8 +140,8 @@ void RecPrism::initializeLinePoints()
     z = corners[3].z;
     for(int i = 0; i < numPoints - 2; i++)
     {
-        y += distanceBetweenPoints;
-        verticalLinePoints.push_back({x, y, z});
+        y += distanceBetweenPointsY;
+        yLinePoints.push_back({x, y, z});
     }
 
     // Front Right line
@@ -74,8 +150,8 @@ void RecPrism::initializeLinePoints()
     z = corners[2].z;
     for(int i = 0; i < numPoints - 2; i++)
     {
-        y += distanceBetweenPoints;
-        verticalLinePoints.push_back({x, y, z});
+        y += distanceBetweenPointsY;
+        yLinePoints.push_back({x, y, z});
     }
 
     // Back right line
@@ -84,8 +160,8 @@ void RecPrism::initializeLinePoints()
     z = corners[6].z;
     for(int i = 0; i < numPoints - 2; i++)
     {
-        y += distanceBetweenPoints;
-        verticalLinePoints.push_back({x, y, z});
+        y += distanceBetweenPointsY;
+        yLinePoints.push_back({x, y, z});
     }
 
     // Back Left line
@@ -94,8 +170,75 @@ void RecPrism::initializeLinePoints()
     z = corners[7].z;
     for(int i = 0; i < numPoints - 2; i++)
     {
-        y += distanceBetweenPoints;
-        verticalLinePoints.push_back({x, y, z});
+        y += distanceBetweenPointsY;
+        yLinePoints.push_back({x, y, z});
+    }
+}
+
+void RecPrism::initializeZLinePoints()
+{
+    int numPoints;
+    double x,y,z;
+
+    // Decide how far apart to make the lines
+    if(linesDrawn == Low)
+    {
+        numPoints = floor(zWidth / distanceBetweenLowLines);
+    }
+    else if(linesDrawn == Medium)
+    {
+        numPoints = floor(zWidth / distanceBetweenMediumLines);
+    }
+    else if(linesDrawn == High)
+    {
+        numPoints = floor(zWidth / distanceBetweenHighLines);
+    }
+    else // If linesDrawn = Normal or NoLines, do not add any gridlines on the planes
+    {
+        return;
+    }
+
+    // The z lines (circling around the z-axis)
+    double distanceBetweenPointsZ = zWidth / numPoints;
+
+    // Top Right line
+    x = corners[4].x;
+    y = corners[4].y;
+    z = corners[4].z;
+    for(int i = 0; i < numPoints - 2; i++)
+    {
+        z += distanceBetweenPointsZ;
+        zLinePoints.push_back({x, y, z});
+    }
+
+    // Bottom right line
+    x = corners[6].x;
+    y = corners[6].y;
+    z = corners[6].z;
+    for(int i = 0; i < numPoints - 2; i++)
+    {
+        z += distanceBetweenPointsZ;
+        zLinePoints.push_back({x, y, z});
+    }
+
+    // Bottom Left line
+    x = corners[7].x;
+    y = corners[7].y;
+    z = corners[7].z;
+    for(int i = 0; i < numPoints - 2; i++)
+    {
+        z += distanceBetweenPointsZ;
+        zLinePoints.push_back({x, y, z});
+    }
+
+    // Top Left line
+    x = corners[5].x;
+    y = corners[5].y;
+    z = corners[5].z;
+    for(int i = 0; i < numPoints - 2; i++)
+    {
+        z += distanceBetweenPointsZ;
+        zLinePoints.push_back({x, y, z});
     }
 }
 
