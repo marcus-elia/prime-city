@@ -5,8 +5,9 @@ RecPrism::RecPrism() : Solid()
     initializeCorners();
 }
 RecPrism::RecPrism(Point inputCenter, RGBAcolor inputColor,
-                   double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor) :
-        Solid(inputCenter, inputColor, inputXWidth, inputYWidth, inputZWidth, inputLineColor)
+                   double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
+                   linesDrawnEnum inputLinesDrawn) :
+        Solid(inputCenter, inputColor, inputXWidth, inputYWidth, inputZWidth, inputLineColor, inputLinesDrawn)
 {
     initializeCorners();
 }
@@ -14,8 +15,9 @@ RecPrism::RecPrism(Point inputCenter, RGBAcolor inputColor,
 RecPrism::RecPrism(Point inputCenter, RGBAcolor inputColor,
                    double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
                    Point inputLocation, Point inputLookingAt, double inputSpeed, Point inputVelocity,
-                   Point inputOwnerCenter) : Solid(inputCenter, inputColor, inputXWidth, inputYWidth, inputZWidth, inputLineColor,
-                                                   inputLocation, inputLookingAt, inputSpeed, inputVelocity, inputOwnerCenter)
+                   Point inputOwnerCenter, linesDrawnEnum inputLinesDrawn) :
+                   Solid(inputCenter, inputColor, inputXWidth, inputYWidth, inputZWidth, inputLineColor,
+                         inputLocation, inputLookingAt, inputSpeed, inputVelocity, inputOwnerCenter, inputLinesDrawn)
 {
     initializeCorners();
 }
@@ -30,6 +32,71 @@ void RecPrism::initializeCorners()
     corners.push_back({center.x - xWidth/2, center.y + yWidth/2, center.z - zWidth/2});
     corners.push_back({center.x + xWidth/2, center.y - yWidth/2, center.z - zWidth/2});
     corners.push_back({center.x - xWidth/2, center.y - yWidth/2, center.z - zWidth/2});
+}
+
+void RecPrism::initializeLinePoints()
+{
+    int numPoints;
+    double x,y,z;
+
+    // The vertical lines
+    if(linesDrawn == Low)
+    {
+        numPoints = floor(yWidth / distanceBetweenLowLines);
+    }
+    else if(linesDrawn == Medium)
+    {
+        numPoints = floor(yWidth / distanceBetweenMediumLines);
+    }
+    else if(linesDrawn == High)
+    {
+        numPoints = floor(yWidth / distanceBetweenHighLines);
+    }
+    else // If linesDrawn = Normal or NoLines, do not add any gridlines on the planes
+    {
+        return;
+    }
+    double distanceBetweenPoints = yWidth / numPoints;
+
+    // Front left line
+    x = corners[3].x;
+    y = corners[3].y;
+    z = corners[3].z;
+    for(int i = 0; i < numPoints - 2; i++)
+    {
+        y += distanceBetweenPoints;
+        verticalLinePoints.push_back({x, y, z});
+    }
+
+    // Front Right line
+    x = corners[2].x;
+    y = corners[2].y;
+    z = corners[2].z;
+    for(int i = 0; i < numPoints - 2; i++)
+    {
+        y += distanceBetweenPoints;
+        verticalLinePoints.push_back({x, y, z});
+    }
+
+    // Back right line
+    x = corners[6].x;
+    y = corners[6].y;
+    z = corners[6].z;
+    for(int i = 0; i < numPoints - 2; i++)
+    {
+        y += distanceBetweenPoints;
+        verticalLinePoints.push_back({x, y, z});
+    }
+
+    // Back Left line
+    x = corners[7].x;
+    y = corners[7].y;
+    z = corners[7].z;
+    for(int i = 0; i < numPoints - 2; i++)
+    {
+        y += distanceBetweenPoints;
+        verticalLinePoints.push_back({x, y, z});
+    }
 }
 
 

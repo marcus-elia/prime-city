@@ -6,16 +6,25 @@
 
 class RecPrism : public Solid
 {
+private:
+    const static int distanceBetweenHighLines = 8;
+    const static int distanceBetweenMediumLines = 16;
+    const static int distanceBetweenLowLines = 24;
+    // Points for drawing extra gridlines on the faces of the rectangular prism
+    std::vector<Point> verticalLinePoints;
+    std::vector<Point> horiztonalLinePoints;
 public:
     RecPrism();
     RecPrism(Point inputCenter, RGBAcolor inputColor,
-             double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor);
+             double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
+             linesDrawnEnum inputLinesDrawn=Normal);
     RecPrism(Point inputCenter, RGBAcolor inputColor,
              double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
              Point inputLocation, Point inputLookingAt, double inputSpeed, Point inputVelocity,
-             Point inputOwnerCenter);
+             Point inputOwnerCenter, linesDrawnEnum inputLinesDrawn=Normal);
 
     void initializeCorners();
+    void initializeLinePoints();
 
     void lookAt(Point &p);
 
