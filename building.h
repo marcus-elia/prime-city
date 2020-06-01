@@ -3,6 +3,7 @@
 
 #include "solid.h"
 #include "recPrism.h"
+#include "cylinder.h"
 #include <vector>
 #include <memory>
 

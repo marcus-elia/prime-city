@@ -33,8 +33,10 @@ void Building::initializeSolids()
     if(buildingType == Plain)
     {
         Point center = {(double)topLeft.x + sideLength/2, (double)height/2, (double)topLeft.z + sideLength/2};
-        solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
-                                                             sideLength, height, sideLength, edgeColor, Medium)));
+        //solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
+        //                                                     sideLength, height, sideLength, edgeColor, Medium)));
+        solids.push_back(std::make_shared<Cylinder>(Cylinder(center, color,
+                                                             sideLength, height, sideLength, edgeColor, Low)));
     }
 
 }
