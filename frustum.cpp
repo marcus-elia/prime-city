@@ -9,8 +9,8 @@ Frustum::Frustum() : Solid()
 }
 Frustum::Frustum(Point inputCenter, RGBAcolor inputColor,
                  double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
-                 double inputUpperXWidth, double inputUpperZWidth) :
-        Solid(inputCenter, inputColor, inputXWidth, inputYWidth, inputZWidth, inputLineColor)
+                 double inputUpperXWidth, double inputUpperZWidth, linesDrawnEnum inputLinesDrawn) :
+        Solid(inputCenter, inputColor, inputXWidth, inputYWidth, inputZWidth, inputLineColor, inputLinesDrawn)
 {
     upperXWidth = inputUpperXWidth;
     upperZWidth = inputUpperZWidth;
@@ -21,8 +21,10 @@ Frustum::Frustum(Point inputCenter, RGBAcolor inputColor,
                  double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
                  double inputUpperXWidth, double inputUpperZWidth,
                  Point inputLocation, Point inputLookingAt, double inputSpeed, Point inputVelocity,
-                 Point inputOwnerCenter) : Solid(inputCenter, inputColor, inputXWidth, inputYWidth, inputZWidth, inputLineColor,
-                                                 inputLocation, inputLookingAt, inputSpeed, inputVelocity, inputOwnerCenter)
+                 Point inputOwnerCenter, linesDrawnEnum inputLinesDrawn)
+                 : Solid(inputCenter, inputColor, inputXWidth, inputYWidth, inputZWidth, inputLineColor,
+                                                 inputLocation, inputLookingAt, inputSpeed, inputVelocity, inputOwnerCenter,
+                                                 inputLinesDrawn)
 {
     upperXWidth = inputUpperXWidth;
     upperZWidth = inputUpperZWidth;
