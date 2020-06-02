@@ -117,6 +117,20 @@ void Cylinder::lookAt(Point &p)
 
 }
 
+double Cylinder::getXRadiusAtHeight(double y) const
+{
+    double slope = (topXWidth - xWidth) / yWidth;
+    return xWidth + slope*y;
+}
+
+double Cylinder::getZRadiusAtHeight(double y) const
+{
+    double slope = (topZWidth - zWidth) / yWidth;
+    return zWidth + slope*y;
+}
+
+
+
 void Cylinder::draw() const
 {
     drawLines();

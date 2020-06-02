@@ -59,6 +59,10 @@ public:
     void setTopXWidth(double inputTopXWidth);
     void setTopZWidth(double inputTopZWidth);
 
+    // Geometry
+    // Returns the x or z radius at a height of y above the base
+    double getXRadiusAtHeight(double y) const;
+    double getZRadiusAtHeight(double y) const;
 
     void lookAt(Point &p);
 
