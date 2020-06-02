@@ -56,18 +56,19 @@ void Frustum::initializeXLinePoints()
     int numPoints;
     double x,y,z;
 
+    double width = fmax(xWidth, upperXWidth);
     // Decide how far apart to make the lines
     if(linesDrawn == Low)
     {
-        numPoints = floor(xWidth / distanceBetweenLowLines);
+        numPoints = floor(width / distanceBetweenLowLines);
     }
     else if(linesDrawn == Medium)
     {
-        numPoints = floor(xWidth / distanceBetweenMediumLines);
+        numPoints = floor(width / distanceBetweenMediumLines);
     }
     else if(linesDrawn == High)
     {
-        numPoints = floor(xWidth / distanceBetweenHighLines);
+        numPoints = floor(width / distanceBetweenHighLines);
     }
     else // If linesDrawn = Normal or NoLines, do not add any gridlines on the planes
     {
@@ -149,8 +150,8 @@ void Frustum::initializeYLinePoints()
     for(int i = 0; i < numPoints - 1; i++)
     {
         y += distanceBetweenPointsY;
-        x = getXWidthAtHeight(y);
-        z = getZWidthAtHeight(y);
+        x = center.x - getXWidthAtHeight(y) - lineOffset;
+        z = center.z + getZWidthAtHeight(y) + lineOffset;
         yLinePoints.push_back({x, y, z});
     }
 
@@ -159,8 +160,8 @@ void Frustum::initializeYLinePoints()
     for(int i = 0; i < numPoints - 1; i++)
     {
         y += distanceBetweenPointsY;
-        x = getXWidthAtHeight(y);
-        z = getZWidthAtHeight(y);
+        x = center.x + getXWidthAtHeight(y) + lineOffset;
+        z = center.z + getZWidthAtHeight(y) + lineOffset;
         yLinePoints.push_back({x, y, z});
     }
 
@@ -169,8 +170,8 @@ void Frustum::initializeYLinePoints()
     for(int i = 0; i < numPoints - 1; i++)
     {
         y += distanceBetweenPointsY;
-        x = getXWidthAtHeight(y);
-        z = getZWidthAtHeight(y);
+        x = center.x - getXWidthAtHeight(y) - lineOffset;
+        z = center.z + getZWidthAtHeight(y) + lineOffset;
         yLinePoints.push_back({x, y, z});
     }
 
@@ -179,8 +180,8 @@ void Frustum::initializeYLinePoints()
     for(int i = 0; i < numPoints - 1; i++)
     {
         y += distanceBetweenPointsY;
-        x = getXWidthAtHeight(y);
-        z = getZWidthAtHeight(y);
+        x = center.x - getXWidthAtHeight(y) - lineOffset;
+        z = center.z - getZWidthAtHeight(y) - lineOffset;
         yLinePoints.push_back({x, y, z});
     }
 }
@@ -189,18 +190,19 @@ void Frustum::initializeZLinePoints()
     int numPoints;
     double x,y,z;
 
+    double width = fmax(zWidth, upperZWidth);
     // Decide how far apart to make the lines
     if(linesDrawn == Low)
     {
-        numPoints = floor(zWidth / distanceBetweenLowLines);
+        numPoints = floor(width / distanceBetweenLowLines);
     }
     else if(linesDrawn == Medium)
     {
-        numPoints = floor(zWidth / distanceBetweenMediumLines);
+        numPoints = floor(width / distanceBetweenMediumLines);
     }
     else if(linesDrawn == High)
     {
-        numPoints = floor(zWidth / distanceBetweenHighLines);
+        numPoints = floor(width / distanceBetweenHighLines);
     }
     else // If linesDrawn = Normal or NoLines, do not add any gridlines on the planes
     {
