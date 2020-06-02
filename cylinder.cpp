@@ -129,6 +129,13 @@ double Cylinder::getZRadiusAtHeight(double y) const
     return zWidth + slope*y;
 }
 
+Point Cylinder::getPointAtHeight(double y, double theta) const
+{
+    double xRad = getXRadiusAtHeight(y);
+    double zRad = getZRadiusAtHeight(y);
+    return {center.x + xRad*cos(theta), center.y - yWidth/2 + y, center.z + zRad*sin(theta)};
+}
+
 
 
 void Cylinder::draw() const

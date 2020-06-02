@@ -63,6 +63,8 @@ public:
     // Returns the x or z radius at a height of y above the base
     double getXRadiusAtHeight(double y) const;
     double getZRadiusAtHeight(double y) const;
+    // Get the coordinates on circumference at given height and angle
+    Point getPointAtHeight(double y, double theta) const;
 
     void lookAt(Point &p);
 
