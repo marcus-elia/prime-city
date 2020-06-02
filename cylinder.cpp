@@ -101,11 +101,13 @@ void Cylinder::initializeLinePoints()
         y = corners[i].y;
         z = corners[i].z;
 
+        double theta = 2*PI* (i+1)/2 / smoothness;
+
         linePoints.emplace_back();
         for(int j = 0; j < numPoints - 1; j++)
         {
             y += distanceBetweenPoints;
-            linePoints.back().push_back({x, y, z});
+            linePoints.back().push_back(getPointAtHeight(y, theta));
         }
     }
 }
@@ -119,14 +121,14 @@ void Cylinder::lookAt(Point &p)
 
 double Cylinder::getXRadiusAtHeight(double y) const
 {
-    double slope = (topXWidth - xWidth) / yWidth;
-    return xWidth + slope*y;
+    double slope = (topXWidth - xWidth) / 2 / yWidth;
+    return xWidth/2 + slope*y;
 }
 
 double Cylinder::getZRadiusAtHeight(double y) const
 {
-    double slope = (topZWidth - zWidth) / yWidth;
-    return zWidth + slope*y;
+    double slope = (topZWidth - zWidth) / 2 / yWidth;
+    return zWidth/2 + slope*y;
 }
 
 Point Cylinder::getPointAtHeight(double y, double theta) const
