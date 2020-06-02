@@ -4,6 +4,7 @@
 #include "solid.h"
 #include "recPrism.h"
 #include "cylinder.h"
+#include "frustum.h"
 #include <vector>
 #include <memory>
 
