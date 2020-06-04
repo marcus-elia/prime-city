@@ -33,6 +33,11 @@ public:
              RGBAcolor inputColor, RGBAcolor inputEdgeColor, typeOfBuilding inputBuildingType);
 
     void initializeSolids();
+    // Create the solids, using a different helper function depending on how many solids there are
+    void initializeSolids1();
+    void initializeSolids2();
+    void initializeSolids3();
+    void initializeSolids4();
 
     // Getters
     std::vector<std::shared_ptr<Solid>> getSolids() const;
