@@ -97,9 +97,7 @@ void Cylinder::initializeLinePoints()
     // Iterate through the bottom of the ellipse and add points above it
     for(int i = 1; i < corners.size(); i += 2)
     {
-        x = corners[i].x;
-        y = corners[i].y;
-        z = corners[i].z;
+        y = 0;
 
         double theta = 2*PI* (i+1)/2 / smoothness;
 
