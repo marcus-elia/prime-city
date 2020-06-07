@@ -39,6 +39,15 @@ public:
     void initializeSolids3();
     void initializeSolids4();
 
+    // This adds a pointer to a new solid to the vector of solids. The new solid has its center y coordinate at
+    // center height, and its height is ywidth. The x and z dimensions are random, chosen within the specified
+    // parameters.
+    // The seeds must be between 0 and 100 so that rectPrismSeed < cylinderSeed. A random int between
+    // 0 and 100 will be created so that if r < rectPrismSeed, the solid is a rectprism. Else if r < cylinderSeed,
+    // it's a cylinder. Otherwise, it's a frustum.
+    void addRandomSolid(int centerHeight, int yWidth, int maxXWidth, int maxZWidth, int minTopXWidth, int minTopZWidth,
+            int rectPrismSeed, int cylinderSeed, linesDrawnEnum lineDensity);
+
     // Get a random line density to help initialize solids
     linesDrawnEnum getRandomLineDensity() const;
 

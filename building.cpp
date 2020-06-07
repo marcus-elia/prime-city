@@ -254,6 +254,12 @@ void Building::initializeSolids3()
                                                                topXWidth, topZWidth, lineDensity)));
         }
     }
+    else if(structureSeed < 65) // Three random pieces
+    {
+        // Divide the building into 3 heights
+        int lowerDividingPoint = height/4 + (rand() % (height/2));
+        int upperDividingPoint = lowerDividingPoint + (rand() % (height - 10 - lowerDividingPoint));
+    }
 }
 void Building::initializeSolids4()
 {
@@ -278,6 +284,36 @@ linesDrawnEnum Building::getRandomLineDensity() const
     else
     {
         return High;
+    }
+}
+
+
+void Building::addRandomSolid(int centerHeight, int yWidth, int maxXWidth, int maxZWidth, int minTopXWidth,
+        int minTopZWidth, int rectPrismSeed, int cylinderSeed, linesDrawnEnum lineDensity)
+{
+    Point center = {(double)topLeft.x + sideLength/2, (double)centerHeight, (double)topLeft.z + sideLength/2};
+    int xWidth = (rand() % (maxXWidth - 1)) + 1;
+    int zWidth = (rand() % (maxZWidth - 1)) + 1;
+    int topXWidth = minTopXWidth + (rand() % (sideLength - minTopXWidth));
+    int topZWidth = minTopZWidth + (rand() % (sideLength - minTopZWidth));
+    int shapeSeed = rand() % 100;
+    if(shapeSeed < rectPrismSeed)
+    {
+        solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
+                                                             xWidth, yWidth,
+                                                             zWidth, edgeColor, lineDensity)));
+    }
+    else if(shapeSeed < cylinderSeed)
+    {
+        solids.push_back(std::make_shared<Cylinder>(Cylinder(center, color,
+                                                             xWidth, yWidth, zWidth, edgeColor,
+                                                             topXWidth, topZWidth, lineDensity)));
+    }
+    else
+    {
+        solids.push_back(std::make_shared<Frustum>(Frustum(center, color,
+                                                             xWidth, yWidth, zWidth, edgeColor,
+                                                             topXWidth, topZWidth, lineDensity)));
     }
 }
 
