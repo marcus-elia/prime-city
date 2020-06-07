@@ -172,12 +172,88 @@ void Building::initializeSolids2()
             }
         }
     }
-
-
 }
 void Building::initializeSolids3()
 {
-    initializeSolids1();
+    // Determine the gridlines
+    linesDrawnEnum lineDensity = getRandomLineDensity();
+
+    RGBAcolor gray = {0.5, 0.5, 0.5, 1};
+    Point center;
+    int xWidth, zWidth, topXWidth, topZWidth;
+
+    int structureSeed = rand() % 100;
+    // Three of the same type, stacked
+    if(structureSeed < 30)
+    {
+        int solidHeight = height/3;
+        center = {(double)topLeft.x + sideLength/2, (double)solidHeight/2, (double)topLeft.z + sideLength/2};
+        int shapeSeed = rand() % 100;
+        if(shapeSeed < 50) // rectangular
+        {
+            xWidth = sideLength;
+            zWidth = sideLength;
+            solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
+                                                                 xWidth, solidHeight, zWidth, edgeColor, lineDensity)));
+            center.y += solidHeight;
+            xWidth = 3*sideLength/4;
+            zWidth = 3*sideLength/4;
+            solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
+                                                                 xWidth, solidHeight,
+                                                                 zWidth, edgeColor, lineDensity)));
+            center.y += solidHeight;
+            xWidth = sideLength/2;
+            zWidth = sideLength/2;
+            solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
+                                                                 xWidth, solidHeight,
+                                                                 zWidth, edgeColor, lineDensity)));
+        }
+        else if(shapeSeed < 75) // cylinder
+        {
+            xWidth = sideLength;
+            zWidth = sideLength;
+            solids.push_back(std::make_shared<Cylinder>(Cylinder(center, color,
+                                                                 xWidth, solidHeight, zWidth, edgeColor, lineDensity)));
+            center.y += solidHeight;
+            xWidth = 3*sideLength/4;
+            zWidth = 3*sideLength/4;
+            solids.push_back(std::make_shared<Cylinder>(Cylinder(center, color,
+                                                                 xWidth, solidHeight,
+                                                                 zWidth, edgeColor, lineDensity)));
+            center.y += solidHeight;
+            xWidth = sideLength/2;
+            zWidth = sideLength/2;
+            solids.push_back(std::make_shared<Cylinder>(Cylinder(center, color,
+                                                                 xWidth, solidHeight,
+                                                                 zWidth, edgeColor, lineDensity)));
+        }
+        else // Frustum
+        {
+            xWidth = sideLength;
+            zWidth = sideLength;
+            topXWidth = 7*sideLength/8;
+            topZWidth = 7*sideLength/8;
+            solids.push_back(std::make_shared<Frustum>(Frustum(center, color,
+                                                                 xWidth, solidHeight, zWidth, edgeColor,
+                                                                 topXWidth, topZWidth, lineDensity)));
+            center.y += solidHeight;
+            xWidth = 3*sideLength/4;
+            zWidth = 3*sideLength/4;
+            topXWidth = 5*sideLength/8;
+            topZWidth = 5*sideLength/8;
+            solids.push_back(std::make_shared<Frustum>(Frustum(center, color,
+                                                               xWidth, solidHeight, zWidth, edgeColor,
+                                                               topXWidth, topZWidth, lineDensity)));
+            center.y += solidHeight;
+            xWidth = sideLength/2;
+            zWidth = sideLength/2;
+            topXWidth = 3*sideLength/8;
+            topZWidth = 3*sideLength/8;
+            solids.push_back(std::make_shared<Frustum>(Frustum(center, color,
+                                                               xWidth, solidHeight, zWidth, edgeColor,
+                                                               topXWidth, topZWidth, lineDensity)));
+        }
+    }
 }
 void Building::initializeSolids4()
 {
