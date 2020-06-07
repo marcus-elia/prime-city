@@ -39,6 +39,9 @@ public:
     void initializeSolids3();
     void initializeSolids4();
 
+    // Get a random line density to help initialize solids
+    linesDrawnEnum getRandomLineDensity() const;
+
     // Getters
     std::vector<std::shared_ptr<Solid>> getSolids() const;
 
