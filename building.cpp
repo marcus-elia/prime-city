@@ -112,7 +112,7 @@ void Building::initializeSolids2()
         if(baseShapeSeed < 10)
         {
             solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
-                                                                 sideLength, height, sideLength, edgeColor, lineDensity)));
+                                                                 sideLength, baseHeight, sideLength, edgeColor, lineDensity)));
             center = {center.x, center.y + baseHeight, center.z};
             solids.push_back(std::make_shared<Frustum>(Frustum(center, color,
                                                                sideLength, baseHeight, sideLength, edgeColor,
@@ -125,18 +125,18 @@ void Building::initializeSolids2()
             if(baseShapeSeed < 50)
             {
                 solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
-                                                                     sideLength, height, sideLength, edgeColor, lineDensity)));
+                                                                     sideLength, baseHeight, sideLength, edgeColor, lineDensity)));
             }
             else if(baseShapeSeed < 75)
             {
                 solids.push_back(std::make_shared<Cylinder>(Cylinder(center, color,
-                                                                     sideLength, height, sideLength, edgeColor,
+                                                                     sideLength, baseHeight, sideLength, edgeColor,
                                                                      sideLength, sideLength, lineDensity)));
             }
             else
             {
                 solids.push_back(std::make_shared<Frustum>(Frustum(center, color,
-                                                                     sideLength, height, sideLength, edgeColor,
+                                                                     sideLength, baseHeight, sideLength, edgeColor,
                                                                      sideLength/2, sideLength/2, lineDensity)));
             }
 
@@ -147,7 +147,7 @@ void Building::initializeSolids2()
             {
                 xWidth = sideLength/2 - (rand() % (sideLength/4));
                 zWidth = sideLength/2 - (rand() % (sideLength/4));
-                solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,xWidth, height, zWidth,
+                solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color, xWidth, baseHeight, zWidth,
                                                                      edgeColor, lineDensity)));
             }
             else if(topShapeSeed < 70) // Cylinder
@@ -157,8 +157,8 @@ void Building::initializeSolids2()
                 topXWidth = sideLength/2 - (rand() % (sideLength/4));
                 topZWidth = sideLength/2 - (rand() % (sideLength/4));
                 solids.push_back(std::make_shared<Cylinder>(Cylinder(center, color,
-                                                                     sideLength, height, sideLength, edgeColor,
-                                                                     sideLength, sideLength, lineDensity)));
+                                                                     xWidth, baseHeight, zWidth, edgeColor,
+                                                                     topXWidth, topZWidth, lineDensity)));
             }
             else // Frustum
             {
@@ -167,8 +167,8 @@ void Building::initializeSolids2()
                 topXWidth = sideLength/2 - (rand() % (sideLength/4));
                 topZWidth = sideLength/2 - (rand() % (sideLength/4));
                 solids.push_back(std::make_shared<Frustum>(Frustum(center, color,
-                                                                     sideLength, height, sideLength, edgeColor,
-                                                                     sideLength, sideLength, lineDensity)));
+                                                                     xWidth, baseHeight, zWidth, edgeColor,
+                                                                     topXWidth, topZWidth, lineDensity)));
             }
         }
     }
