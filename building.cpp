@@ -257,8 +257,41 @@ void Building::initializeSolids3()
     else if(structureSeed < 65) // Three random pieces
     {
         // Divide the building into 3 heights
+
+        // The chances of making each solid type
+        int rectProb = 50;
+        int cylProb = 75;
+
+        // How tall to make the 3 parts
         int lowerDividingPoint = height/4 + (rand() % (height/2));
         int upperDividingPoint = lowerDividingPoint + (rand() % (height - 10 - lowerDividingPoint));
+
+        int solidHeight, centerY;
+
+        // Base
+        solidHeight = lowerDividingPoint;
+        centerY = solidHeight/2;
+        xWidth = sideLength;
+        zWidth = sideLength;
+        addRandomSolid(centerY, solidHeight, xWidth, zWidth, xWidth, zWidth, rectProb, cylProb, lineDensity);
+
+        // Middle
+        solidHeight = upperDividingPoint - lowerDividingPoint;
+        centerY = lowerDividingPoint + solidHeight/2;
+        xWidth -= (rand() % (xWidth/2));
+        zWidth -= (rand() % (zWidth/2));
+        topXWidth = xWidth + (rand() % xWidth) - xWidth/3;
+        topZWidth = zWidth + (rand() % zWidth) - zWidth/3;
+        addRandomSolid(centerY, solidHeight, xWidth, zWidth, topXWidth, topZWidth, rectProb, cylProb, lineDensity);
+
+        // Top
+        solidHeight = height - upperDividingPoint;
+        centerY = upperDividingPoint + solidHeight/2;
+        xWidth -= (rand() % (xWidth/2));
+        zWidth -= (rand() % (zWidth/2));
+        topXWidth = xWidth + (rand() % xWidth) - xWidth/3;
+        topZWidth = zWidth + (rand() % zWidth) - zWidth/3;
+        addRandomSolid(centerY, solidHeight, xWidth, zWidth, topXWidth, topZWidth, rectProb, cylProb, lineDensity);
     }
 }
 void Building::initializeSolids4()
@@ -288,14 +321,10 @@ linesDrawnEnum Building::getRandomLineDensity() const
 }
 
 
-void Building::addRandomSolid(int centerHeight, int yWidth, int maxXWidth, int maxZWidth, int minTopXWidth,
-        int minTopZWidth, int rectPrismSeed, int cylinderSeed, linesDrawnEnum lineDensity)
+void Building::addRandomSolid(int centerHeight, int yWidth, int xWidth, int zWidth, int topXWidth, int topZWidth,
+                    int rectPrismSeed, int cylinderSeed, linesDrawnEnum lineDensity)
 {
     Point center = {(double)topLeft.x + sideLength/2, (double)centerHeight, (double)topLeft.z + sideLength/2};
-    int xWidth = (rand() % (maxXWidth - 1)) + 1;
-    int zWidth = (rand() % (maxZWidth - 1)) + 1;
-    int topXWidth = minTopXWidth + (rand() % (sideLength - minTopXWidth));
-    int topZWidth = minTopZWidth + (rand() % (sideLength - minTopZWidth));
     int shapeSeed = rand() % 100;
     if(shapeSeed < rectPrismSeed)
     {
