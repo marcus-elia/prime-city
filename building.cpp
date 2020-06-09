@@ -331,7 +331,76 @@ void Building::initializeSolids3()
 }
 void Building::initializeSolids4()
 {
-    initializeSolids1();
+    // Determine the gridlines
+    linesDrawnEnum lineDensity = getRandomLineDensity();
+
+    // Three random solids and a bonus on top
+    // The chances of making each solid type
+    int rectProb = 50;
+    int cylProb = 75;
+
+    int xWidth, zWidth, topXWidth, topZWidth;
+
+    // How tall to make the 3 parts
+    int lowerDividingPoint = height/4 + (rand() % (height/3));
+    int upperDividingPoint = lowerDividingPoint + (rand() % (7*height/8 - lowerDividingPoint));
+
+    int solidHeight, centerY;
+
+    // Base
+    solidHeight = lowerDividingPoint;
+    centerY = solidHeight/2;
+    xWidth = sideLength;
+    zWidth = sideLength;
+    addRandomSolid(centerY, solidHeight, xWidth, zWidth, xWidth, zWidth, rectProb, cylProb, lineDensity);
+
+    // Middle
+    solidHeight = upperDividingPoint - lowerDividingPoint;
+    centerY = lowerDividingPoint + solidHeight/2;
+    xWidth -= (rand() % (xWidth/2));
+    zWidth -= (rand() % (zWidth/2));
+    topXWidth = xWidth + (rand() % xWidth) - xWidth/3;
+    topZWidth = zWidth + (rand() % zWidth) - zWidth/3;
+    addRandomSolid(centerY, solidHeight, xWidth, zWidth, topXWidth, topZWidth, rectProb, cylProb, lineDensity);
+
+    // Top
+    solidHeight = 7*height/8 - upperDividingPoint;
+    centerY = upperDividingPoint + solidHeight/2;
+    xWidth -= (rand() % (xWidth/2));
+    zWidth -= (rand() % (zWidth/2));
+    topXWidth = xWidth + (rand() % xWidth) - xWidth/3;
+    topZWidth = zWidth + (rand() % zWidth) - zWidth/3;
+    addRandomSolid(centerY, solidHeight, xWidth, zWidth, topXWidth, topZWidth, rectProb, cylProb, lineDensity);
+
+    // Bonus
+    int bonusSeed = rand() % 100;
+    solidHeight = height/8;
+    xWidth = sideLength;
+    zWidth = sideLength;
+    if(bonusSeed < 30) // Full cylinder
+    {
+        Point center = {(double)topLeft.x + sideLength/2, 15*height/16.0, (double)topLeft.z + sideLength/2};
+        solids.push_back(std::make_shared<Cylinder>(Cylinder(center, color,
+                                                             xWidth, solidHeight, zWidth, edgeColor, lineDensity)));
+    }
+    else if(bonusSeed < 60) // Rectangular spire
+    {
+        solidHeight = height/3;
+        xWidth = sideLength/8;
+        zWidth = sideLength/8;
+        Point center = {(double)topLeft.x + sideLength/2, 7*height/8.0 + solidHeight/2, (double)topLeft.z + sideLength/2};
+        solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
+                                                             xWidth, solidHeight, zWidth, edgeColor, lineDensity)));
+    }
+    else // Frustum
+    {
+        topXWidth = sideLength/2;
+        topZWidth = sideLength/2;
+        Point center = {(double)topLeft.x + sideLength/2, 15*height/16.0, (double)topLeft.z + sideLength/2};
+        solids.push_back(std::make_shared<Frustum>(Frustum(center, color,
+                                                           xWidth, solidHeight, zWidth, edgeColor,
+                                                           topXWidth, topZWidth, lineDensity)));
+    }
 }
 
 linesDrawnEnum Building::getRandomLineDensity() const
