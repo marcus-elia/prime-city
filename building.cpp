@@ -293,6 +293,41 @@ void Building::initializeSolids3()
         topZWidth = zWidth + (rand() % zWidth) - zWidth/3;
         addRandomSolid(centerY, solidHeight, xWidth, zWidth, topXWidth, topZWidth, rectProb, cylProb, lineDensity);
     }
+    // A building with a complex top
+    else
+    {
+        // The chances of making each solid type
+        int rectProb = 50;
+        int cylProb = 75;
+        int solidHeight, centerY;
+
+        // Base
+        solidHeight = 3*height/4;
+        centerY = solidHeight/2;
+        xWidth = sideLength;
+        zWidth = sideLength;
+        topXWidth = sideLength - (rand() % (sideLength/4));
+        topZWidth = sideLength - (rand() % (sideLength/4));
+        addRandomSolid(centerY, solidHeight, xWidth, zWidth, topXWidth, topZWidth, rectProb, cylProb, lineDensity);
+
+        // Middle
+        solidHeight = height/8;
+        centerY = 3*height/4 + solidHeight/2;
+        xWidth = topXWidth - (rand() % (topXWidth/2));
+        zWidth = topZWidth - (rand() % (topZWidth/2));
+        topXWidth = xWidth + (rand() % (xWidth/2)) - xWidth/4;
+        topZWidth = zWidth + (rand() % (zWidth/2)) - zWidth/4;
+        addRandomSolid(centerY, solidHeight, xWidth, zWidth, topXWidth, topZWidth, rectProb, cylProb, lineDensity);
+
+        // Top
+        solidHeight = height/8;
+        centerY += height/8;
+        xWidth = sideLength - (rand() % (sideLength/2));
+        zWidth = sideLength - (rand() % (sideLength/2));
+        topXWidth = sideLength - (rand() % (sideLength/2));
+        topZWidth = sideLength - (rand() % (sideLength/2));
+        addRandomSolid(centerY, solidHeight, xWidth, zWidth, topXWidth, topZWidth, rectProb, cylProb, lineDensity);
+    }
 }
 void Building::initializeSolids4()
 {
