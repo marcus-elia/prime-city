@@ -38,7 +38,7 @@ void Building::initializeSolids()
     {
         initializeSolids2();
     }
-    else if(r < 80)
+    else if(r < 90)
     {
         initializeSolids3();
     }
@@ -60,13 +60,13 @@ void Building::initializeSolids1()
     // Determine the shape
     int shapeSeed = rand() % 100;
     // Make a rectangle most of the time
-    if(shapeSeed < 60)
+    if(shapeSeed < 65)
     {
         solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
                                                             sideLength, height, sideLength, edgeColor, lineDensity)));
     }
     // Then try a frustum
-    else if(shapeSeed < 80)
+    else if(shapeSeed < 85)
     {
         double upperXWidth = sideLength - (rand() % (sideLength/2));
         double upperZWidth = sideLength - (rand() % (sideLength/2));
@@ -102,6 +102,11 @@ void Building::initializeSolids2()
     if(spire)
     {
         baseHeight = 3*height/4;
+        int centerY = baseHeight/2;
+        addRandomSolid(centerY, baseHeight, sideLength, sideLength, sideLength, sideLength, 50, 75, lineDensity);
+        centerY = height;
+        // Spire
+        addRandomSolid(centerY, height/2, sideLength/8, sideLength/8, sideLength/9, sideLength/9, 50, 75, lineDensity);
     }
     else
     {
@@ -109,7 +114,7 @@ void Building::initializeSolids2()
         center = {(double)topLeft.x + sideLength/2, (double)baseHeight/2, (double)topLeft.z + sideLength/2};
 
         // Make a frustum that fits the rec prism base
-        if(baseShapeSeed < 10)
+        if(baseShapeSeed < 20)
         {
             solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
                                                                  sideLength, baseHeight, sideLength, edgeColor, lineDensity)));
@@ -377,13 +382,13 @@ void Building::initializeSolids4()
     solidHeight = height/8;
     xWidth = sideLength;
     zWidth = sideLength;
-    if(bonusSeed < 30) // Full cylinder
+    if(bonusSeed < 45) // Full cylinder
     {
         Point center = {(double)topLeft.x + sideLength/2, 15*height/16.0, (double)topLeft.z + sideLength/2};
         solids.push_back(std::make_shared<Cylinder>(Cylinder(center, color,
                                                              xWidth, solidHeight, zWidth, edgeColor, lineDensity)));
     }
-    else if(bonusSeed < 60) // Rectangular spire
+    else if(bonusSeed < 90) // Rectangular spire
     {
         solidHeight = height/3;
         xWidth = sideLength/8;
@@ -406,7 +411,7 @@ void Building::initializeSolids4()
 linesDrawnEnum Building::getRandomLineDensity() const
 {
     int lineSeed = rand() % 100;
-    if(lineSeed < 20)
+    if(lineSeed < 40)
     {
         return Normal;
     }

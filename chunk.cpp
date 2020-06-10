@@ -42,6 +42,7 @@ void Chunk::makeBuildings()
     {
         for(int j = 0; j < plotsPerSide; j++)
         {
+            // Don't build around the origin where the player spawns
             if(abs(bottomLeft.x*sideLength + i*plotSize) < sideLength/3 &&
                abs((bottomLeft.z + 1)*sideLength - (j+1)*plotSize) < sideLength/3)
             {
@@ -50,22 +51,36 @@ void Chunk::makeBuildings()
 
             double r1 = (double)(rand() % 100) / 100;
 
-            RGBAcolor color = {0.65, 0.65, 0.65, 1};    // Silver
+            int colorSeed = rand() % 100;
+            RGBAcolor color;
+            if(colorSeed < 33)
+            {
+                color = {78/256.0, 65/256.0, 84/256.0, 1};  // Purple Silver
+            }
+            else if(colorSeed < 66)
+            {
+                color = {117/256.0, 87/256.0, 89/256.0, 1}; // Red Silver
+            }
+            else
+            {
+                color = {105/256.0, 90/256.0, 73/256.0, 1}; // Orange Silver
+            }
+
             RGBAcolor edgeColor = {1.0, 1.0, 0.0, 1.0}; // Yellow
 
             double height;
             if(perlinSeed < 1.0)
             {
-                height = 200 + r1*100 + perlinSeed*100;
+                height = 200 + r1*100 + perlinSeed*100 + rand() % 100;
             }
             else // If we are at a max height seeded plot, make buidlings taller at the center
             {
                 Point2D currentPlot = {i, j};
                 Point2D chunkCenter = {plotsPerSide/2,plotsPerSide/2};
-                height = 200 + r1*100 + perlinSeed*100 + 25*(1.4*plotsPerSide/2 - distance(currentPlot, chunkCenter));
+                height = 250 + r1*100 + perlinSeed*100 + 25*(1.4*plotsPerSide/2 - distance(currentPlot, chunkCenter));
             }
 
-            if((r1 < buildingDensity || perlinSeed == 1.0) && plotEmpty[i][j] && shouldConsiderBuilding(i,j))
+            if((r1 < BUILDING_DENSITY || perlinSeed == 1.0) && plotEmpty[i][j] && shouldConsiderBuilding(i,j))
             {
                 Point2D topLeftOfBuilding = {bottomLeft.x*sideLength + i*plotSize,
                                              (bottomLeft.z + 1)*sideLength - (j+1)*plotSize};
@@ -110,18 +125,18 @@ bool Chunk::shouldConsiderBuilding(int i, int j) const
     // Left
     if(i == 0)
     {
-        if((rand() % 100) / 100.0 < buildingDensity)
+        if((rand() % 100) / 100.0 < BUILDING_DENSITY)
         {
             neighbors++;
         }
 
         // Up Left
-        if((rand() % 100) / 100.0 < buildingDensity)
+        if((rand() % 100) / 100.0 < BUILDING_DENSITY)
         {
             neighbors++;
         }
         // Down left
-        if((rand() % 100) / 100.0 < buildingDensity)
+        if((rand() % 100) / 100.0 < BUILDING_DENSITY)
         {
             neighbors++;
         }
@@ -136,7 +151,7 @@ bool Chunk::shouldConsiderBuilding(int i, int j) const
         // Up left
         if(j == 0)
         {
-            if((rand() % 100) / 100.0 < buildingDensity)
+            if((rand() % 100) / 100.0 < BUILDING_DENSITY)
             {
                 neighbors++;
             }
@@ -151,7 +166,7 @@ bool Chunk::shouldConsiderBuilding(int i, int j) const
         // Down left
         if(j == plotsPerSide-1)
         {
-            if((rand() % 100) / 100.0 < buildingDensity)
+            if((rand() % 100) / 100.0 < BUILDING_DENSITY)
             {
                 neighbors++;
             }
@@ -168,18 +183,18 @@ bool Chunk::shouldConsiderBuilding(int i, int j) const
     // Right
     if(i == plotsPerSide-1)
     {
-        if((rand() % 100) / 100.0 < buildingDensity)
+        if((rand() % 100) / 100.0 < BUILDING_DENSITY)
         {
             neighbors++;
         }
 
         // Up Right
-        if((rand() % 100) / 100.0 < buildingDensity)
+        if((rand() % 100) / 100.0 < BUILDING_DENSITY)
         {
             neighbors++;
         }
         // Down Right
-        if((rand() % 100) / 100.0 < buildingDensity)
+        if((rand() % 100) / 100.0 < BUILDING_DENSITY)
         {
             neighbors++;
         }
@@ -194,7 +209,7 @@ bool Chunk::shouldConsiderBuilding(int i, int j) const
         // Up Right
         if(j == 0)
         {
-            if((rand() % 100) / 100.0 < buildingDensity)
+            if((rand() % 100) / 100.0 < BUILDING_DENSITY)
             {
                 neighbors++;
             }
@@ -209,7 +224,7 @@ bool Chunk::shouldConsiderBuilding(int i, int j) const
         // Down right
         if(j == plotsPerSide-1)
         {
-            if((rand() % 100) / 100.0 < buildingDensity)
+            if((rand() % 100) / 100.0 < BUILDING_DENSITY)
             {
                 neighbors++;
             }
@@ -226,7 +241,7 @@ bool Chunk::shouldConsiderBuilding(int i, int j) const
     // Up
     if(j == 0)
     {
-        if((rand() % 100) / 100.0 < buildingDensity)
+        if((rand() % 100) / 100.0 < BUILDING_DENSITY)
         {
             neighbors++;
         }
@@ -242,7 +257,7 @@ bool Chunk::shouldConsiderBuilding(int i, int j) const
     // Down
     if(j == plotsPerSide-1)
     {
-        if((rand() % 100) / 100.0 < buildingDensity)
+        if((rand() % 100) / 100.0 < BUILDING_DENSITY)
         {
             neighbors++;
         }
@@ -254,7 +269,7 @@ bool Chunk::shouldConsiderBuilding(int i, int j) const
             neighbors++;
         }
     }
-    return neighbors < buildingDensity*8;
+    return neighbors < BUILDING_DENSITY*8;
 }
 
 

@@ -31,7 +31,7 @@ private:
 
     // How common/dense buildings are. Approximately this proportion of
     // plots will have a building
-    constexpr const static double buildingDensity = 0.25;
+    constexpr const static double BUILDING_DENSITY = 0.20;
 
     // True if the plot at i,j is empty
     bool plotEmpty[plotsPerSide][plotsPerSide];
