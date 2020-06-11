@@ -410,6 +410,10 @@ void Building::initializeSolids4()
 
 linesDrawnEnum Building::getRandomLineDensity() const
 {
+    if(!GRIDLINES_ENABLED) // If gridlines are off
+    {
+        return Normal;
+    }
     int lineSeed = rand() % 100;
     if(lineSeed < 40)
     {
