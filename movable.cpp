@@ -91,6 +91,7 @@ void Movable::move(double deltaX, double deltaY, double deltaZ)
 }
 void Movable::rotate(double thetaX, double thetaY, double thetaZ)
 {
+    hasBeenRotated = true;
     rotatePointAroundPoint(lookingAt, location, thetaX, thetaY, thetaZ);
 }
 

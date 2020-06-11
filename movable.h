@@ -14,6 +14,8 @@ protected:
     double speed;
     Point velocity;
     double xzAngle; // angle in the xz-plane
+    bool hasBeenRotated = false; // keep track of if this has been rotated
+                                 // because collision detection won't work
 public:
     Movable();
     Movable(Point inputLocation, Point inputLookingAt, double inputSpeed, Point inputVelocity);
