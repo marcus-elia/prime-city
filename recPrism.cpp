@@ -419,6 +419,10 @@ void RecPrism::drawGridLines() const
 // Wrapper function
 std::experimental::optional<Point> RecPrism::correctCollision(Point p, int buffer)
 {
+    if(hasBeenRotated)
+    {
+        throw std::domain_error("This RecPrism has been rotated. Cannot perform collision detection.");
+    }
     return correctRectangularPrismCollision(p, buffer, center,
                                             xWidth, yWidth, zWidth);
 }

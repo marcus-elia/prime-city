@@ -3,6 +3,7 @@
 
 #include "solid.h"
 #include <iostream>
+#include <stdexcept>
 
 class RecPrism : public Solid
 {
