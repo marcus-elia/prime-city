@@ -439,48 +439,28 @@ void RecPrism::printDebugStats()
 std::experimental::optional<Point> correctRectangularPrismCollision(Point p, int buffer, Point c,
                                                                     double xw, double yw, double zw)
 {
-    // If it is ouside the prism, just return nullopt
-    if(p.x < c.x - xw/2 - buffer || p.x > c.x + xw/2 + buffer ||
-       p.z < c.z - zw/2 - buffer || p.z > c.z + zw/2 + buffer ||
-       p.y > c.y + yw/2 + buffer || p.y < c.y - yw/2 - buffer)
+    double distanceOutsideLeftEdge = c.x - xw/2 - p.x;
+    double distanceOutsideRightEdge = p.x - c.x - xw/2;
+    double distanceAboveTopEdge = p.y - c.y - yw/2;
+    double distanceBelowBottomEdge = c.y - yw/2 - p.y;
+    double distanceOutsideFrontEdge = p.z - c.z - zw/2;
+    double distanceOutsideBackEdge = c.z - zw/2 - p.z;
+    // If the point is closest to the top face
+    if(distanceAboveTopEdge > distanceOutsideLeftEdge && distanceAboveTopEdge > distanceOutsideRightEdge &&
+    distanceAboveTopEdge > distanceOutsideFrontEdge && distanceAboveTopEdge > distanceOutsideBackEdge)
     {
-        return std::experimental::nullopt;
+
     }
-    // Get the distance from each face
-    double left = abs(p.x - c.x + xw/2);
-    double right = abs(p.x - c.x - xw/2);
-    double up = abs(p.y - c.y - yw/2);
-    double down = abs(p.y - c.y + yw/2);
-    double front = abs(p.z - c.z - zw/2);
-    double back = abs(p.z - c.z + zw/2);
-    // If we're closest to the left side
-    if(left <= right && left < up && left < down && left < front && left < back)
+    // If the point is closest to the bottom face
+    else if(distanceBelowBottomEdge > distanceOutsideLeftEdge && distanceBelowBottomEdge > distanceOutsideRightEdge &&
+            distanceBelowBottomEdge > distanceOutsideFrontEdge && distanceBelowBottomEdge > distanceOutsideBackEdge)
     {
-        return std::experimental::optional<Point>({c.x - xw/2 - buffer, p.y, p.z});
+
     }
-        // Right side
-    else if(right <= up && right < down && right < front && right < back)
+    // Otherwise, assume it is near a side face and correct that
+    else
     {
-        return std::experimental::optional<Point>({c.x + xw/2 + buffer, p.y, p.z});
-    }
-        // Up
-    else if(up <= down && up < front && up < back)
-    {
-        return std::experimental::optional<Point>({p.x, c.y + yw/2 + buffer, p.z});
-    }
-        // Down
-    else if(down <= front && down < back)
-    {
-        return std::experimental::optional<Point>({p.x, c.y - yw/2 - buffer, p.z});
-    }
-        // Back side
-    else if(back < front)
-    {
-        return std::experimental::optional<Point>({p.x, p.y, c.z - zw/2 - buffer});
-    }
-    else // Front
-    {
-        return std::experimental::optional<Point>({p.x, p.y, c.z + zw/2 + buffer});
+        return correctRectangularCrossSection(p, buffer, c, xw, zw);
     }
 }
 
