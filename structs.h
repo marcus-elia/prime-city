@@ -48,7 +48,7 @@ struct RGBAcolor
 // This determines if p lies above the line in the xz plane
 bool isAboveLine(Point p, double m, double b)
 {
-    return p.z > m*p.x + b;
+    return p.z < m*p.x + b; // Reverse inequality because up is negative z
 }
 
 
