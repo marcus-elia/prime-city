@@ -449,13 +449,27 @@ std::experimental::optional<Point> correctRectangularPrismCollision(Point p, int
     if(distanceAboveTopEdge > distanceOutsideLeftEdge && distanceAboveTopEdge > distanceOutsideRightEdge &&
     distanceAboveTopEdge > distanceOutsideFrontEdge && distanceAboveTopEdge > distanceOutsideBackEdge)
     {
-
+        if(distanceAboveTopEdge > buffer)
+        {
+            return std::experimental::nullopt;
+        }
+        else
+        {
+            return std::experimental::optional<Point>({p.x, c.y + yw/2 + buffer, p.z});
+        }
     }
     // If the point is closest to the bottom face
     else if(distanceBelowBottomEdge > distanceOutsideLeftEdge && distanceBelowBottomEdge > distanceOutsideRightEdge &&
             distanceBelowBottomEdge > distanceOutsideFrontEdge && distanceBelowBottomEdge > distanceOutsideBackEdge)
     {
-
+        if(distanceBelowBottomEdge > buffer)
+        {
+            return std::experimental::nullopt;
+        }
+        else
+        {
+            return std::experimental::optional<Point>({p.x, c.y - yw/2 - buffer, p.z});
+        }
     }
     // Otherwise, assume it is near a side face and correct that
     else
