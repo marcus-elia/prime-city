@@ -509,14 +509,14 @@ std::experimental::optional<Point> correctRectangularCrossSection(Point p, int b
     {
         if(p.x > c.x - xw/2 - buffer)
         {
-            return std::experimental::optional<Point>({p.x - zw/2 - buffer, p.y, c.z});
+            return std::experimental::optional<Point>({c.x - xw/2 - buffer, p.y, p.z});
         }
     }
     else if(above2) // zone 2
     {
         if(p.x < c.x + xw/2 + buffer)
         {
-            return std::experimental::optional<Point>({p.x + zw/2 + buffer, p.y, c.z});
+            return std::experimental::optional<Point>({c.x + xw/2 + buffer, p.y, p.z});
         }
     }
     else // zone 3
