@@ -27,6 +27,13 @@ struct Point
     double x;
     double y;
     double z;
+
+    // m and b represent a line such that z = mx + b.
+    // This determines if p lies above the line in the xz plane
+    bool isAboveLine(double m, double b)
+    {
+        return z < m*x + b; // Reverse inequality because up is negative z
+    }
 };
 
 // A line segment specified by two points
@@ -44,12 +51,7 @@ struct RGBAcolor
     double a;
 };
 
-// m and b represent a line such that z = mx + b.
-// This determines if p lies above the line in the xz plane
-bool isAboveLine(Point p, double m, double b)
-{
-    return p.z < m*p.x + b; // Reverse inequality because up is negative z
-}
+
 
 
 #endif //PRIME_CITY_STRUCTS_H

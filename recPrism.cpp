@@ -496,8 +496,8 @@ std::experimental::optional<Point> correctRectangularCrossSection(Point p, int b
     double m = zw / xw;
     double b1 = c.x - m*c.z;
     double b2 = c.x + m*c.z;
-    bool above1 = isAboveLine(p, m, b1);
-    bool above2 = isAboveLine(p, -m, b2);
+    bool above1 = p.isAboveLine(m, b1);
+    bool above2 = p.isAboveLine(-m, b2);
     if(above1 && above2) // zone 1
     {
         if(p.z > c.z - zw/2 - buffer)
