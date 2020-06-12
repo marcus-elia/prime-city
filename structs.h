@@ -44,5 +44,12 @@ struct RGBAcolor
     double a;
 };
 
+// m and b represent a line such that z = mx + b.
+// This determines if p lies above the line in the xz plane
+bool isAboveLine(Point p, double m, double b)
+{
+    return p.z > m*p.x + b;
+}
+
 
 #endif //PRIME_CITY_STRUCTS_H
