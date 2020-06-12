@@ -46,7 +46,17 @@ public:
     void printDebugStats();
 };
 
+// If the Point p is within buffer units of the rectangular prism defined by center c, and
+// side widths xw, yw, zw, return the corrected version of where p should be. If p is not
+// too close, then return nullopt.
 std::experimental::optional<Point> correctRectangularPrismCollision(Point p, int buffer, Point c,
                                                                     double xw, double yw, double zw);
+
+// For each Point here, consider only the x and z coordinates. Assuming p lies in the same plane
+// as the rectangle determined by c, xw, and zw, this returns the corrected version of where p
+// should be if p is too close to the rectangle. Likewise, ignore the y-coordinate of the returned
+// Point.
+std::experimental::optional<Point> correctRectangularCrossSection(Point p, int buffer, Point c,
+                                                                    double xw, double zw);
 
 #endif //PRIME_CITY_RECPRISM_H

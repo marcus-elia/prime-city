@@ -483,3 +483,54 @@ std::experimental::optional<Point> correctRectangularPrismCollision(Point p, int
         return std::experimental::optional<Point>({p.x, p.y, c.z + zw/2 + buffer});
     }
 }
+
+
+/*
+ * + - - - - - +
+ * |  \  1  /  |
+ * | 4   X   2 |
+ * |  /  3  \  |
+ * + - - - - - +
+ */
+std::experimental::optional<Point> correctRectangularCrossSection(Point p, int buffer, Point c,
+                                                                  double xw, double zw)
+{
+    // Determine which of the 4 zones of the rectangle p lies in
+    // Let line 1 have the positive slope, and line 2 have the negative slope
+    // Line 1: z = mx + b1
+    // Line 2: z = -mx + b2
+    double m = zw / xw;
+    double b1 = c.x - m*c.z;
+    double b2 = c.x + m*c.z;
+    bool above1 = isAboveLine(p, m, b1);
+    bool above2 = isAboveLine(p, -m, b2);
+    if(above1 && above2) // zone 1
+    {
+        if(p.z > c.z - zw/2 - buffer)
+        {
+            return std::experimental::optional<Point>({p.x, p.y, c.z - zw/2 - buffer});
+        }
+    }
+    else if(above1) // zone 4
+    {
+        if(p.x > c.x - xw/2 - buffer)
+        {
+            return std::experimental::optional<Point>({p.x - zw/2 - buffer, p.y, c.z});
+        }
+    }
+    else if(above2) // zone 2
+    {
+        if(p.x < c.x + xw/2 + buffer)
+        {
+            return std::experimental::optional<Point>({p.x + zw/2 + buffer, p.y, c.z});
+        }
+    }
+    else // zone 3
+    {
+        if(p.z > c.x + zw/2 + buffer)
+        {
+            return std::experimental::optional<Point>({p.x, p.y, c.z + zw/2 + buffer});
+        }
+    }
+    return std::experimental::nullopt;
+}
