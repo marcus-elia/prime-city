@@ -78,7 +78,13 @@ bool testIsAboveLine()
 }
 
 
-
+/*
+ * + - - - - - +
+ * |  \  1  /  |
+ * | 4   X   2 |
+ * |  /  3  \  |
+ * + - - - - - +
+ */
 bool testCorrectRectangularCrossSection()
 {
     bool passed = true;
@@ -88,13 +94,13 @@ bool testCorrectRectangularCrossSection()
     Point p, c;
     double xw, zw;
     int buffer;
-    std::experimental::optional<Point> exp, obs;
+    std::experimental::optional<Point> obs;
+    Point exp;
 
     // When the Point does not need to be corrected
-    exp = std::experimental::nullopt;
     c = {0, 0, 0};
-    xw = 5;
-    zw = 10;
+    xw = 10;
+    zw = 20;
     buffer = 2;
 
     // Way too far left
@@ -105,7 +111,99 @@ bool testCorrectRectangularCrossSection()
         passed = false;
         std::cout << "FAILED test of point way too far left." << std::endl;
     }
+    // On the left buffer
+    p = {-7, 0, 0};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point on left buffer." << std::endl;
+    }
+    // Way too far right
+    p = {30, 0, 0};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point way too far right." << std::endl;
+    }
+    // On the right buffer
+    p = {7, 0, 0};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point on right buffer." << std::endl;
+    }
+    // Way too far up
+    p = {0, 0, -30};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point way too far up." << std::endl;
+    }
+    // On the top buffer
+    p = {0, 0, -12};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point on top buffer." << std::endl;
+    }
+    // Way too far down
+    p = {0, 0, 30};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point way too far down." << std::endl;
+    }
+    // On the bottom buffer
+    p = {0, 0, 12};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point on bottom buffer." << std::endl;
+    }
 
+    // Inside zone 1
+    p = {0, 0, -2};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    exp = {0, 0, -12};
+    if(distance2d(exp, obs.value()) > TOLERANCE)
+    {
+        passed = false;
+        std::cout << "FAILED test of point inside zone 1." << std::endl;
+    }
+    // Inside zone 2
+    p = {2, 0, 0};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    exp = {7, 0, 0};
+    if(distance2d(exp, obs.value()) > TOLERANCE)
+    {
+        passed = false;
+        std::cout << "FAILED test of point inside zone 2." << std::endl;
+    }
+    // Inside zone 3
+    p = {0, 0, 2};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    exp = {0, 0, 12};
+    if(distance2d(exp, obs.value()) > TOLERANCE)
+    {
+        passed = false;
+        std::cout << "FAILED test of point inside zone 3." << std::endl;
+    }
+    // Inside zone 4
+    p = {-2, 0, 0};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    exp = {-7, 0, 0};
+    if(distance2d(exp, obs.value()) > TOLERANCE)
+    {
+        passed = false;
+        std::cout << "FAILED test of point inside zone 4." << std::endl;
+    }
 
     if(passed)
     {
