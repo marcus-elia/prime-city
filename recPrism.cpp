@@ -490,14 +490,14 @@ std::experimental::optional<Point> correctRectangularCrossSection(Point p, int b
                                                                   double xw, double zw)
 {
     // Determine which of the 4 zones of the rectangle p lies in
-    // Let line 1 have the positive slope, and line 2 have the negative slope
-    // Line 1: z = mx + b1
-    // Line 2: z = -mx + b2
+    // Let line 1 have the negative slope, and line 2 have the positive slope
+    // Line 1: z = -mx + b1
+    // Line 2: z = mx + b2
     double m = zw / xw;
-    double b1 = c.x - m*c.z;
-    double b2 = c.x + m*c.z;
-    bool above1 = p.isAboveLine(m, b1);
-    bool above2 = p.isAboveLine(-m, b2);
+    double b1 = c.x + m*c.z;
+    double b2 = c.x - m*c.z;
+    bool above1 = p.isAboveLine(-m, b1);
+    bool above2 = p.isAboveLine(m, b2);
     if(above1 && above2) // zone 1
     {
         if(p.z > c.z - zw/2 - buffer)
