@@ -449,7 +449,7 @@ std::experimental::optional<Point> correctRectangularPrismCollision(Point p, int
     if(distanceAboveTopEdge > distanceOutsideLeftEdge && distanceAboveTopEdge > distanceOutsideRightEdge &&
     distanceAboveTopEdge > distanceOutsideFrontEdge && distanceAboveTopEdge > distanceOutsideBackEdge)
     {
-        if(distanceAboveTopEdge > buffer)
+        if(distanceAboveTopEdge >= buffer)
         {
             return std::experimental::nullopt;
         }
@@ -462,7 +462,7 @@ std::experimental::optional<Point> correctRectangularPrismCollision(Point p, int
     else if(distanceBelowBottomEdge > distanceOutsideLeftEdge && distanceBelowBottomEdge > distanceOutsideRightEdge &&
             distanceBelowBottomEdge > distanceOutsideFrontEdge && distanceBelowBottomEdge > distanceOutsideBackEdge)
     {
-        if(distanceBelowBottomEdge > buffer)
+        if(distanceBelowBottomEdge >= buffer)
         {
             return std::experimental::nullopt;
         }
