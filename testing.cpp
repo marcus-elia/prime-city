@@ -5,11 +5,14 @@ bool testIsAboveLine();
 
 bool testCorrectRectangularCrossSection();
 
+bool testCorrectRectangularPrismCollision();
+
 
 int main()
 {
     testIsAboveLine();
     testCorrectRectangularCrossSection();
+    testCorrectRectangularPrismCollision();
     return 0;
 }
 
@@ -203,6 +206,129 @@ bool testCorrectRectangularCrossSection()
     {
         passed = false;
         std::cout << "FAILED test of point inside zone 4." << std::endl;
+    }
+
+    // Point slightly N of NW and outside
+    p = {-7, 0, -13};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point slightly N of NW and outside." << std::endl;
+    }
+    // Point slightly W of NW and outside
+    p = {-8, 0, -12};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point slightly W of NW and outside." << std::endl;
+    }
+    // Point slightly N of NE and outside
+    p = {7, 0, -13};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point slightly N of NE and outside." << std::endl;
+    }
+    // Point slightly E of NE and outside
+    p = {8, 0, -12};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point slightly E of NE and outside." << std::endl;
+    }
+    // Point slightly S of SE and outside
+    p = {7, 0, 13};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point slightly S of SE and outside." << std::endl;
+    }
+    // Point slightly E of SE and outside
+    p = {8, 0, 12};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point slightly E of SE and outside." << std::endl;
+    }
+    // Point slightly S of SW and outside
+    p = {-7, 0, 13};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point slightly S of SW and outside." << std::endl;
+    }
+    // Point slightly W of SW and outside
+    p = {-8, 0, 12};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point slightly W of SW and outside." << std::endl;
+    }
+
+
+    if(passed)
+    {
+        std::cout << "All tests passed." << std::endl;
+    }
+    return passed;
+}
+
+bool testCorrectRectangularPrismCollision()
+{
+    bool passed = true;
+    std::cout << "\nTesting correctRectangularPrismCollision()" << std::endl;
+
+    Point p, c;
+    double xw, yw, zw;
+    int buffer = 2;
+    const double TOLERANCE = 0.01;
+
+    c = {0,0,0};
+    xw = 10;
+    yw = 40;
+    zw = 20;
+    std::experimental::optional<Point> obs;
+    Point exp;
+
+    // Point way too high
+    p = {0, 50, 0};
+    obs = correctRectangularPrismCollision(p, buffer, c, xw, yw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point way too high." << std::endl;
+    }
+    // Point on top buffer
+    p = {0, 22, 0};
+    obs = correctRectangularPrismCollision(p, buffer, c, xw, yw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point on top buffer." << std::endl;
+    }
+    // Point way too low
+    p = {0, -50, 0};
+    obs = correctRectangularPrismCollision(p, buffer, c, xw, yw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point way too low." << std::endl;
+    }
+    // Point on bottom buffer
+    p = {0, -22, 0};
+    obs = correctRectangularPrismCollision(p, buffer, c, xw, yw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of point on bottom buffer." << std::endl;
     }
 
     if(passed)
