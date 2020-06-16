@@ -423,6 +423,7 @@ std::experimental::optional<Point> RecPrism::correctCollision(Point p, int buffe
     {
         throw std::domain_error("This RecPrism has been rotated. Cannot perform collision detection.");
     }
+    
     return correctRectangularPrismCollision(p, buffer, center,
                                             xWidth, yWidth, zWidth);
 }
@@ -494,8 +495,8 @@ std::experimental::optional<Point> correctRectangularCrossSection(Point p, int b
     // Line 1: z = -mx + b1
     // Line 2: z = mx + b2
     double m = zw / xw;
-    double b1 = c.x + m*c.z;
-    double b2 = c.x - m*c.z;
+    double b1 = c.z + m*c.x;
+    double b2 = c.z - m*c.x;
     bool above1 = p.isAboveLine(-m, b1);
     bool above2 = p.isAboveLine(m, b2);
     if(above1 && above2) // zone 1
