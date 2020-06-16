@@ -274,6 +274,43 @@ bool testCorrectRectangularCrossSection()
     }
 
 
+    // Point slightly N of NW and inside buffer
+    p = {-5.2, 0, -10.5};
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    exp = {-5.2, 0, -12};
+    if(!obs || distance2d(exp, obs.value()) > TOLERANCE)
+    {
+        passed = false;
+        std::cout << "FAILED test of point slightly N of NW and inside buffer." << std::endl;
+    }
+    
+    // Point 1 from real life failed example
+    p = {0, 5, 0};
+    buffer = 5;
+    c = {32, 54.5, 224};
+    xw = 64;
+    zw = 64;
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of real life example 1." << std::endl;
+    }
+
+    // Point 2 from real life failed example
+    p = {1.176, 5, -3.823};
+    buffer = 5;
+    c = {96, 110, -352};
+    xw = 64;
+    zw = 64;
+    obs = correctRectangularCrossSection(p, buffer, c, xw, zw);
+    if(obs)
+    {
+        passed = false;
+        std::cout << "FAILED test of real life example 2." << std::endl;
+    }
+
+
     if(passed)
     {
         std::cout << "All tests passed." << std::endl;
