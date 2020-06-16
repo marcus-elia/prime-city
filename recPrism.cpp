@@ -423,9 +423,15 @@ std::experimental::optional<Point> RecPrism::correctCollision(Point p, int buffe
     {
         throw std::domain_error("This RecPrism has been rotated. Cannot perform collision detection.");
     }
-    
-    return correctRectangularPrismCollision(p, buffer, center,
-                                            xWidth, yWidth, zWidth);
+    std::experimental::optional<Point> a = correctRectangularPrismCollision(p, buffer, center,
+                                                                            xWidth, yWidth, zWidth);
+    if(a)
+    {
+        int j = 1;
+    }
+    return a;
+    //return correctRectangularPrismCollision(p, buffer, center,
+    //                                        xWidth, yWidth, zWidth);
 }
 
 void RecPrism::printDebugStats()
@@ -522,7 +528,7 @@ std::experimental::optional<Point> correctRectangularCrossSection(Point p, int b
     }
     else // zone 3
     {
-        if(p.z < c.x + zw/2 + buffer)
+        if(p.z < c.z + zw/2 + buffer)
         {
             return std::experimental::optional<Point>({p.x, p.y, c.z + zw/2 + buffer});
         }
