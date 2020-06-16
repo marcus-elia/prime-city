@@ -8,7 +8,7 @@ Player::Player()
     up = {0, 1, 0};
     speed = 4;
     velocity = {0,0,0};
-    sensitivity = 0.02;
+    sensitivity = 0.03;
     chunkSize = 512;
     currentChunkCoords = whatChunk();
 }
@@ -19,7 +19,7 @@ Player::Player(Vector3 inputLocation, Vector3 inputLookingAt, Vector3 inputUp, d
     up = inputUp;
     speed = inputSpeed;
     velocity = {0,0,0};
-    sensitivity = 0.02;
+    sensitivity = 0.03;
     chunkSize = inputChunkSize;
     currentChunkCoords = whatChunk();
 }
