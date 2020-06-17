@@ -298,6 +298,11 @@ void Cylinder::printDebugStats()
 std::experimental::optional<Point> correctEllipticalCrossSection(Point p, int buffer, Point c,
                                                                  double xw, double zw)
 {
+    if(xw == 0 || zw == 0) // If the ellipse is just a line
+    {
+        return std::experimental::nullopt;
+    }
+
     double a, b, focalLength;  // a is the larger radius, b is the smaller radius
     Point f1, f2;              // focii
     if(xw < zw) // z-width is bigger
@@ -329,7 +334,7 @@ std::experimental::optional<Point> correctEllipticalCrossSection(Point p, int bu
         double z = p.z - c.z;
 
         // special cases to avoid division by 0
-        if(z == 0)
+        if(z == 0) // If on the x-axis, send it right or left
         {
             if(x > 0)
             {
@@ -339,6 +344,61 @@ std::experimental::optional<Point> correctEllipticalCrossSection(Point p, int bu
             {
                 return std::experimental::optional<Point>({c.x - xw/2 - buffer, c.y, c.z});
             }
+        }
+        else if(x == 0) // If on the z-axis, go straight up or down
+        {
+            if(z > 0)
+            {
+                return std::experimental::optional<Point>({c.x, c.y, c.z + zw/2 + buffer});
+            }
+            else
+            {
+                return std::experimental::optional<Point>({c.x, c.y, c.z - zw/2 - buffer});
+            }
+        }
+        else  // Otherwise, we need to use the derivative of the ellipse equation
+        {
+            // First, project (x,z) onto the boundary of the ellipse
+            // We have already handled cases of x = 0, z = 0, a = 0, b = 0
+            double xbar, zbar;
+            if(x > 0)
+            {
+                xbar = b / sqrt((z*z)/(x*x) + (b*b)/(a*a));
+            }
+            else
+            {
+                xbar = -b / sqrt((z*z)/(x*x) + (b*b)/(a*a));
+            }
+            if(z > 0)
+            {
+                zbar = (z/x)*xbar;
+            }
+            else
+            {
+                zbar = -(z/x)*xbar;
+            }
+
+
+            // Calculate the derivative at that point
+            // We know xbar != +/- a because that would require x = 0, and
+            // that case already returned a value
+            // And |xbar| < |a| since a is the major axis
+            double derivative;
+            if(z > 0)
+            {
+                derivative = (b/a)*(-xbar) / sqrt(a*a - xbar*xbar);
+            }
+            else
+            {
+                derivative = (b/a)*xbar / sqrt(a*a - xbar*xbar);
+            }
+
+
+            // Find the angle of inclination of the normal line
+            double normalSlope = -1/derivative;
+            double angle = atan(normalSlope);
+            Point corrected = {c.x + xbar + buffer*cos(angle), p.y, c.z + zbar + buffer*sin(angle)};
+            return std::experimental::optional<Point>(corrected);
         }
 
     }
