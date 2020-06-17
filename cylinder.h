@@ -78,4 +78,19 @@ public:
     void printDebugStats();
 };
 
+// If the Point p is within buffer units of the cylinder thing defined by center c, and
+// bottom diameters xw zw and top diameters topxw topzw and height yw, then return the corrected
+// version of the point.  If p is not too close, then return nullopt.
+std::experimental::optional<Point> correctCylinderCollision(Point p, int buffer, Point c,
+                                                                    double xw, double yw, double zw,
+                                                                    double topxw, double topzw);
+
+// For each Point here, consider only the x and z coordinates. Assuming p lies in the same plane
+// as the ellipse determined by c, xw, and zw, this returns the corrected version of where p
+// should be if p is too close to the ellipse. Likewise, ignore the y-coordinate of the returned
+// Point.
+std::experimental::optional<Point> correctEllipticalCrossSection(Point p, int buffer, Point c,
+                                                                  double xw, double zw);
+
+
 #endif //PRIME_CITY_CYLINDER_H

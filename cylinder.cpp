@@ -293,3 +293,53 @@ void Cylinder::printDebugStats()
     std::cout << "yWidth: " << xWidth << std::endl;
     std::cout << "zWidth: " << xWidth << std::endl;
 }
+
+
+std::experimental::optional<Point> correctEllipticalCrossSection(Point p, int buffer, Point c,
+                                                                 double xw, double zw)
+{
+    double a, b, focalLength;  // a is the larger radius, b is the smaller radius
+    Point f1, f2;              // focii
+    if(xw < zw) // z-width is bigger
+    {
+        a = zw/2, b = xw/2;
+        focalLength = sqrt(zw*zw - xw*xw)/2;
+        f1 = {c.x, 0, c.z + focalLength};
+        f2 = {c.x, 0, c.z - focalLength};
+    }
+    else
+    {
+        a = xw/2, b = zw/2;
+        focalLength = sqrt(xw*xw - zw*zw)/2;
+        f1 = {c.x + focalLength, 0, c.z};
+        f2 = {c.x - focalLength, 0, c.z};
+    }
+
+    double focusDistanceSum = distance2d(p, f1) + distance2d(p, f2);
+
+    // If the point is far enough away, don't change it
+    if(focusDistanceSum >= 2*a + buffer)
+    {
+        return std::experimental::nullopt;
+    }
+    else // Otherwise, move it away
+    {
+        // the x and z coordinates, pretending the ellipse was centered at (0,0)
+        double x = p.x - c.x;
+        double z = p.z - c.z;
+
+        // special cases to avoid division by 0
+        if(z == 0)
+        {
+            if(x > 0)
+            {
+                return std::experimental::optional<Point>({c.x + xw/2 + buffer, c.y, c.z});
+            }
+            else
+            {
+                return std::experimental::optional<Point>({c.x - xw/2 - buffer, c.y, c.z});
+            }
+        }
+
+    }
+}
