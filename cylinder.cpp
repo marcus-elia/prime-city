@@ -263,27 +263,13 @@ void Cylinder::drawGridLines() const
 
 std::experimental::optional<Point> Cylinder::correctCollision(Point p, int buffer)
 {
-    if(distance2d(p, center) >= xWidth + buffer || p.y < center.y - yWidth/2 - buffer ||
-       p.y > center.y + yWidth/2 + buffer)
+    if(hasBeenRotated)
     {
-        return std::experimental::nullopt;
+        throw std::domain_error("This Cylinder has been rotated. Cannot perform collision detection.");
     }
-    // If it's near the top
-    if(abs(p.y - center.y - yWidth/2) < buffer)
-    {
-        return std::experimental::optional<Point>({p.x, center.y + yWidth/2 + buffer, p.z});
-    }
-        // Bottom
-    else if(abs(p.y - center.y + yWidth/2) < buffer)
-    {
-        return std::experimental::optional<Point>({p.x, center.y - yWidth/2 - buffer, p.z});
-    }
-    else // Move out of the circle
-    {
-        double theta = atan2(p.z - center.z, p.x - center.x);
-        return std::experimental::optional<Point>({center.x + (xWidth/2 + buffer)*cos(theta), p.y,
-                                                   center.z + (zWidth/2 + buffer)*sin(theta)});
-    }
+    return correctCylinderCollision(p, buffer, center,
+            xWidth, yWidth, zWidth,
+            topXWidth, topZWidth);
 }
 
 void Cylinder::printDebugStats()
@@ -292,6 +278,66 @@ void Cylinder::printDebugStats()
     std::cout << "xWidth: " << xWidth << std::endl;
     std::cout << "yWidth: " << xWidth << std::endl;
     std::cout << "zWidth: " << xWidth << std::endl;
+}
+
+double focusDistanceSum(Point p, Point c, double xw, double zw)
+{
+    double focalLength;
+    Point f1, f2;              // focii
+    if(xw < zw) // z-width is bigger
+    {
+        focalLength = sqrt(zw*zw - xw*xw)/2;
+        f1 = {c.x, 0, c.z + focalLength};
+        f2 = {c.x, 0, c.z - focalLength};
+    }
+    else
+    {
+        focalLength = sqrt(xw*xw - zw*zw)/2;
+        f1 = {c.x + focalLength, 0, c.z};
+        f2 = {c.x - focalLength, 0, c.z};
+    }
+
+    return distance2d(p, f1) + distance2d(p, f2);
+}
+
+std::experimental::optional<Point> correctCylinderCollision(Point p, int buffer, Point c,
+                                                            double xw, double yw, double zw,
+                                                            double topxw, double topzw)
+{
+    double distanceAboveTop = p.y - c.y - yw/2;
+    double distanceBelowBottom = c.y - yw/2 - p.y;
+    double focusDistanceNearTop = focusDistanceSum(p, c, topxw, topzw);
+    double focusDistanceNearBottom = focusDistanceSum(p, c, xw, zw);
+    if((distanceAboveTop > focusDistanceNearTop  && distanceAboveTop > distanceBelowBottom) ||
+            (distanceAboveTop > 0 && focusDistanceNearTop < fmax(topxw, topzw)))
+    {
+        if(distanceAboveTop >= buffer)
+        {
+            return std::experimental::nullopt;
+        }
+        else
+        {
+            return std::experimental::optional<Point>({p.x, c.y + yw/2 + buffer, p.z});
+        }
+    }
+    else if((distanceBelowBottom > focusDistanceNearBottom  && distanceBelowBottom > distanceAboveTop) ||
+            (distanceBelowBottom > 0 && focusDistanceNearBottom < fmax(xw, zw)))
+    {
+        if(distanceBelowBottom >= buffer)
+        {
+            return std::experimental::nullopt;
+        }
+        else
+        {
+            return std::experimental::optional<Point>({p.x, c.y - yw/2 - buffer, p.z});
+        }
+    }
+    else
+    {
+        double xwAtHeight = xw + (p.y - c.y + yw/2)/yw * (topxw - xw);
+        double zwAtHeight = zw + (p.y - c.y + yw/2)/yw * (topzw - zw);
+        return correctEllipticalCrossSection(p, buffer, c, xwAtHeight, zwAtHeight);
+    }
 }
 
 

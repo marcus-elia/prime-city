@@ -78,6 +78,10 @@ public:
     void printDebugStats();
 };
 
+// Returns the focus distance sum of p away from the ellipse centered at c
+// with xw and zw as the diameters. Working in the xz-plane.
+double focusDistanceSum(Point p, Point c, double xw, double zw);
+
 // If the Point p is within buffer units of the cylinder thing defined by center c, and
 // bottom diameters xw zw and top diameters topxw topzw and height yw, then return the corrected
 // version of the point.  If p is not too close, then return nullopt.
