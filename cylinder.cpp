@@ -369,14 +369,8 @@ std::experimental::optional<Point> correctEllipticalCrossSection(Point p, int bu
             {
                 xbar = -b / sqrt((z*z)/(x*x) + (b*b)/(a*a));
             }
-            if(z > 0)
-            {
-                zbar = (z/x)*xbar;
-            }
-            else
-            {
-                zbar = -(z/x)*xbar;
-            }
+
+            zbar = (z/x)*xbar;
 
 
             // Calculate the derivative at that point
@@ -397,8 +391,20 @@ std::experimental::optional<Point> correctEllipticalCrossSection(Point p, int bu
             // Find the angle of inclination of the normal line
             double normalSlope = -1/derivative;
             double angle = atan(normalSlope);
-            Point corrected = {c.x + xbar + buffer*cos(angle), p.y, c.z + zbar + buffer*sin(angle)};
-            return std::experimental::optional<Point>(corrected);
+
+            // Put the new point at the buffer using sin/cos of angle
+            double correctedX, correctedZ;
+            if(x > 0)
+            {
+                correctedX =  c.x + xbar + buffer*cos(angle);
+                correctedZ = c.z + zbar + buffer*sin(angle);
+            }
+            else
+            {
+                correctedX =  c.x + xbar - buffer*cos(angle);
+                correctedZ = c.z + zbar - buffer*sin(angle);
+            }
+            return std::experimental::optional<Point>({correctedX, p.y, correctedZ});
         }
 
     }
