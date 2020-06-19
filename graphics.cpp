@@ -18,6 +18,11 @@ void init()
 /* Initialize OpenGL Graphics */
 void initGL()
 {
+    // Enable alpha transparency
+    // Code from https://www.opengl.org/archives/resources/faq/technical/transparency.htm
+    glEnable (GL_BLEND);
+    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     // Set "clearing" or background color
     glClearColor(1.0f, 1.0f, 0.0f, 1.0f); // Yellow
     glEnable(GL_DEPTH_TEST);
