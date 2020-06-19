@@ -10,6 +10,11 @@ private:
     Vector3 location;
     Vector3 lookingAt;
     Vector3 up;
+    Vector3 sphericalDirection; // The direction the player is facing in spherical coordinates
+                                // Must be on the unit sphere
+
+    double xzAngle; // Where the player is looking in the xz-plane
+    double yAngle;  // How much the player is looking up (in [-Pi, Pi])
 
     double speed;     // how fast the player can move
     Vector3 velocity; // current x y and z velocity
@@ -27,6 +32,8 @@ public:
     Vector3 getLookingAt() const;
     Vector3 getUp() const;
     double getSpeed() const;
+    double getXZAngle() const;
+    double getYAngle() const;
     Point2D getCurrentChunkCoords() const;
     int getCurrentChunkInt() const;
 
@@ -35,6 +42,8 @@ public:
     void setLookingAt(Vector3 inputLookingAt);
     void setUp(Vector3 inputUp);
     void setSpeed(double inputSpeed);
+    void setXZAngle(double inputXZAngle);
+    void setYAngle(double inputYAngle);
     void setCurrentChunkCoords(Point2D input);
 
     // Movement
@@ -42,14 +51,11 @@ public:
     // Based on which keys are pressed, set the velocity
     void setVelocity(bool wKey, bool aKey, bool sKey, bool dKey, bool rKey, bool cKey);
 
-    // Rotates lookingAt around location in the xz plane
-    void rotateLookingAtHorizontal(double theta);
+    // Update the xzAngle and yAngle based on theta resulting from a mouse movement
+    void updateAngles(double theta);
 
-    // Rotates lookingAt around location vertically
-    void rotateLookingAtVertical(double theta);
-
-    // Based on the angle of mouse movement, change the lookingat
-    void updateLookingAt(double theta);
+    // Use xzAngle, yAngle, and location to determine the spherical direction.
+    void updateSphericalDirectionBasedOnAngles();
 
 
     // Chunks

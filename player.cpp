@@ -7,6 +7,9 @@ Player::Player()
     lookingAt = {0,0,-60};
     up = {0, 1, 0};
     speed = 4;
+    xzAngle = -PI/2;
+    yAngle = 0;
+    sphericalDirection = {0, 0, -1};
     velocity = {0,0,0};
     sensitivity = 0.03;
     chunkSize = 512;
@@ -18,6 +21,9 @@ Player::Player(Vector3 inputLocation, Vector3 inputLookingAt, Vector3 inputUp, d
     lookingAt = inputLookingAt;
     up = inputUp;
     speed = inputSpeed;
+    xzAngle = -PI/2;
+    yAngle = 0;
+    sphericalDirection = {0, 0, -1};
     velocity = {0,0,0};
     sensitivity = 0.03;
     chunkSize = inputChunkSize;
@@ -40,6 +46,14 @@ Vector3 Player::getUp() const
 double Player::getSpeed() const
 {
     return speed;
+}
+double Player::getXZAngle() const
+{
+    return xzAngle;
+}
+double Player::getYAngle() const
+{
+    return yAngle;
 }
 Point2D Player::getCurrentChunkCoords() const
 {
@@ -66,6 +80,14 @@ void Player::setUp(Vector3 inputUp)
 void Player::setSpeed(double inputSpeed)
 {
     speed = inputSpeed;
+}
+void Player::setXZAngle(double inputXZAngle)
+{
+    xzAngle = inputXZAngle;
+}
+void Player::setYAngle(double inputYAngle)
+{
+    yAngle = inputYAngle;
 }
 void Player::setCurrentChunkCoords(Point2D input)
 {
@@ -152,68 +174,50 @@ void Player::setVelocity(bool wKey, bool aKey, bool sKey, bool dKey, bool rKey, 
     velocity.z = speed * sin(angleToMove);
 }
 
-void Player::rotateLookingAtHorizontal(double theta)
+
+void Player::updateAngles(double theta)
 {
-    // Translate to the origin
-    lookingAt.x -= location.x;
-    lookingAt.z -= location.z;
-
-    // Rotate around y-axis
-    double prevX = lookingAt.x;
-    double prevZ = lookingAt.z;
-    lookingAt.x = prevX * cos(theta) - prevZ * sin(theta);
-    lookingAt.z = prevX * sin(theta) + prevZ * cos(theta);
-
-    // Translate back
-    lookingAt.x += location.x;
-    lookingAt.z += location.z;
-}
-
-void Player::rotateLookingAtVertical(double theta)
-{
-    // Rotate around the y axis to get on the +x axis
-    double xzAngle = atan2(lookingAt.z - location.z, lookingAt.x - location.x);
-    rotateLookingAtHorizontal(2*PI - xzAngle);
-
-    // Translate to origin
-    lookingAt.x -= location.x;
-    lookingAt.y -= location.y;
-
-    // Clip the angle between -Pi and Pi
-    double curAngle = atan2(lookingAt.y, lookingAt.x);
-    if(curAngle + theta > PI)
-    {
-        theta = PI - curAngle;
-    }
-    else if(curAngle + theta < -PI)
-    {
-        theta = -PI - curAngle;
-    }
-
-    // Rotate around y-axis
-    double prevX = lookingAt.x;
-    double prevY = lookingAt.y;
-    lookingAt.x = prevX * cos(theta) - prevY * sin(theta);
-    lookingAt.y = prevX * sin(theta) + prevY * cos(theta);
-
-    // Translate back
-    lookingAt.x += location.x;
-    lookingAt.y += location.y;
-
-    // Unrotate horizontally
-    rotateLookingAtHorizontal(xzAngle);
-}
-
-void Player::updateLookingAt(double theta)
-{
-    // Horizontal turning
     double horizontalAmount = sensitivity * cos(theta);
-    rotateLookingAtHorizontal(horizontalAmount);
+    xzAngle += horizontalAmount;
+    if(xzAngle > 2*PI)
+    {
+        xzAngle -= 2*PI;
+    }
+    else if(xzAngle < -2*PI)
+    {
+        xzAngle += 2*PI;
+    }
 
-    // Vertical turning
     double verticalAmount = sensitivity * sin(theta);
-    rotateLookingAtVertical(-verticalAmount); // negative sign since we are rotating up from +x axis
+    yAngle -= verticalAmount; // negative sign since we are rotating up from +x axis????
+    if(yAngle > PI/2 - 0.01)
+    {
+        yAngle = PI/2 - 0.01;
+    }
+    else if(yAngle < -PI/2 + 0.01)
+    {
+        yAngle = -PI/2 + 0.01;
+    }
 }
+
+void Player::updateSphericalDirectionBasedOnAngles()
+{
+    sphericalDirection.x = cos(xzAngle);
+    sphericalDirection.z = sin(xzAngle);
+
+    // Must scale the component in the xz plane for spherical coordinates
+    double scaleAmount = cos(yAngle) / sqrt(sphericalDirection.x*sphericalDirection.x + sphericalDirection.z*sphericalDirection.z);
+    sphericalDirection.x *= scaleAmount;
+    sphericalDirection.z *= scaleAmount;
+    sphericalDirection.y = sin(yAngle);
+
+    lookingAt.x = location.x + sphericalDirection.x;
+    lookingAt.y = location.y + sphericalDirection.y;
+    lookingAt.z = location.z + sphericalDirection.z;
+}
+
+
+
 
 void Player::tick()
 {

@@ -19,7 +19,8 @@ GameManager::GameManager(int inputChunkSize, int inputRenderRadius, int inputPer
 
 void GameManager::reactToMouseMovement(double theta)
 {
-    player.updateLookingAt(theta);
+    player.updateAngles(theta);
+    player.updateSphericalDirectionBasedOnAngles();
     player.setVelocity(wKey, aKey, sKey, dKey, rKey, cKey);
 }
 void GameManager::reactToMouseClick()
