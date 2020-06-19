@@ -279,11 +279,33 @@ void GameManager::printPlayerBuildingDebug()
 
 void GameManager::drawPlayerDirection(double x, double y) const
 {
+    int compassRadius = 25;
+
+    // Draw the text
     glColor4f(0.0, 0.0, 0.0, 1.0);
     std::string direction = player.getDirectionString();
-    glRasterPos2i(x - (4 * direction.length()), y + 7);
+    glRasterPos2i(x - (4 * direction.length()), y - 3);
     for (const char &letter : direction)
     {
         glutBitmapCharacter(GLUT_BITMAP_9_BY_15, letter);
     }
+
+    // Draw the red line
+    glColor4f(1.0, 0.0, 0.0, 1.0);
+    glBegin(GL_LINES);
+    glVertex2f(x, y);
+    double theta = player.getXZAngle();
+    glVertex2f(x + compassRadius*cos(theta), y - compassRadius*sin(theta));
+    glEnd();
+
+    // Draw the circle
+    glColor4f(1.0, 1.0, 1.0, 1.0);
+    glBegin(GL_TRIANGLE_FAN);
+    int smoothness = 24;
+    glVertex2f(x, y); // center
+    for(int i = 0; i < smoothness + 1; i++)
+    {
+        glVertex2f(x + compassRadius*cos(i*2*PI/smoothness), y + compassRadius*sin(i*2*PI/smoothness));
+    }
+    glEnd();
 }

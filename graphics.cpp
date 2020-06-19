@@ -114,7 +114,7 @@ void display()
     glPushMatrix();
     glLoadIdentity();
 
-    manager.drawPlayerDirection(7*width/8, 7*height/8);
+    manager.drawPlayerDirection(width - height/10, 9*height/10);
 
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
