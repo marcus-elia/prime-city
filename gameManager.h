@@ -5,7 +5,7 @@
 #include <memory>
 #include <iostream>
 #include <unordered_map>
-//#include "recPrism.h"
+#include "enemy.h"
 #include "player.h"
 #include "perlinNoiseGenerator.h"
 #include "structs.h"
@@ -26,6 +26,7 @@ private:
     std::vector<std::shared_ptr<Chunk>> currentChunks;
     int perlinSize;  // how many chunks before perlin repeats
     PerlinNoiseGenerator png;
+    std::vector<std::shared_ptr<Enemy>> enemies;
 public:
     GameManager();
     GameManager(int inputChunkSize, int inputRenderRadius, int inputPerlinSize);

@@ -7,6 +7,7 @@ GameManager::GameManager()
     chunkSize = 512;
     renderRadius = 5;
     updateCurrentChunks();
+    enemies.push_back(std::make_shared<Enemy>());
 }
 GameManager::GameManager(int inputChunkSize, int inputRenderRadius, int inputPerlinSize)
 {
@@ -36,7 +37,10 @@ void GameManager::draw() const
         c->draw();
     }
 
-
+    for(auto &e : enemies)
+    {
+        e->draw();
+    }
     // Draw a red square under the player for debug
     /*glDisable(GL_CULL_FACE);
     Vector3 v = player.getLocation();
