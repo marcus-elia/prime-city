@@ -453,8 +453,7 @@ std::experimental::optional<Point> correctFrustumCollision(Point p, int buffer, 
     bool isWithinBordersNearBottom = frontDistanceNearBottom < buffer && rightDistanceNearBottom < buffer &&
                                   backDistanceNearBottom < buffer && leftDistanceNearBottom < buffer;
     // If the point is above the top
-    if((distanceBelowBottom > frontDistanceNearBottom  && distanceBelowBottom > distanceAboveTop) ||
-       (distanceBelowBottom > 0 && isWithinBordersNearBottom))
+    if(distanceAboveTop > 0 && isWithinBordersNearTop)
     {
         if(distanceAboveTop >= buffer)
         {
@@ -466,8 +465,7 @@ std::experimental::optional<Point> correctFrustumCollision(Point p, int buffer, 
         }
     }
     // If the point is below the bottom
-    else if((distanceAboveTop > frontDistanceNearTop  && distanceAboveTop > distanceBelowBottom) ||
-            (distanceAboveTop > 0 && isWithinBordersNearTop))
+    else if(distanceBelowBottom > 0 && isWithinBordersNearBottom)
     {
         if(distanceBelowBottom >= buffer)
         {
