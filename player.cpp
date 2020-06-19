@@ -7,7 +7,7 @@ Player::Player()
     lookingAt = {0,0,-60};
     up = {0, 1, 0};
     speed = 4;
-    xzAngle = -PI/2;
+    xzAngle = 3*PI/2;
     yAngle = 0;
     sphericalDirection = {0, 0, -1};
     velocity = {0,0,0};
@@ -21,7 +21,7 @@ Player::Player(Vector3 inputLocation, Vector3 inputLookingAt, Vector3 inputUp, d
     lookingAt = inputLookingAt;
     up = inputUp;
     speed = inputSpeed;
-    xzAngle = -PI/2;
+    xzAngle = 3*PI/2;
     yAngle = 0;
     sphericalDirection = {0, 0, -1};
     velocity = {0,0,0};
@@ -183,7 +183,7 @@ void Player::updateAngles(double theta)
     {
         xzAngle -= 2*PI;
     }
-    else if(xzAngle < -2*PI)
+    else if(xzAngle < 0)
     {
         xzAngle += 2*PI;
     }
