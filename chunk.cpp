@@ -43,8 +43,8 @@ void Chunk::makeBuildings()
         for(int j = 0; j < plotsPerSide; j++)
         {
             // Don't build around the origin where the player spawns
-            if(abs(bottomLeft.x*sideLength + i*plotSize) < sideLength/3 &&
-               abs((bottomLeft.z + 1)*sideLength - (j+1)*plotSize) < sideLength/3)
+            if(abs(bottomLeft.x*sideLength + i*plotSize) < sideLength/2 &&
+               abs((bottomLeft.z + 1)*sideLength - (j+1)*plotSize) < sideLength/2)
             {
                 continue;
             }
