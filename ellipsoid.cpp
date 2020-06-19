@@ -5,7 +5,7 @@ Ellipsoid::Ellipsoid() : Solid()
     pointsPerRing = 16;
     numRings = 9;
     initializeCorners();
-    hideLines = false;
+    hideLines = true;
 }
 Ellipsoid::Ellipsoid(Point inputCenter, RGBAcolor inputColor,
                      double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor) :
@@ -14,7 +14,7 @@ Ellipsoid::Ellipsoid(Point inputCenter, RGBAcolor inputColor,
     pointsPerRing = 16;
     numRings = 9;
     initializeCorners();
-    hideLines = false;
+    hideLines = true;
 }
 Ellipsoid::Ellipsoid(Point inputCenter, RGBAcolor inputColor,
                      double inputXWidth, double inputYWidth, double inputZWidth, RGBAcolor inputLineColor,
