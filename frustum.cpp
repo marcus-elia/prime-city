@@ -419,10 +419,9 @@ void Frustum::drawGridLines() const
     }
 }
 
-// TODO need to actually fill this in. For now, it's pretending it's a rectangular prism
 std::experimental::optional<Point> Frustum::correctCollision(Point p, int buffer)
 {
-    return correctRectangularPrismCollision(p, buffer, center, xWidth, yWidth, zWidth);
+    return correctFrustumCollision(p, buffer, center, xWidth, yWidth, zWidth, upperXWidth, upperZWidth);
 }
 
 void Frustum::printDebugStats()
@@ -433,4 +432,56 @@ void Frustum::printDebugStats()
     std::cout << "zWidth: " << xWidth << std::endl;
     std::cout << "upperxWidth: " << upperXWidth << std::endl;
     std::cout << "upperyWidth: " << upperZWidth << std::endl;
+}
+
+std::experimental::optional<Point> correctFrustumCollision(Point p, int buffer, Point c,
+                                                           double xw, double yw, double zw, double topxw, double topzw)
+{
+    double distanceAboveTop = p.y - c.y - yw/2;
+    double distanceBelowBottom = c.y - yw/2 - p.y;
+    double frontDistanceNearTop = p.z - c.z - topzw/2;
+    double rightDistanceNearTop = p.x - c.x - topxw/2;
+    double backDistanceNearTop = c.z - topzw/2 - p.z;
+    double leftDistanceNearTop = c.x - topxw/2 - p.x;
+    double frontDistanceNearBottom = p.z - c.z - zw/2;
+    double rightDistanceNearBottom = p.x - c.x - xw/2;
+    double backDistanceNearBottom = c.z - zw/2 - p.z;
+    double leftDistanceNearBottom = c.x - xw/2 - p.x;
+
+    bool isWithinBordersNearTop = frontDistanceNearTop < buffer && rightDistanceNearTop < buffer &&
+            backDistanceNearTop < buffer && leftDistanceNearTop < buffer;
+    bool isWithinBordersNearBottom = frontDistanceNearBottom < buffer && rightDistanceNearBottom < buffer &&
+                                  backDistanceNearBottom < buffer && leftDistanceNearBottom < buffer;
+    // If the point is above the top
+    if((distanceBelowBottom > frontDistanceNearBottom  && distanceBelowBottom > distanceAboveTop) ||
+       (distanceBelowBottom > 0 && isWithinBordersNearBottom))
+    {
+        if(distanceAboveTop >= buffer)
+        {
+            return std::experimental::nullopt;
+        }
+        else
+        {
+            return std::experimental::optional<Point>({p.x, c.y + yw/2 + buffer, p.z});
+        }
+    }
+    // If the point is below the bottom
+    else if((distanceAboveTop > frontDistanceNearTop  && distanceAboveTop > distanceBelowBottom) ||
+            (distanceAboveTop > 0 && isWithinBordersNearTop))
+    {
+        if(distanceBelowBottom >= buffer)
+        {
+            return std::experimental::nullopt;
+        }
+        else
+        {
+            return std::experimental::optional<Point>({p.x, c.y - yw/2 - buffer, p.z});
+        }
+    }
+    else
+    {
+        double xwAtHeight = xw + (p.y - c.y + yw/2)/yw * (topxw - xw);
+        double zwAtHeight = zw + (p.y - c.y + yw/2)/yw * (topzw - zw);
+        return correctRectangularCrossSection(p, buffer, c, xwAtHeight, zwAtHeight);
+    }
 }

@@ -59,4 +59,12 @@ public:
 
     void printDebugStats();
 };
+
+// If the Point p is within buffer units of the frustum defined by center c, and bottom
+// side widths xw, zw, height yw, and top side widths topxw, topzw,
+// return the corrected version of where p should be. If p is not
+// too close, then return nullopt.
+std::experimental::optional<Point> correctFrustumCollision(Point p, int buffer, Point c,
+        double xw, double yw, double zw, double topxw, double topzw);
+
 #endif //PRIME_CITY_FRUSTUM_H
