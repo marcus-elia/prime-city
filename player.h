@@ -68,6 +68,9 @@ public:
     // Check every Building in the given Chunk to see if we are hitting it,
     // and move according to what the Building says if we are
     void checkCollisionsAndCorrect(Chunk &c, int buffer);
+
+    // UI
+    std::string getDirectionString() const;
 };
 
 #endif //RANDOM_3D_CITY_PLAYER_H

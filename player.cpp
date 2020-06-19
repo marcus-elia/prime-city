@@ -253,3 +253,39 @@ void Player::checkCollisionsAndCorrect(Chunk &c, int buffer)
         location.z = p.z;
     }
 }
+
+std::string Player::getDirectionString() const
+{
+    if(xzAngle < PI/8 || xzAngle > 15*PI/8)
+    {
+        return "E";
+    }
+    else if(xzAngle < 3*PI/8)
+    {
+        return "SE";
+    }
+    else if(xzAngle < 5*PI/8)
+    {
+        return "S";
+    }
+    else if(xzAngle < 7*PI/8)
+    {
+        return "SW";
+    }
+    else if(xzAngle < 9*PI/8)
+    {
+        return "W";
+    }
+    else if(xzAngle < 11*PI/8)
+    {
+        return "NW";
+    }
+    else if(xzAngle < 13*PI/8)
+    {
+        return "N";
+    }
+    else
+    {
+        return "NE";
+    }
+}
