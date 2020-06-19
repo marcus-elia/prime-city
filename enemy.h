@@ -29,8 +29,10 @@ private:
 
     std::vector<std::shared_ptr<Solid>> solids;
 
-    constexpr const static RGBAcolor bodyColor = {0.0, 0.5, 1.0, 1.0};
-    constexpr const static RGBAcolor headColor = {0.8, 0.8, 0.8, 0.5};
+    //constexpr const static
+    RGBAcolor bodyColor = {0.0, 0.5, 1.0, 1.0};
+    //constexpr const static
+    RGBAcolor headColor = {0.8, 0.8, 0.8, 0.5};
 public:
     Enemy();
     Enemy(Vector3 inputLocation, double inputBodyHeight, double inputRadius,
