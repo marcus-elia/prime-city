@@ -71,6 +71,9 @@ public:
 
     // Debug
     void printPlayerBuildingDebug();
+
+    // UI
+    void drawPlayerDirection(double x, double y) const;
 };
 
 // Since % can return negatives

@@ -104,6 +104,23 @@ void display()
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
 
+    // Switch to 2d mode
+    // Code from https://www.youtube.com/watch?v=i1mp4zflkYo
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    gluOrtho2D(0.0,width,0.0,height);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    manager.drawPlayerDirection(7*width/8, 7*height/8);
+
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+
     glFlush();  // Render now
 }
 

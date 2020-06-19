@@ -276,3 +276,14 @@ void GameManager::printPlayerBuildingDebug()
         std::cout<<"End of Building" << std::endl;
     }*/
 }
+
+void GameManager::drawPlayerDirection(double x, double y) const
+{
+    glColor4f(0.0, 0.0, 0.0, 1.0);
+    std::string direction = player.getDirectionString();
+    glRasterPos2i(x - (4 * direction.length()), y + 7);
+    for (const char &letter : direction)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, letter);
+    }
+}
