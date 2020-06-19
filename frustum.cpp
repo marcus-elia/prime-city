@@ -478,8 +478,13 @@ std::experimental::optional<Point> correctFrustumCollision(Point p, int buffer, 
     }
     else
     {
-        double xwAtHeight = xw + (p.y - c.y + yw/2)/yw * (topxw - xw);
-        double zwAtHeight = zw + (p.y - c.y + yw/2)/yw * (topzw - zw);
+        double deltaY = p.y - (c.y - yw/2); // how far the point is above the bottom of the solid
+        if(deltaY < 0 || deltaY > yw)
+        {
+            return std::experimental::nullopt;
+        }
+        double xwAtHeight = xw + deltaY/yw * (topxw - xw);
+        double zwAtHeight = zw + deltaY/yw * (topzw - zw);
         return correctRectangularCrossSection(p, buffer, c, xwAtHeight, zwAtHeight);
     }
 }

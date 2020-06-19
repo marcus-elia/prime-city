@@ -334,8 +334,13 @@ std::experimental::optional<Point> correctCylinderCollision(Point p, int buffer,
     }
     else
     {
-        double xwAtHeight = xw + (p.y - c.y + yw/2)/yw * (topxw - xw);
-        double zwAtHeight = zw + (p.y - c.y + yw/2)/yw * (topzw - zw);
+        double deltaY = p.y - (c.y - yw/2); // how far the point is above the bottom of the solid
+        if(deltaY < 0 || deltaY > yw)
+        {
+            return std::experimental::nullopt;
+        }
+        double xwAtHeight = xw + deltaY/yw * (topxw - xw);
+        double zwAtHeight = zw + deltaY/yw * (topzw - zw);
         return correctEllipticalCrossSection(p, buffer, c, xwAtHeight, zwAtHeight);
     }
 }
