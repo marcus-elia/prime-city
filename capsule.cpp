@@ -47,19 +47,20 @@ void Capsule::initializeCorners()
     int numRingsPerHalf = (numRings + 1) / 2;
     double cylinderHeight = yWidth - xWidth;
 
-    double curY = center.y + yWidth/2;
+    double curY;
     double phi = -PI/2;
     double deltaPhi = (PI/2) / numRingsPerHalf;
     double rx, rz;  // the x and z radii at the given height
 
     // Top hemisphere
+    double centerY = center.y + cylinderHeight/2;
     for(int ring = 0; ring < numRingsPerHalf; ring++)
     {
         phi += deltaPhi;
-        curY = center.y + cylinderHeight/2 +  1 / sqrt(4 / (tan(phi)*tan(phi)*xWidth*xWidth) + 4 / (yWidth*yWidth));
+        curY = centerY +  1 / sqrt(4 / (tan(phi)*tan(phi)*xWidth*xWidth) + 4 / (xWidth*xWidth));
 
-        rx = xWidth/2 * sqrt(1 - 4*(curY-center.y)*(curY-center.y)/yWidth/yWidth);
-        rz = zWidth/2 * sqrt(1 - 4*(curY-center.y)*(curY-center.y)/yWidth/yWidth);
+        rx = xWidth/2 * sqrt(1 - 4*(curY-centerY)*(curY-centerY)/xWidth/xWidth);
+        rz = zWidth/2 * sqrt(1 - 4*(curY-centerY)*(curY-centerY)/xWidth/xWidth);
         double theta;
         for(int i = 0; i < pointsPerRing; i++)
         {
@@ -68,13 +69,14 @@ void Capsule::initializeCorners()
         }
     }
     // Bottom hemisphere
+    centerY = center.y - cylinderHeight/2;
     for(int ring = 0; ring < numRingsPerHalf; ring++)
     {
         phi += deltaPhi;
-        curY = center.y - cylinderHeight/2 +  1 / sqrt(4 / (tan(phi)*tan(phi)*xWidth*xWidth) + 4 / (yWidth*yWidth));
+        curY = centerY -  1 / sqrt(4 / (tan(phi)*tan(phi)*xWidth*xWidth) + 4 / (xWidth*xWidth));
 
-        rx = xWidth/2 * sqrt(1 - 4*(curY-center.y)*(curY-center.y)/yWidth/yWidth);
-        rz = zWidth/2 * sqrt(1 - 4*(curY-center.y)*(curY-center.y)/yWidth/yWidth);
+        rx = xWidth/2 * sqrt(1 - 4*(curY-centerY)*(curY-centerY)/xWidth/xWidth);
+        rz = zWidth/2 * sqrt(1 - 4*(curY-centerY)*(curY-centerY)/xWidth/xWidth);
         double theta;
         for(int i = 0; i < pointsPerRing; i++)
         {
@@ -84,12 +86,15 @@ void Capsule::initializeCorners()
     }
 }
 
-void Capsule::lookAt(Point &p);
+void Capsule::lookAt(Point &p)
+{
+
+}
 
 void Capsule::draw() const
 {
     glDisable(GL_CULL_FACE);
-    drawLines();
+    //drawLines();
     drawFaces();
     glEnable(GL_CULL_FACE);
 }
@@ -109,7 +114,7 @@ void Capsule::drawLines() const
     for(int i = 0; i < pointsPerRing; i++)
     {
         drawPoint(corners[1]);
-        drawPoint(corners[(numRings - 1)*pointsPerRing + 2 + i]);
+        drawPoint(corners[(numRings)*pointsPerRing + 2 + i]);
     }
     // First ring, horiztonal lines
     for(int i = 0; i < pointsPerRing; i++)
@@ -117,11 +122,9 @@ void Capsule::drawLines() const
         drawPoint(corners[i + 2]);
         drawPoint(corners[2 + (i + 1) % pointsPerRing]);
     }
-    //drawPoint(corners[pointsPerRing + 3]);
-    //drawPoint(corners[2]);
 
     // Iterate through the other rings
-    for(int ring = 1; ring < numRings; ring++)
+    for(int ring = 1; ring < numRings + 1; ring++)
     {
         for(int i = 0; i < pointsPerRing; i++)
         {
@@ -133,9 +136,6 @@ void Capsule::drawLines() const
             drawPoint(corners[ring*pointsPerRing + 2 + i]);
             drawPoint(corners[ring*pointsPerRing + 2 + (i + 1) % pointsPerRing]);
         }
-        // Connect to the start points
-        //drawPoint(corners[ring*pointsPerRing + 2]);
-        //drawPoint(corners[(ring + 1)*pointsPerRing + 1]);
     }
     glEnd();
 }
@@ -158,13 +158,13 @@ void Capsule::drawFaces() const
     drawPoint(corners[1]);
     for(int i = 2; i < pointsPerRing + 2; i++)
     {
-        drawPoint(corners[(numRings-1)*pointsPerRing + i]);
+        drawPoint(corners[(numRings)*pointsPerRing + i]);
     }
-    drawPoint(corners[(numRings-1)*pointsPerRing + 2]);
+    drawPoint(corners[(numRings)*pointsPerRing + 2]);
     glEnd();
 
     // Connect consecutive rings
-    for(int ring = 1; ring < numRings; ring++)
+    for(int ring = 1; ring < numRings + 1; ring++)
     {
         glBegin(GL_TRIANGLE_STRIP);
         for(int i = 0; i < pointsPerRing; i++)
