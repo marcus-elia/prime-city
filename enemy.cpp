@@ -2,8 +2,8 @@
 
 Enemy::Enemy()
 {
-    location = {0, 5, 0};
-    bodyHeight = 10;
+    location = {0, 6, 0};
+    bodyHeight = 12;
     radius = 4;
     speed = 2;
     rotationSpeed = 0.1;
@@ -32,7 +32,7 @@ void Enemy::initializeSolids()
 {
     RGBAcolor edgeColor = {1, 1, 1, 1};
     Point center = {location.x, location.y, location.z};
-    solids.push_back(std::make_shared<Cylinder>(Cylinder(center, bodyColor,
+    solids.push_back(std::make_shared<Capsule>(Capsule(center, bodyColor,
                                                          2*radius, bodyHeight, 2*radius, edgeColor)));
     center.y += bodyHeight/2 + radius;
     solids.push_back(std::make_shared<Ellipsoid>(Ellipsoid(center, headColor,

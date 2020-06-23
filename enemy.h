@@ -6,6 +6,7 @@
 #include "solid.h"
 #include "cylinder.h"
 #include "ellipsoid.h"
+#include "capsule.h"
 
 // Physically, the Enemy is a sphere on top of a capsule. The capsule and
 // the sphere have the same radius. The y-value of location is the center of
