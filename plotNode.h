@@ -34,19 +34,19 @@ public:
     // Setters
     void addLeftNeighbor(std::experimental::optional<PlotNode*> inputLeftNeighbor);
     void addRightNeighbor(std::experimental::optional<PlotNode*> inputRightNeighbor);
-    void addTopNeighbor(std::experimental::optional<PlotNode*> inputTopNeighbor);
-    void addBottomNeighbor(std::experimental::optional<PlotNode*> inputBottomNeighbor);
+    void addUpNeighbor(std::experimental::optional<PlotNode*> inputUpNeighbor);
+    void addDownNeighbor(std::experimental::optional<PlotNode*> inputDownNeighbor);
 
     // Getters
     std::experimental::optional<PlotNode*> getLeftNeighbor() const;
     std::experimental::optional<PlotNode*> getRightNeighbor() const;
-    std::experimental::optional<PlotNode*> getTopNeighbor() const;
-    std::experimental::optional<PlotNode*> getBottomNeighbor() const;
+    std::experimental::optional<PlotNode*> getUpNeighbor() const;
+    std::experimental::optional<PlotNode*> getDownNeighbor() const;
 
     bool hasLeftNeighbor() const;
     bool hasRightNeighbor() const;
-    bool hasTopNeighbor() const;
-    bool hasBottomNeighbor() const;
+    bool hasUpNeighbor() const;
+    bool hasDownNeighbor() const;
 
     Point2D getChunkCoords() const;
     Point2D getPlotCoords() const;
