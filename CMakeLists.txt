@@ -29,7 +29,7 @@ file(GLOB SOURCE_FILES
 add_executable(graphics graphics.h graphics.cpp gameManager.h gameManager.cpp player.h player.cpp
         perlinNoiseGenerator.h perlinNoiseGenerator.cpp structs.h chunk.h chunk.cpp movable.cpp movable.h
         movableComponent.cpp movableComponent.h recPrism.cpp recPrism.h solid.cpp solid.h building.cpp building.h
-        cylinder.cpp cylinder.h frustum.cpp frustum.h enemy.cpp enemy.h ellipsoid.cpp ellipsoid.h capsule.cpp capsule.h)
+        cylinder.cpp cylinder.h frustum.cpp frustum.h enemy.cpp enemy.h ellipsoid.cpp ellipsoid.h capsule.cpp capsule.h plotNode.cpp plotNode.h)
 add_executable(testing testing.cpp recPrism.h recPrism.cpp solid.h solid.cpp movable.h movable.cpp
         movableComponent.h movableComponent.cpp structs.h cylinder.h cylinder.cpp frustum.h frustum.cpp)
 
