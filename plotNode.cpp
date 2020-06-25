@@ -103,6 +103,10 @@ Point PlotNode::getCenter() const
 {
     return center;
 }
+int PlotNode::getID() const
+{
+    return id;
+}
 
 int makeID(Point2D chunkCoords, Point2D plotCoords, int plotsPerSide)
 {

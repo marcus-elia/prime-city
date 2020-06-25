@@ -53,6 +53,7 @@ public:
     Point2D getChunkCoords() const;
     Point2D getPlotCoords() const;
     Point getCenter() const;
+    int getID() const;
 };
 
 int makeID(Point2D chunkCoords, Point2D plotCoords, int plotsPerSide);
