@@ -13,6 +13,8 @@ private:
     Point2D chunkCoords; // specify which chunk it is in
     Point2D plotCoords;  // specify the exact plot
 
+    int id; // a unique int based on the chunkCoords and plotCoords
+
     int chunkSideLength;
     int plotsPerSide;
 
@@ -52,5 +54,7 @@ public:
     Point2D getPlotCoords() const;
     Point getCenter() const;
 };
+
+int makeID(Point2D chunkCoords, Point2D plotCoords, int plotsPerSide);
 
 #endif //PRIME_CITY_PLOTNODE_H
