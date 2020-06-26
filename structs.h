@@ -19,7 +19,7 @@ struct Point2D
     {
         return x != p1.x || z != p1.z;
     }
-    int toInt()
+    int toChunkID()
     {
         int a = x;
         int b = z;

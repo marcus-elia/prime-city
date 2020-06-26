@@ -312,25 +312,7 @@ std::vector<Point2D> Chunk::getChunksAround(int radius)
 
 int pointToInt(Point2D p)
 {
-    int a = p.x;
-    int b = p.z;
-    if(a > 0 && b <= a-1 && b > -a)
-    {
-        return 4*a*a - 3*a - b;
-    }
-    else if(b < 0 && a <= -b && a > b+1)
-    {
-        return 4*b*b + b - a;
-    }
-    else if(a < 0 && b > a-1 && b < -a)
-    {
-        return 4*a*a - a + b;
-    }
-    else if(b > -1 && a >= -b && a < b+1)
-    {
-        return 4*b*b + 3*b + a;
-    }
-    return (2*a-1)*(2*a-3); // idk why, but this works for (0,-1) and (-1,-2)
+    return p.toChunkID();
 }
 
 std::vector<int> getChunksAroundPoint(Point2D p, int radius)
