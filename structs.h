@@ -23,23 +23,33 @@ struct Point2D
     {
         int a = x;
         int b = z;
-        if(a > 0 && b <= a-1 && b > -a)
+        // Bottom Zone
+        if(b > 0 && a >= -b && a < b)
         {
-            return 4*a*a - 3*a - b;
+            return 4*b*b + 3*b - a;
         }
-        else if(b < 0 && a <= -b && a > b+1)
+        // Left Zone
+        else if(a < 0 && b < -a && b > a)
         {
-            return 4*b*b + b - a;
+            return 4*a*a + 3*a - b;
         }
-        else if(a < 0 && b > a-1 && b < -a)
+        // Top Zone
+        else if(b < 0 && a <= -b && a > b)
         {
-            return 4*a*a - a + b;
+            return 4*b*b + b + a;
         }
-        else if(b > -1 && a >= -b && a < b+1)
+        // Right Zone
+        else if(a > 0 && b <= a && b < -a)
         {
-            return 4*b*b + 3*b + a;
+            return 4*a*a + a + b;
         }
-        return (2*a-1)*(2*a-3); // idk why, but this works for (0,-1) and (-1,-2)
+        // Only a=0, b=0 is not in a zone
+        else
+        {
+            return 0;
+        }
+
+
     }
 };
 
