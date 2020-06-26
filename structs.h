@@ -29,7 +29,7 @@ struct Point2D
             return 4*b*b + 3*b - a;
         }
         // Left Zone
-        else if(a < 0 && b < -a && b > a)
+        else if(a < 0 && b < -a && b >= a)
         {
             return 4*a*a + 3*a - b;
         }
@@ -39,7 +39,7 @@ struct Point2D
             return 4*b*b + b + a;
         }
         // Right Zone
-        else if(a > 0 && b <= a && b < -a)
+        else if(a > 0 && b <= a && b > -a)
         {
             return 4*a*a + a + b;
         }
