@@ -3,6 +3,7 @@
 #include "frustum.h"
 #include "chunk.h"
 #include <experimental/optional>
+#include "mathHelper.h"
 
 bool testIsAboveLine();
 
@@ -12,7 +13,11 @@ bool testCorrectRectangularPrismCollision();
 
 bool testCorrectEllipticalCrossSection();
 
-bool testPointToInt();
+bool testPointToIntAndChunkIDtoPoint();
+
+bool testNearestPerfectSquare();
+
+bool testiSqrt();
 
 
 int main()
@@ -21,7 +26,9 @@ int main()
     testCorrectRectangularCrossSection();
     testCorrectRectangularPrismCollision();
     testCorrectEllipticalCrossSection();
-    testPointToInt();
+    testPointToIntAndChunkIDtoPoint();
+    testNearestPerfectSquare();
+    testiSqrt();
     return 0;
 }
 
@@ -563,7 +570,7 @@ bool testCorrectEllipticalCrossSection()
     return passed;
 }
 
-bool testPointToInt()
+bool testPointToIntAndChunkIDtoPoint()
 {
     std::cout << std::endl << "Testing PointToInt()" << std::endl;
 
@@ -626,6 +633,112 @@ bool testPointToInt()
     for(int i = 0; i < values.size(); i++)
     {
         int observed = pointToInt(values[i]);
+        if(observed != expected[i])
+        {
+            passed = false;
+            std::cout << "Test FAILED" << std::endl;
+            std::cout << "Expected " << expected[i] << ", observed " << observed << std::endl;
+        }
+    }
+
+    std::cout << std::endl << "Testing chunkIDtoPoint()" << std::endl;
+    for(int i = 0; i < values.size(); i++)
+    {
+        Point2D observed = chunkIDtoPoint(expected[i]);
+        if(observed != values[i])
+        {
+            passed = false;
+            std::cout << "Test FAILED when n = " << expected[i] << std::endl;
+        }
+    }
+
+    if(passed)
+    {
+        std::cout << "All tests passed." << std::endl;
+    }
+    return passed;
+}
+
+bool testNearestPerfectSquare()
+{
+    bool passed = true;
+    std::cout << "\nTesting nearestPerfectSquare()" << std::endl;
+
+    std::vector<int> values;
+    std::vector<int> expected;
+
+    values.push_back(1);
+    expected.push_back(1);
+    values.push_back(2);
+    expected.push_back(1);
+    values.push_back(3);
+    expected.push_back(4);
+    values.push_back(4);
+    expected.push_back(4);
+    values.push_back(5);
+    expected.push_back(4);
+    values.push_back(6);
+    expected.push_back(4);
+    values.push_back(7);
+    expected.push_back(9);
+    values.push_back(8);
+    expected.push_back(9);
+    values.push_back(9);
+    expected.push_back(9);
+    values.push_back(10);
+    expected.push_back(9);
+    values.push_back(11);
+    expected.push_back(9);
+    values.push_back(12);
+    expected.push_back(9);
+    values.push_back(13);
+    expected.push_back(16);
+    values.push_back(65535);
+    expected.push_back(65536);
+    values.push_back(65537);
+    expected.push_back(65536);
+
+    for(int i = 0; i < values.size(); i++)
+    {
+        int observed = nearestPerfectSquare(values[i]);
+        if(observed != expected[i])
+        {
+            passed = false;
+            std::cout << "Test FAILED" << std::endl;
+            std::cout << "Expected " << expected[i] << ", observed " << observed << std::endl;
+        }
+    }
+    if(passed)
+    {
+        std::cout << "All tests passed." << std::endl;
+    }
+    return passed;
+}
+
+bool testiSqrt()
+{
+    bool passed = true;
+    std::cout << "\nTesting isqrt()" << std::endl;
+
+    std::vector<int> values;
+    std::vector<int> expected;
+
+    values.push_back(1);
+    expected.push_back(1);
+    values.push_back(4);
+    expected.push_back(2);
+    values.push_back(9);
+    expected.push_back(3);
+    values.push_back(16);
+    expected.push_back(4);
+    values.push_back(361);
+    expected.push_back(19);
+    values.push_back(65536);
+    expected.push_back(256);
+
+    for(int i = 0; i < values.size(); i++)
+    {
+        int observed = isqrt(values[i]);
         if(observed != expected[i])
         {
             passed = false;
