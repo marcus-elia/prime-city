@@ -59,7 +59,7 @@ Point2D chunkIDtoPoint(int n)
         }
         else
         {
-            return {-(sq + 1)/2 - s + n, (sq + 1)/2 - 1};
+            return {-(sq + 1)/2 + s - n, (sq + 1)/2 - 1};
         }
     }
 }
