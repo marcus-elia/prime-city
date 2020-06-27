@@ -30,7 +30,7 @@ int nearestPerfectSquare(int n)
 }
 
 // Returns the square root of n, assuming that n is a perfect square
-int sqrt(int n)
+int isqrt(int n)
 {
     return round(sqrt(n));
 }
@@ -39,7 +39,7 @@ int sqrt(int n)
 Point2D chunkIDtoPoint(int n)
 {
     int s = nearestPerfectSquare(n);
-    int sq = sqrt(s);
+    int sq = isqrt(s);
     if(s % 2 == 0)
     {
         if(n >= s)
