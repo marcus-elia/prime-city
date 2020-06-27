@@ -15,7 +15,7 @@
 class Chunk
 {
 private:
-    Point2D bottomLeft; // The bottom left coordinate divided by sideLength
+    Point2D topLeft; // The top left coordinate divided by sideLength
     int sideLength;
     Point2D center;   // The actual center
 
@@ -46,7 +46,7 @@ public:
     void makeBuildings();
 
     // Getters
-    Point2D getBottomLeft() const;
+    Point2D getTopLeft() const;
     int getSideLength() const;
     Point2D getCenter() const;
     int getPlotsPerSide() const;

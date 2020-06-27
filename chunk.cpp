@@ -2,7 +2,7 @@
 
 Chunk::Chunk()
 {
-    bottomLeft = {0,0};
+    topLeft = {0, 0};
     sideLength = 1024;
     perlinSeed = 0.5;
     initializeCenter();
@@ -12,7 +12,7 @@ Chunk::Chunk()
 }
 Chunk::Chunk(Point2D inputBottomLeft, int inputSideLength,  double inputPerlinSeed)
 {
-    bottomLeft = inputBottomLeft;
+    topLeft = inputBottomLeft;
     sideLength = inputSideLength;
     perlinSeed = inputPerlinSeed;
     initializeCenter();
@@ -23,7 +23,7 @@ Chunk::Chunk(Point2D inputBottomLeft, int inputSideLength,  double inputPerlinSe
 
 void Chunk::initializeCenter()
 {
-    center = {sideLength*bottomLeft.x + sideLength/2, sideLength*bottomLeft.z - sideLength/2};
+    center = {sideLength * topLeft.x + sideLength / 2, sideLength * topLeft.z + sideLength / 2};
 }
 void Chunk::initializePlotEmpty()
 {
@@ -43,8 +43,8 @@ void Chunk::makeBuildings()
         for(int j = 0; j < plotsPerSide; j++)
         {
             // Don't build around the origin where the player spawns
-            if(abs(bottomLeft.x*sideLength + i*plotSize) < sideLength/2 &&
-               abs((bottomLeft.z + 1)*sideLength - (j+1)*plotSize) < sideLength/2)
+            if(abs(topLeft.x * sideLength + i * plotSize) < sideLength / 2 &&
+               abs(topLeft.z * sideLength + j * plotSize) < sideLength / 2)
             {
                 continue;
             }
@@ -82,8 +82,8 @@ void Chunk::makeBuildings()
 
             if((r1 < BUILDING_DENSITY || perlinSeed == 1.0) && plotEmpty[i][j] && shouldConsiderBuilding(i,j))
             {
-                Point2D topLeftOfBuilding = {bottomLeft.x*sideLength + i*plotSize,
-                                             (bottomLeft.z + 1)*sideLength - (j+1)*plotSize};
+                Point2D topLeftOfBuilding = {topLeft.x * sideLength + i * plotSize,
+                                             topLeft.z * sideLength + j * plotSize};
                 buildings.push_back(Building(topLeftOfBuilding, plotSize, height,
                                              color, edgeColor, Plain));
                 plotEmpty[i][j] = false;
@@ -93,9 +93,9 @@ void Chunk::makeBuildings()
 }
 
 // Getters
-Point2D Chunk::getBottomLeft() const
+Point2D Chunk::getTopLeft() const
 {
-    return bottomLeft;
+    return topLeft;
 }
 int Chunk::getSideLength() const
 {
@@ -277,7 +277,7 @@ bool Chunk::shouldConsiderBuilding(int i, int j) const
 void Chunk::draw() const
 {
     glBegin(GL_QUADS);
-    /*if((bottomLeft.x + bottomLeft.z) % 2 == 0)
+    /*if((topLeft.x + topLeft.z) % 2 == 0)
     {
         glColor4f(1, 1, 0.3, 1);
     }
@@ -287,10 +287,10 @@ void Chunk::draw() const
     }*/
     //glColor4f(perlinSeed, 0, 1, 1);
     glColor4f(0.0, 0.2, 0.45, 1); // Navy blue
-    glVertex3f(sideLength*bottomLeft.x,0, sideLength*bottomLeft.z);
-    glVertex3f(sideLength*bottomLeft.x,0, sideLength*bottomLeft.z + sideLength);
-    glVertex3f(sideLength*bottomLeft.x + sideLength,0, sideLength*bottomLeft.z + sideLength);
-    glVertex3f(sideLength*bottomLeft.x + sideLength,0, sideLength*bottomLeft.z);
+    glVertex3f(sideLength * topLeft.x, 0, sideLength * topLeft.z);
+    glVertex3f(sideLength * topLeft.x, 0, sideLength * topLeft.z + sideLength);
+    glVertex3f(sideLength * topLeft.x + sideLength, 0, sideLength * topLeft.z + sideLength);
+    glVertex3f(sideLength * topLeft.x + sideLength, 0, sideLength * topLeft.z);
 
     glEnd();
 
@@ -302,12 +302,12 @@ void Chunk::draw() const
 
 int Chunk::chunkToInt() const
 {
-    return pointToInt({bottomLeft.x, bottomLeft.z});
+    return pointToInt({topLeft.x, topLeft.z});
 }
 
 std::vector<Point2D> Chunk::getChunksAround(int radius)
 {
-    return getChunksAroundPointByPoint(bottomLeft, radius);
+    return getChunksAroundPointByPoint(topLeft, radius);
 }
 
 int pointToInt(Point2D p)
