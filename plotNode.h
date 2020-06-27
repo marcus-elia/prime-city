@@ -57,17 +57,4 @@ public:
     int getID() const;
 };
 
-// Return the unique id of the PlotNode, depending on which chunk it's in and
-// where it is within the chunk
-int makeID(Point2D chunkCoords, Point2D plotCoords, int plotsPerSide);
-int makeID(int chunkID, Point2D plotCoords, int plotsPerSide);
-
-Point2D idToPlotCoords(int id, int plotsPerSide);
-
-// Get the id of the PlotNode adjacent to this one
-int idAbove(int id, int plotsPerSide);
-int idBelow(int id, int plotsPerSide);
-int idLeft(int id, int plotsPerSide);
-int idRight(int id, int plotsPerSide);
-
 #endif //PRIME_CITY_PLOTNODE_H
