@@ -19,6 +19,12 @@ bool testNearestPerfectSquare();
 
 bool testiSqrt();
 
+bool testMakeID();
+
+bool testIdToPlotCoords();
+
+bool testIDAboveBelowLeftRight();
+
 
 int main()
 {
@@ -29,6 +35,9 @@ int main()
     testPointToIntAndChunkIDtoPoint();
     testNearestPerfectSquare();
     testiSqrt();
+    testMakeID();
+    testIdToPlotCoords();
+    testIDAboveBelowLeftRight();
     return 0;
 }
 
@@ -632,7 +641,7 @@ bool testPointToIntAndChunkIDtoPoint()
 
     for(int i = 0; i < values.size(); i++)
     {
-        int observed = pointToInt(values[i]);
+        int observed = values[i].toChunkID();
         if(observed != expected[i])
         {
             passed = false;
@@ -746,6 +755,248 @@ bool testiSqrt()
             std::cout << "Expected " << expected[i] << ", observed " << observed << std::endl;
         }
     }
+    if(passed)
+    {
+        std::cout << "All tests passed." << std::endl;
+    }
+    return passed;
+}
+
+bool testMakeID()
+{
+    bool passed = true;
+    std::cout << "\nTesting makeID()" << std::endl;
+
+    Point2D chunkCoords;
+    Point2D plotCoords;
+    int plotsPerSide = 8;
+    int exp, obs;
+
+    chunkCoords = {0,0};
+    plotCoords = {0,0};
+    exp = 0;
+    obs = makeID(chunkCoords, plotCoords, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+
+    chunkCoords = {0,0};
+    plotCoords = {0,7};
+    exp = 56;
+    obs = makeID(chunkCoords, plotCoords, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+
+    chunkCoords = {0,0};
+    plotCoords = {7,0};
+    exp = 7;
+    obs = makeID(chunkCoords, plotCoords, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+
+    chunkCoords = {0,0};
+    plotCoords = {7,7};
+    exp = 63;
+    obs = makeID(chunkCoords, plotCoords, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+
+    chunkCoords = {-3,3};
+    plotCoords = {5,4};
+    exp = 3109;
+    obs = makeID(chunkCoords, plotCoords, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+
+    if(passed)
+    {
+        std::cout << "All tests passed." << std::endl;
+    }
+    return passed;
+}
+
+bool testIdToPlotCoords()
+{
+    bool passed = true;
+    std::cout << "\nTesting idToPlotCoords()" << std::endl;
+
+    int plotID;
+    Point2D exp, obs;
+    int plotsPerSide = 8;
+
+    plotID = 0;
+    exp = {0,0};
+    obs = idToPlotCoords(plotID, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED when plot ID = " << plotID << std::endl;
+    }
+
+    plotID = 7;
+    exp = {7,0};
+    obs = idToPlotCoords(plotID, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED when plot ID = " << plotID << std::endl;
+    }
+
+    plotID = 56;
+    exp = {0,7};
+    obs = idToPlotCoords(plotID, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED when plot ID = " << plotID << std::endl;
+    }
+
+    plotID = 63;
+    exp = {7,7};
+    obs = idToPlotCoords(plotID, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED when plot ID = " << plotID << std::endl;
+    }
+
+    if(passed)
+    {
+        std::cout << "All tests passed." << std::endl;
+    }
+    return passed;
+}
+
+bool testIDAboveBelowLeftRight()
+{
+    bool passed = true;
+    std::cout << "\nTesting idAbove(), idBelow(), idLeft(), idRight()" << std::endl;
+
+    int id;
+    int plotsPerSide = 8;
+    int exp, obs;
+
+    id = 0;
+    obs = idAbove(id, plotsPerSide);
+    exp = 248;
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED on above when ID = " << id << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    obs = idBelow(id, plotsPerSide);
+    exp = 8;
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED on below when ID = " << id << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    obs = idLeft(id, plotsPerSide);
+    exp = 71;
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED on left when ID = " << id << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    obs = idRight(id, plotsPerSide);
+    exp = 1;
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED on right when ID = " << id << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+
+    id = 29;
+    obs = idAbove(id, plotsPerSide);
+    exp = 21;
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED on above when ID = " << id << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    obs = idBelow(id, plotsPerSide);
+    exp = 37;
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED on below when ID = " << id << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    obs = idLeft(id, plotsPerSide);
+    exp = 28;
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED on left when ID = " << id << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    obs = idRight(id, plotsPerSide);
+    exp = 30;
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED on right when ID = " << id << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+
+    id = 248;
+    obs = idAbove(id, plotsPerSide);
+    exp = 240;
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED on above when ID = " << id << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    obs = idBelow(id, plotsPerSide);
+    exp = 0;
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED on below when ID = " << id << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    obs = idLeft(id, plotsPerSide);
+    exp = 191;
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED on left when ID = " << id << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    obs = idRight(id, plotsPerSide);
+    exp = 249;
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED on right when ID = " << id << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+
     if(passed)
     {
         std::cout << "All tests passed." << std::endl;
