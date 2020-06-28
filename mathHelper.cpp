@@ -56,11 +56,11 @@ Point2D chunkIDtoPoint(int n)
 
 int makeID(Point2D chunkCoords, Point2D plotCoords, int plotsPerSide)
 {
-    return chunkCoords.toChunkID() + plotCoords.x + plotCoords.z * plotsPerSide;
+    return chunkCoords.toChunkID()*plotsPerSide*plotsPerSide + plotCoords.x + plotCoords.z * plotsPerSide;
 }
 int makeID(int chunkID, Point2D plotCoords, int plotsPerSide)
 {
-    return chunkID + plotCoords.x + plotCoords.z * plotsPerSide;
+    return chunkID*plotsPerSide*plotsPerSide + plotCoords.x + plotCoords.z * plotsPerSide;
 }
 
 Point2D idToPlotCoords(int id, int plotsPerSide)
