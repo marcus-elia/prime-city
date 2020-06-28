@@ -31,6 +31,8 @@ public:
 
     PlotNode(Point2D inputChunkCoords, Point2D inputPlotCoords, int inputChunkSideLength, int inputPlotsPerSide);
 
+    PlotNode(int inputPlotID, int inputChunkSideLength, int inputPlotsPerSide);
+
     // Make the Center point based on the chunk and plot coords
     void initializeCenter();
 

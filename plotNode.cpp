@@ -28,6 +28,20 @@ PlotNode::PlotNode(Point2D inputChunkCoords, Point2D inputPlotCoords, int inputC
     id = makeID(chunkCoords, plotCoords, plotsPerSide);
 }
 
+PlotNode::PlotNode(int inputPlotID, int inputChunkSideLength, int inputPlotsPerSide)
+{
+    plotsPerSide = inputPlotsPerSide;
+    id = inputPlotID;
+    chunkCoords = chunkIDtoPoint(id / (plotsPerSide*plotsPerSide));
+    plotCoords = idToPlotCoords(id, plotsPerSide);
+    chunkSideLength = inputChunkSideLength;
+    initializeCenter();
+    leftNeighbor = std::experimental::nullopt;
+    rightNeighbor = std::experimental::nullopt;
+    upNeighbor = std::experimental::nullopt;
+    downNeighbor = std::experimental::nullopt;
+}
+
 void PlotNode::initializeCenter()
 {
     int topLeftX = chunkCoords.x * chunkSideLength;
