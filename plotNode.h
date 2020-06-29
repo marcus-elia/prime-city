@@ -21,9 +21,6 @@ private:
 
     Point center;
 
-    // If there is a neighboring empty plot in each direction
-    bool hasLeft, hasRight, hasUp, hasDown;
-
     // The actual node in each direction, or nullopt
     std::experimental::optional<PlotNode*> leftNeighbor, rightNeighbor, upNeighbor, downNeighbor;
 public:
