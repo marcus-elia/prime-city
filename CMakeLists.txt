@@ -34,7 +34,7 @@ add_executable(graphics graphics.h graphics.cpp gameManager.h gameManager.cpp pl
 add_executable(testing testing.cpp recPrism.h recPrism.cpp solid.h solid.cpp movable.h movable.cpp
         movableComponent.h movableComponent.cpp structs.h cylinder.h cylinder.cpp frustum.h frustum.cpp
         chunk.h chunk.cpp plotNode.h plotNode.cpp plotNetwork.h plotNetwork.cpp building.h building.cpp mathHelper.h
-        mathHelper.cpp)
+        mathHelper.cpp testPathFinding.cpp testPathFinding.h)
 
 if (WIN32)
     target_link_libraries (graphics ${OPENGL_LIBRARIES} freeglut)

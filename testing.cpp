@@ -4,6 +4,7 @@
 #include "chunk.h"
 #include <experimental/optional>
 #include "mathHelper.h"
+#include "testPathFinding.h"
 
 bool testIsAboveLine();
 
@@ -38,6 +39,7 @@ int main()
     testMakeID();
     testIdToPlotCoords();
     testIDAboveBelowLeftRight();
+    testBFSexample1();
     return 0;
 }
 
