@@ -35,6 +35,8 @@ private:
 
     // True if the plot at i,j is empty
     bool plotEmpty[plotsPerSide][plotsPerSide];
+    // The ID's of the empty plots
+    std::vector<int> emptyPlotIDs;
 
     std::vector<Building> buildings;
 public:
@@ -44,6 +46,7 @@ public:
     void initializeCenter();
     void initializePlotEmpty();
     void makeBuildings();
+    void initializeEmptyPlotIDs();
 
     // Getters
     Point2D getTopLeft() const;
@@ -51,6 +54,7 @@ public:
     Point2D getCenter() const;
     int getPlotsPerSide() const;
     int getPlotSize() const;
+    std::vector<int> getEmptyPlotIDs() const;
     std::vector<Building> getBuildings() const;
 
     void draw() const;

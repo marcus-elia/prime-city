@@ -90,6 +90,21 @@ void Chunk::makeBuildings()
             }
         }
     }
+    initializeEmptyPlotIDs();
+}
+
+void Chunk::initializeEmptyPlotIDs()
+{
+    for(int i = 0; i < plotsPerSide; i++)
+    {
+        for(int j = 0; j < plotsPerSide; j++)
+        {
+            if(plotEmpty[i][j])
+            {
+                emptyPlotIDs.push_back(makeID(chunkID, {i,j}, plotsPerSide));
+            }
+        }
+    }
 }
 
 // Getters
@@ -112,6 +127,10 @@ int Chunk::getPlotsPerSide() const
 int Chunk::getPlotSize() const
 {
     return plotSize;
+}
+std::vector<int> Chunk::getEmptyPlotIDs() const
+{
+    return emptyPlotIDs;
 }
 std::vector<Building> Chunk::getBuildings() const
 {
