@@ -40,6 +40,9 @@ int main()
     testIdToPlotCoords();
     testIDAboveBelowLeftRight();
     testBFSexample1();
+    testBFSexample2();
+    testBFSexample3();
+    testBFSexample4();
     return 0;
 }
 
