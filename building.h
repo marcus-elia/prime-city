@@ -26,7 +26,7 @@ protected:
 
     typeOfBuilding buildingType;
 
-    const static boolean GRIDLINES_ENABLED = false;
+    const static bool GRIDLINES_ENABLED = false;
 
 public:
     Building();
