@@ -11,7 +11,8 @@
 class PlotNetwork
 {
 private:
-    std::unordered_map<int, PlotNode*> id2node;
+    //std::unordered_map<int, PlotNode*> id2node;
+    std::unordered_map<int, std::shared_ptr<PlotNode>> id2node;
     int plotsPerSide;
 public:
     PlotNetwork();

@@ -13,32 +13,32 @@ bool PlotNetwork::hasNode(int id) const
 void PlotNetwork::addNode(PlotNode n)
 {
     // Put the node in the map
-    id2node[n.getID()] = &n;
+    id2node[n.getID()] = std::make_shared<PlotNode>(n);
 
     // Add pointers between the adjacent nodes, if they exist
     int plotIDAbove = idAbove(n.getID(), plotsPerSide);
     if(id2node.count(plotIDAbove) != 0)
     {
-        id2node[n.getID()]->addUpNeighbor(id2node[plotIDAbove]);
-        id2node[plotIDAbove]->addDownNeighbor(id2node[n.getID()]);
+        id2node[n.getID()]->addUpNeighbor(&*id2node[plotIDAbove]);
+        id2node[plotIDAbove]->addDownNeighbor(&*id2node[n.getID()]);
     }
     int plotIDBelow = idBelow(n.getID(), plotsPerSide);
     if(id2node.count(plotIDBelow) != 0)
     {
-        id2node[n.getID()]->addDownNeighbor(id2node[plotIDBelow]);
-        id2node[plotIDBelow]->addUpNeighbor(id2node[n.getID()]);
+        id2node[n.getID()]->addDownNeighbor(&*id2node[plotIDBelow]);
+        id2node[plotIDBelow]->addUpNeighbor(&*id2node[n.getID()]);
     }
     int plotIDLeft = idLeft(n.getID(), plotsPerSide);
     if(id2node.count(plotIDLeft) != 0)
     {
-        id2node[n.getID()]->addLeftNeighbor(id2node[plotIDLeft]);
-        id2node[plotIDLeft]->addRightNeighbor(id2node[n.getID()]);
+        id2node[n.getID()]->addLeftNeighbor(&*id2node[plotIDLeft]);
+        id2node[plotIDLeft]->addRightNeighbor(&*id2node[n.getID()]);
     }
     int plotIDRight = idRight(n.getID(), plotsPerSide);
     if(id2node.count(plotIDRight) != 0)
     {
-        id2node[n.getID()]->addRightNeighbor(id2node[plotIDRight]);
-        id2node[plotIDRight]->addLeftNeighbor(id2node[n.getID()]);
+        id2node[n.getID()]->addRightNeighbor(&*id2node[plotIDRight]);
+        id2node[plotIDRight]->addLeftNeighbor(&*id2node[n.getID()]);
     }
 }
 
@@ -134,10 +134,10 @@ std::vector<PlotNode*> PlotNetwork::breadthFirstSearch(int idStart, int idEnd) c
     int curID = idEnd;
     while(curID != idStart)
     {
-        output.push_back(id2node.at(curID));
+        output.push_back(&*id2node.at(curID));
         curID = node2prev[curID];
     }
-    output.push_back(id2node.at(idStart));
+    output.push_back(&*id2node.at(idStart));
     return output;
 }
 
