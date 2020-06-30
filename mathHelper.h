@@ -29,4 +29,14 @@ int idBelow(int id, int plotsPerSide);
 int idLeft(int id, int plotsPerSide);
 int idRight(int id, int plotsPerSide);
 
+
+// Returns the distance in the xz plane
+double distance2d(Point p1, Point p2);
+
+// Euclidean distance
+double distance(Point2D p1, Point2D p2);
+
+// 2d directed distance
+double directedDistance(double A, double B, double C, double x, double y);
+
 #endif //PRIME_CITY_MATHHELPER_H
