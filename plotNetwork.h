@@ -22,11 +22,13 @@ public:
     void addNode(PlotNode n);
 
     // Returns the shortest path between the nodes given by idStart and idEnd in
-    // reverse order
-    std::vector<PlotNode*> breadthFirstSearch(int idStart, int idEnd) const;
+    // reverse order. If no path exists, returns the path to a random node as far
+    // away as possible. If maxDepth is given to be a positive integer, then it will
+    // return whatever Plot that is maxDepth from Start is closest to End.
+    std::vector<PlotNode*> breadthFirstSearch(int idStart, int idEnd, int maxDepth=-1) const;
 
     // Wrapper function
-    std::vector<PlotNode*> getShortestPath(int idStart, int idEnd) const;
+    std::vector<PlotNode*> getShortestPath(int idStart, int idEnd, int maxDepth=-1) const;
 };
 
 #endif //PRIME_CITY_PLOTNETWORK_H

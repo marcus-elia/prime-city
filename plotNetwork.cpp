@@ -44,7 +44,7 @@ void PlotNetwork::addNode(PlotNode n)
 
 // Returns the shortest path between the nodes given by idStart and idEnd in
 // reverse order
-std::vector<PlotNode*> PlotNetwork::breadthFirstSearch(int idStart, int idEnd) const
+std::vector<PlotNode*> PlotNetwork::breadthFirstSearch(int idStart, int idEnd, int maxDepth) const
 {
     std::vector<PlotNode*> output;
 
@@ -59,9 +59,11 @@ std::vector<PlotNode*> PlotNetwork::breadthFirstSearch(int idStart, int idEnd) c
 
     curLevel.push_back(idStart);
     bool hasBeenFound = false;
+    int curDepth = 0;
 
-    while(!hasBeenFound)
+    while(!hasBeenFound && !curLevel.empty() && curDepth != maxDepth)
     {
+        curDepth++;
         prevLevel = curLevel;
         curLevel = std::vector<int>();
         // Iterate through the previous level and look at each neighbor
@@ -131,7 +133,32 @@ std::vector<PlotNode*> PlotNetwork::breadthFirstSearch(int idStart, int idEnd) c
     }
 
     // Trace backwards and add the path to the output
-    int curID = idEnd;
+    int curID;
+    if(hasBeenFound)  // If we found the end, trace back from there
+    {
+        curID = idEnd;
+    }
+    else if(curDepth == maxDepth)  // Pick as close to the end as possible
+    {
+        double shortestDistance = distance2d(id2node.at(idEnd)->getCenter(), id2node.at(prevLevel[0])->getCenter());
+        int idOfClosest = prevLevel[0];
+        for(int i = 1; i < prevLevel.size(); i++) // iterate through the last level and select the closest
+        {
+            int curDistance = distance2d(id2node.at(idEnd)->getCenter(), id2node.at(prevLevel[i])->getCenter());
+            if(curDistance < shortestDistance)
+            {
+                shortestDistance = curDistance;
+                idOfClosest = prevLevel[i];
+            }
+        }
+        curID = idOfClosest;
+    }
+    else              // Otherwise, pick a random node in the last level reached
+    {
+        int randIndex = rand() % prevLevel.size();
+        curID = prevLevel[randIndex];
+    }
+
     while(curID != idStart)
     {
         output.push_back(&*id2node.at(curID));
@@ -139,13 +166,15 @@ std::vector<PlotNode*> PlotNetwork::breadthFirstSearch(int idStart, int idEnd) c
     }
     output.push_back(&*id2node.at(idStart));
     return output;
+
+
 }
 
 // Wrapper function
-std::vector<PlotNode*> PlotNetwork::getShortestPath(int idStart, int idEnd) const
+std::vector<PlotNode*> PlotNetwork::getShortestPath(int idStart, int idEnd, int maxDepth) const
 {
     std::vector<PlotNode*> output;
-    std::vector<PlotNode*> reverseNodes = breadthFirstSearch(idStart, idEnd);
+    std::vector<PlotNode*> reverseNodes = breadthFirstSearch(idStart, idEnd, maxDepth);
     for(int i = reverseNodes.size() - 1; i >= 0; i--)
     {
         output.push_back(reverseNodes[i]);
