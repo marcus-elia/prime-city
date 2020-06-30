@@ -16,7 +16,7 @@ Enemy::Enemy()
 
     initializeSolids();
 }
-Enemy::Enemy(Vector3 inputLocation, double inputBodyHeight, double inputRadius,
+Enemy::Enemy(Point inputLocation, double inputBodyHeight, double inputRadius,
              double inputSpeed, double inputRotationSpeed, int inputNumber)
 {
     location = inputLocation;
@@ -38,6 +38,44 @@ void Enemy::initializeSolids()
     solids.push_back(std::make_shared<Ellipsoid>(Ellipsoid(center, headColor,
                                                          2*radius, 2*radius, 2*radius, edgeColor)));
 }
+
+void Enemy::setFutureLocations(std::vector<Point> inputFutureLocations)
+{
+    futureLocations = inputFutureLocations;
+    arriveAtTarget();
+}
+
+void Enemy::turnTowardTarget()
+{
+    xzAngle = atan2(targetLocation.z - location.z, targetLocation.x - location.x);
+    velocity = {speed*cos(xzAngle), 0, speed*sin(xzAngle)};
+}
+
+
+void Enemy::arriveAtTarget()
+{
+    if(!futureLocations.empty())
+    {
+        targetLocation = futureLocations.back();
+        futureLocations.pop_back();
+        turnTowardTarget();
+    }
+}
+
+void Enemy::tick()
+{
+    if(distance2d(location, targetLocation) < speed)
+    {
+        location = targetLocation;
+        arriveAtTarget();
+    }
+    else
+    {
+        location.x += velocity.x;
+        location.z += velocity.z;
+    }
+}
+
 
 void Enemy::draw() const
 {
