@@ -90,19 +90,19 @@ std::experimental::optional<PlotNode*> PlotNode::getDownNeighbor() const
 
 bool PlotNode::hasLeftNeighbor() const
 {
-    return leftNeighbor == std::experimental::nullopt;
+    return leftNeighbor != std::experimental::nullopt;
 }
 bool PlotNode::hasRightNeighbor() const
 {
-    return rightNeighbor == std::experimental::nullopt;
+    return rightNeighbor != std::experimental::nullopt;
 }
 bool PlotNode::hasUpNeighbor() const
 {
-    return upNeighbor == std::experimental::nullopt;
+    return upNeighbor != std::experimental::nullopt;
 }
 bool PlotNode::hasDownNeighbor() const
 {
-    return downNeighbor == std::experimental::nullopt;
+    return downNeighbor != std::experimental::nullopt;
 }
 
 Point2D PlotNode::getChunkCoords() const
