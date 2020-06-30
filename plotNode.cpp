@@ -53,21 +53,21 @@ void PlotNode::initializeCenter()
 }
 
 // Setters
-void PlotNode::addLeftNeighbor(std::experimental::optional<PlotNode*> inputLeftNeighbor)
+void PlotNode::addLeftNeighbor(PlotNode &inputLeftNeighbor)
 {
-    leftNeighbor = inputLeftNeighbor;
+    leftNeighbor = &inputLeftNeighbor;
 }
-void PlotNode::addRightNeighbor(std::experimental::optional<PlotNode*> inputRightNeighbor)
+void PlotNode::addRightNeighbor(PlotNode &inputRightNeighbor)
 {
-    rightNeighbor = inputRightNeighbor;
+    rightNeighbor = &inputRightNeighbor;
 }
-void PlotNode::addUpNeighbor(std::experimental::optional<PlotNode*> inputUpNeighbor)
+void PlotNode::addUpNeighbor(PlotNode &inputUpNeighbor)
 {
-    upNeighbor = inputUpNeighbor;
+    upNeighbor = &inputUpNeighbor;
 }
-void PlotNode::addDownNeighbor(std::experimental::optional<PlotNode*> inputDownNeighbor)
+void PlotNode::addDownNeighbor(PlotNode &inputDownNeighbor)
 {
-    downNeighbor = inputDownNeighbor;
+    downNeighbor = &inputDownNeighbor;
 }
 
 // Getters

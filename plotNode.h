@@ -34,10 +34,10 @@ public:
     void initializeCenter();
 
     // Setters
-    void addLeftNeighbor(std::experimental::optional<PlotNode*> inputLeftNeighbor);
-    void addRightNeighbor(std::experimental::optional<PlotNode*> inputRightNeighbor);
-    void addUpNeighbor(std::experimental::optional<PlotNode*> inputUpNeighbor);
-    void addDownNeighbor(std::experimental::optional<PlotNode*> inputDownNeighbor);
+    void addLeftNeighbor(PlotNode &inputLeftNeighbor);
+    void addRightNeighbor(PlotNode &inputRightNeighbor);
+    void addUpNeighbor(PlotNode &inputUpNeighbor);
+    void addDownNeighbor(PlotNode &inputDownNeighbor);
 
     // Getters
     std::experimental::optional<PlotNode*> getLeftNeighbor() const;
