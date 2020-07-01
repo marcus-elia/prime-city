@@ -3,6 +3,7 @@
 Chunk::Chunk()
 {
     topLeft = {0, 0};
+    chunkID = topLeft.toChunkID();
     sideLength = 1024;
     perlinSeed = 0.5;
     initializeCenter();
@@ -10,9 +11,10 @@ Chunk::Chunk()
     initializePlotEmpty();
     makeBuildings();
 }
-Chunk::Chunk(Point2D inputBottomLeft, int inputSideLength,  double inputPerlinSeed)
+Chunk::Chunk(Point2D inputTopLeft, int inputSideLength,  double inputPerlinSeed)
 {
-    topLeft = inputBottomLeft;
+    topLeft = inputTopLeft;
+    chunkID = topLeft.toChunkID();
     sideLength = inputSideLength;
     perlinSeed = inputPerlinSeed;
     initializeCenter();

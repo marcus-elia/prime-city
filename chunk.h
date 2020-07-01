@@ -41,7 +41,7 @@ private:
     std::vector<Building> buildings;
 public:
     Chunk();
-    Chunk(Point2D inputBottomLeft, int inputSideLength, double inputPerlinSeed);
+    Chunk(Point2D inputTopLeft, int inputSideLength, double inputPerlinSeed);
 
     void initializeCenter();
     void initializePlotEmpty();
