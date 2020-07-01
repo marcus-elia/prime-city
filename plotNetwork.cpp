@@ -186,7 +186,7 @@ std::vector<Point> PlotNetwork::getShortestPathPoints(int idStart, int idEnd, in
 {
     std::vector<Point> output;
     std::vector<PlotNode*> nodes = breadthFirstSearch(idStart, idEnd, maxDepth);
-    for(int i = nodes.size() - 1; i >= 0; i--)
+    for(int i = 0; i < nodes.size(); i++)
     {
         output.push_back(nodes[i]->getCenter());
     }
