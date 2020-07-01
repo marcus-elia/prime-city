@@ -29,6 +29,10 @@ public:
 
     // Wrapper function
     std::vector<PlotNode*> getShortestPath(int idStart, int idEnd, int maxDepth=-1) const;
+
+    // Wrapper function that returns Points (the centers of the Plots), and leaves
+    // the order reversed since the Enemies want that
+    std::vector<Point> getShortestPathPoints(int idStart, int idEnd, int maxDepth=-1) const;
 };
 
 #endif //PRIME_CITY_PLOTNETWORK_H

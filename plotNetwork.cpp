@@ -181,3 +181,14 @@ std::vector<PlotNode*> PlotNetwork::getShortestPath(int idStart, int idEnd, int 
     }
     return output;
 }
+
+std::vector<Point> PlotNetwork::getShortestPathPoints(int idStart, int idEnd, int maxDepth) const
+{
+    std::vector<Point> output;
+    std::vector<PlotNode*> nodes = breadthFirstSearch(idStart, idEnd, maxDepth);
+    for(int i = nodes.size() - 1; i >= 0; i--)
+    {
+        output.push_back(nodes[i]->getCenter());
+    }
+    return output;
+}
