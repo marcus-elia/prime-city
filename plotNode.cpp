@@ -45,7 +45,7 @@ PlotNode::PlotNode(int inputPlotID, int inputChunkSideLength, int inputPlotsPerS
 void PlotNode::initializeCenter()
 {
     int topLeftX = chunkCoords.x * chunkSideLength;
-    int topLeftZ = (chunkCoords.z + 1) * chunkSideLength;
+    int topLeftZ = chunkCoords.z * chunkSideLength;
     int plotSideLength = chunkSideLength / plotsPerSide;
     double centerX = topLeftX + plotCoords.x*plotSideLength + plotSideLength/2;
     double centerZ = topLeftZ + plotCoords.z*plotSideLength + plotSideLength/2;
