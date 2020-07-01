@@ -39,6 +39,11 @@ void Enemy::initializeSolids()
                                                          2*radius, 2*radius, 2*radius, edgeColor)));
 }
 
+Point Enemy::getLocation() const
+{
+    return location;
+}
+
 void Enemy::setFutureLocations(std::vector<Point> inputFutureLocations)
 {
     futureLocations = inputFutureLocations;

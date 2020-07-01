@@ -47,6 +47,8 @@ public:
 
     void initializeSolids();
 
+    Point getLocation() const;
+
     void setFutureLocations(std::vector<Point> inputFutureLocations);
 
     // Set angle and velocity to face toward the targetLocation
