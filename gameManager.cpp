@@ -225,8 +225,16 @@ int GameManager::getIDofNearestPlot(Point p)
     int plotSize = chunkSize / plotsPerSide;
     // Subtract plotSize/2 because we want to target center of plot, but
     // plotCoords refer to top left of plot
-    int plotX = (int)round(p.x - chunkCoords.x*chunkSize - plotSize/2);
-    int plotZ = (int)round(p.z - chunkCoords.z*chunkSize - plotSize/2);
+    int plotX = (int)round((p.x - chunkCoords.x*chunkSize - plotSize/2) / plotSize);
+    if(plotX < 0)
+    {
+        plotX = 0;
+    }
+    int plotZ = (int)round((p.z - chunkCoords.z*chunkSize - plotSize/2) / plotSize);
+    if(plotZ < 0)
+    {
+        plotZ = 0;
+    }
     Point2D plotCoords = {plotX, plotZ};
     return makeID(chunkCoords, plotCoords, plotsPerSide);
 }
