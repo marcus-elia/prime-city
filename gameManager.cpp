@@ -7,6 +7,7 @@ GameManager::GameManager()
     chunkSize = 512;
     plotsPerSide = 8;
     renderRadius = 5;
+    playerPlotID = 0;
     updateCurrentChunks();
     enemies.push_back(std::make_shared<Enemy>());
 }
@@ -16,6 +17,7 @@ GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRen
     plotsPerSide = inputPlotsPerSide;
     renderRadius = inputRenderRadius;
     perlinSize = inputPerlinSize;
+    playerPlotID = 0;
     png = PerlinNoiseGenerator(perlinSize, perlinSize, 1);
     updateCurrentChunks();
 }
@@ -72,6 +74,15 @@ void GameManager::tick()
     // The player moves
     player.tick();
 
+    // Update the player's plot
+    Vector3 newLocation = player.getLocation();
+    int newID = getIDofNearestPlot({newLocation.x, newLocation.y, newLocation.z});
+    if(newID != playerPlotID)
+    {
+        playerPlotID = newID;
+        updateEnemyPathFinding();
+    }
+
     // Check for the player hitting a building
     Point2D curPlayerChunk = player.whatChunk();
     std::shared_ptr<Chunk> c = allSeenChunks[pointToInt(curPlayerChunk)];
@@ -80,9 +91,12 @@ void GameManager::tick()
     // If the player is entering a different chunk
     if(curPlayerChunk != player.getCurrentChunkCoords())
     {
-        //std::cout << pointToInt({player.whatChunk().x, player.whatChunk().z}) << std::endl;
-        //std::cout << player.getLocation().x << ", " << player.getLocation().z << std::endl;
         updateCurrentChunks();
+    }
+
+    for(std::shared_ptr<Enemy> enemy : enemies)
+    {
+        enemy->tick();
     }
 
     // The missiles move
@@ -215,6 +229,15 @@ int GameManager::getIDofNearestPlot(Point p)
     int plotZ = (int)round(p.z - chunkCoords.z*chunkSize - plotSize/2);
     Point2D plotCoords = {plotX, plotZ};
     return makeID(chunkCoords, plotCoords, plotsPerSide);
+}
+
+void GameManager::updateEnemyPathFinding()
+{
+    for(int i = 0; i < enemies.size(); i++)
+    {
+        int enemyPlotID = getIDofNearestPlot(enemies[i]->getLocation());
+        enemies[i]->setFutureLocations(network.getShortestPathPoints(enemyPlotID, playerPlotID));
+    }
 }
 
 // =========================

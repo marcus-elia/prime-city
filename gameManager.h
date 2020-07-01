@@ -34,6 +34,7 @@ private:
 
     // Path finding
     PlotNetwork network;
+    int playerPlotID; // the plot the player is currently in
 public:
     GameManager();
     GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize);
@@ -63,6 +64,7 @@ public:
 
     // Path finding
     int getIDofNearestPlot(Point p);
+    void updateEnemyPathFinding();
 
     // Missiles
     void createMissile();
