@@ -5,13 +5,15 @@ GameManager::GameManager()
     perlinSize = 10;
     png = PerlinNoiseGenerator(10, 10, 1);
     chunkSize = 512;
+    plotsPerSide = 8;
     renderRadius = 5;
     updateCurrentChunks();
     enemies.push_back(std::make_shared<Enemy>());
 }
-GameManager::GameManager(int inputChunkSize, int inputRenderRadius, int inputPerlinSize)
+GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize)
 {
     chunkSize = inputChunkSize;
+    plotsPerSide = inputPlotsPerSide;
     renderRadius = inputRenderRadius;
     perlinSize = inputPerlinSize;
     png = PerlinNoiseGenerator(perlinSize, perlinSize, 1);
@@ -196,6 +198,24 @@ std::shared_ptr<Chunk> GameManager::pointToChunk(Point p)
     return allSeenChunks[chunkIndex];
 }
 
+
+
+// =========================
+//
+//      Path Finding
+//
+// =========================
+int GameManager::getIDofNearestPlot(Point p)
+{
+    Point2D chunkCoords = {(int)(p.x / chunkSize), (int)(p.z / chunkSize)};
+    int plotSize = chunkSize / plotsPerSide;
+    // Subtract plotSize/2 because we want to target center of plot, but
+    // plotCoords refer to top left of plot
+    int plotX = (int)round(p.x - chunkCoords.x*chunkSize - plotSize/2);
+    int plotZ = (int)round(p.z - chunkCoords.z*chunkSize - plotSize/2);
+    Point2D plotCoords = {plotX, plotZ};
+    return makeID(chunkCoords, plotCoords, plotsPerSide);
+}
 
 // =========================
 //

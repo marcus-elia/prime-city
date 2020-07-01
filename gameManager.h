@@ -22,6 +22,7 @@ private:
 
     // Chunks
     int chunkSize;
+    int plotsPerSide;
     int renderRadius;
     std::unordered_map<int, std::shared_ptr<Chunk>> allSeenChunks;
     std::vector<std::shared_ptr<Chunk>> currentChunks;
@@ -35,7 +36,7 @@ private:
     PlotNetwork network;
 public:
     GameManager();
-    GameManager(int inputChunkSize, int inputRenderRadius, int inputPerlinSize);
+    GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize);
 
     // Getters
     Player getPlayer() const;
@@ -59,6 +60,9 @@ public:
     void updateCurrentChunks();
     // Returns a pointer to the chunk that p is in
     std::shared_ptr<Chunk> pointToChunk(Point p);
+
+    // Path finding
+    int getIDofNearestPlot(Point p);
 
     // Missiles
     void createMissile();
