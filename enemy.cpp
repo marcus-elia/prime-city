@@ -74,6 +74,13 @@ void Enemy::arriveAtTarget()
     {
         targetLocation = futureLocations.back();
         futureLocations.pop_back();
+        // If the current location is closer to the ultimate goal than the next step, skip it
+        if(!futureLocations.empty() && distance2d(location, futureLocations[0]) < distance2d(targetLocation, futureLocations[0]))
+        {
+            targetLocation = futureLocations.back();
+            futureLocations.pop_back();
+        }
+
         turnTowardTarget();
     }
 }
