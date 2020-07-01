@@ -10,6 +10,7 @@
 #include "perlinNoiseGenerator.h"
 #include "structs.h"
 #include "chunk.h"
+#include "plotNetwork.h"
 
 class GameManager
 {
@@ -26,7 +27,12 @@ private:
     std::vector<std::shared_ptr<Chunk>> currentChunks;
     int perlinSize;  // how many chunks before perlin repeats
     PerlinNoiseGenerator png;
+
+    // Enemies
     std::vector<std::shared_ptr<Enemy>> enemies;
+
+    // Path finding
+    PlotNetwork network;
 public:
     GameManager();
     GameManager(int inputChunkSize, int inputRenderRadius, int inputPerlinSize);

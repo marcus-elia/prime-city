@@ -173,7 +173,15 @@ void GameManager::updateCurrentChunks()
         int index = pointToInt(p);
         if(allSeenChunks.count(index) == 0) // if the chunk has never been seen before
         {
+            // Create and add a new Chunk
             allSeenChunks[index] = std::make_shared<Chunk>(p, chunkSize, getPerlinValue(p));
+
+            // Update the network with the plots from the new chunk
+            std::vector<int> emptyPlotIDs = allSeenChunks[index]->getEmptyPlotIDs();
+            for(int id : emptyPlotIDs)
+            {
+                network.addNode(PlotNode(id, chunkSize, allSeenChunks[index]->getPlotsPerSide()));
+            }
         }
         currentChunks.push_back(allSeenChunks[index]);
     }
