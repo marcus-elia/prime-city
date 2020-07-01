@@ -56,6 +56,17 @@ void Enemy::turnTowardTarget()
     velocity = {speed*cos(xzAngle), 0, speed*sin(xzAngle)};
 }
 
+void Enemy::move()
+{
+    for(auto s : solids)
+    {
+        s->move(velocity.x, velocity.y, velocity.z);
+    }
+    location.x += velocity.x;
+    location.y += velocity.y;
+    location.z += velocity.z;
+}
+
 
 void Enemy::arriveAtTarget()
 {
@@ -76,8 +87,7 @@ void Enemy::tick()
     }
     else
     {
-        location.x += velocity.x;
-        location.z += velocity.z;
+        move();
     }
 }
 

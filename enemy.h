@@ -54,6 +54,8 @@ public:
     // Set angle and velocity to face toward the targetLocation
     void turnTowardTarget();
 
+    void move();
+
     // When the enemy reaches the target location, start moving
     // toward the next target
     void arriveAtTarget();
