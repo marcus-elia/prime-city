@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include "enemy.h"
 #include "player.h"
+#include "missile.h"
 #include "perlinNoiseGenerator.h"
 #include "structs.h"
 #include "chunk.h"
@@ -32,6 +33,9 @@ private:
 
     // Enemies
     std::vector<std::shared_ptr<Enemy>> enemies;
+
+    // Missiles
+    std::vector<std::shared_ptr<Missile>> missiles;
 
     // Path finding
     PlotNetwork network;

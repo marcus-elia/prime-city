@@ -45,6 +45,11 @@ void GameManager::draw() const
     {
         e->draw();
     }
+
+    for(auto &m : missiles)
+    {
+        m->draw();
+    }
     // Draw a red square under the player for debug
     /*glDisable(GL_CULL_FACE);
     Vector3 v = player.getLocation();
@@ -100,11 +105,11 @@ void GameManager::tick()
     }
 
     // The missiles move
-    /*for(std::shared_ptr<Missile> m : missiles)
+    for(std::shared_ptr<Missile> m : missiles)
     {
         m->tick();
     }
-    checkMissiles();*/
+    checkMissiles();
 }
 
 Player GameManager::getPlayer() const
@@ -240,11 +245,11 @@ void GameManager::createMissile()
     Point velocity = {player.getLookingAt().x - location.x,
                       player.getLookingAt().y - location.y,
                       player.getLookingAt().z - location.z};
-    //missiles.push_back(std::make_shared<Missile>(Missile(location, 10, velocity, 5)));
+    missiles.push_back(std::make_shared<Missile>(Missile(location, 10, velocity, 5, true)));
 }
 void GameManager::checkMissiles()
 {
-    /*int L = missiles.size();
+    int L = missiles.size();
     int i = 0;
     while(i < L)
     {
@@ -267,7 +272,6 @@ void GameManager::checkMissiles()
                 if(b.correctCollision(m->getLocation(), m->getRadius()))
                 {
                     missiles.erase(missiles.begin() + i);
-                    b.giveSolidsColor();
                     L -= 1;
                     i--;
                     break;
@@ -275,7 +279,7 @@ void GameManager::checkMissiles()
             }
         }
         i++;
-    }*/
+    }
 }
 
 
