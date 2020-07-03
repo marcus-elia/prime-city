@@ -26,6 +26,8 @@ bool testIdToPlotCoords();
 
 bool testIDAboveBelowLeftRight();
 
+bool testGetIDofNearestPlot();
+
 
 int main()
 {
@@ -43,6 +45,7 @@ int main()
     testBFSexample2();
     testBFSexample3();
     testBFSexample4();
+    testGetIDofNearestPlot();
     return 0;
 }
 
@@ -999,6 +1002,167 @@ bool testIDAboveBelowLeftRight()
     {
         passed = false;
         std::cout << "Test FAILED on right when ID = " << id << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+
+    if(passed)
+    {
+        std::cout << "All tests passed." << std::endl;
+    }
+    return passed;
+}
+
+bool testGetIDofNearestPlot()
+{
+    bool passed = true;
+    std::cout << "\nTesting getIDofNearestPlot" << std::endl;
+
+    Point p;
+    int chunkSize = 512;
+    int plotsPerSide = 8;
+    int obs, exp;
+
+    // ----------- The Plot 0 ------------
+    exp = 0;
+    // In the center of the plot
+    p = {32, 0, 32};
+    obs = getIDofNearestPlot(p, chunkSize, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED for center of plot" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    // In the top left of the plot
+    p = {8, 0, 8};
+    obs = getIDofNearestPlot(p, chunkSize, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED for top left of plot" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    // In the top right of the plot
+    p = {56, 0, 8};
+    obs = getIDofNearestPlot(p, chunkSize, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED for top right of plot" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    // In the bottom left of the plot
+    p = {8, 0, 56};
+    obs = getIDofNearestPlot(p, chunkSize, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED for bottom left of plot" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    // In the bottom right of the plot
+    p = {56, 0, 56};
+    obs = getIDofNearestPlot(p, chunkSize, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED for bottom right of plot" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+
+    // ---------- The Plot 71 ----------
+    exp = 71;
+    // In the center of the plot
+    p = {-32, 0, 32};
+    obs = getIDofNearestPlot(p, chunkSize, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED for center of plot" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    // In the top left of the plot
+    p = {-56, 0, 8};
+    obs = getIDofNearestPlot(p, chunkSize, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED for top left of plot" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    // In the top right of the plot
+    p = {-8, 0, 8};
+    obs = getIDofNearestPlot(p, chunkSize, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED for top right of plot" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    // In the bottom left of the plot
+    p = {-56, 0, 56};
+    obs = getIDofNearestPlot(p, chunkSize, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED for bottom left of plot" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    // In the bottom right of the plot
+    p = {-8, 0, 56};
+    obs = getIDofNearestPlot(p, chunkSize, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED for bottom right of plot" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+
+    // ---------- The Plot 191 ----------
+    exp = 191;
+    // In the center of the plot
+    p = {-32, 0, -32};
+    obs = getIDofNearestPlot(p, chunkSize, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED for center of plot" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    // In the top left of the plot
+    p = {-56, 0, -56};
+    obs = getIDofNearestPlot(p, chunkSize, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED for top left of plot" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    // In the top right of the plot
+    p = {-8, 0, -56};
+    obs = getIDofNearestPlot(p, chunkSize, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED for top right of plot" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    // In the bottom left of the plot
+    p = {-56, 0, -8};
+    obs = getIDofNearestPlot(p, chunkSize, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED for bottom left of plot" << std::endl;
+        std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+    // In the bottom right of the plot
+    p = {-8, 0, -8};
+    obs = getIDofNearestPlot(p, chunkSize, plotsPerSide);
+    if(exp != obs)
+    {
+        passed = false;
+        std::cout << "Test FAILED for bottom right of plot" << std::endl;
         std::cout << "Expected " << exp << ", observed " << obs << std::endl;
     }
 
