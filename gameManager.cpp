@@ -9,7 +9,11 @@ GameManager::GameManager()
     renderRadius = 5;
     playerPlotID = 0;
     updateCurrentChunks();
-    enemies.push_back(std::make_shared<Enemy>());
+
+    enemyBodyHeight = 12;
+    enemyRadius = 4;
+    enemySpeed = 1.5;
+    //enemies.push_back(std::make_shared<Enemy>());
 }
 GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize)
 {
@@ -20,6 +24,9 @@ GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRen
     playerPlotID = 0;
     png = PerlinNoiseGenerator(perlinSize, perlinSize, 1);
     updateCurrentChunks();
+    enemyBodyHeight = 12;
+    enemyRadius = 4;
+    enemySpeed = 1.5;
 }
 
 void GameManager::reactToMouseMovement(double theta)
@@ -99,10 +106,13 @@ void GameManager::tick()
         updateCurrentChunks();
     }
 
+    // The enemies move
     for(std::shared_ptr<Enemy> enemy : enemies)
     {
         enemy->tick();
     }
+    // Spawn and despawn enemies
+    manageEnemies();
 
     // The missiles move
     for(std::shared_ptr<Missile> m : missiles)
@@ -232,6 +242,50 @@ void GameManager::updateEnemyPathFinding()
     {
         int enemyPlotID = getIDofNearestPlot(enemies[i]->getLocation(), chunkSize, plotsPerSide);
         enemies[i]->setFutureLocations(network.getShortestPathPoints(enemyPlotID, playerPlotID));
+    }
+}
+
+// =========================
+//
+//         Enemies
+//
+// =========================
+Point GameManager::getRandomOpenLocation()
+{
+    int randIndex = rand() % currentChunks.size();
+    std::vector<int> emptyPlots = currentChunks[randIndex]->getEmptyPlotIDs();
+    randIndex = rand() % emptyPlots.size();
+    int plot = emptyPlots[randIndex];
+    return getPlotCenterFromID(plot, chunkSize, plotsPerSide);
+}
+void GameManager::createRandomEnemy()
+{
+    Point location = getRandomOpenLocation();
+    location.y = enemyBodyHeight/2;
+    enemies.push_back(std::make_shared<Enemy>(location, enemyBodyHeight, enemyRadius,
+            enemySpeed,  0, rand() % 100));
+}
+void  GameManager::manageEnemies()
+{
+    // First, iterate through and remove enemies that are too far away
+    int L = enemies.size();
+    int i = 0;
+    while(i < L)
+    {
+        std::shared_ptr<Enemy> e = enemies[i];
+        Point playerLocation = {player.getLocation().x, player.getLocation().y, player.getLocation().z};
+
+        if(distance2d(playerLocation, e->getLocation()) > renderRadius*chunkSize)
+        {
+            enemies.erase(enemies.begin() + i);
+            L -= 1;
+            i--;
+        }
+        i++;
+    }
+    if(enemies.size() < MAX_NUM_ENEMIES)
+    {
+        createRandomEnemy();
     }
 }
 

@@ -32,7 +32,11 @@ private:
     PerlinNoiseGenerator png;
 
     // Enemies
+    double enemyBodyHeight;
+    double enemyRadius;
+    double enemySpeed;
     std::vector<std::shared_ptr<Enemy>> enemies;
+    const int MAX_NUM_ENEMIES = 10;
 
     // Missiles
     std::vector<std::shared_ptr<Missile>> missiles;
@@ -69,6 +73,11 @@ public:
 
     // Path finding
     void updateEnemyPathFinding();
+
+    // Enemies
+    Point getRandomOpenLocation();  // Returns the center of an empty plot
+    void manageEnemies(); // create new enemies if needed, despawn if too far away
+    void createRandomEnemy();
 
     // Missiles
     void createMissile();

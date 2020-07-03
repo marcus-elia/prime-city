@@ -25,6 +25,7 @@ Enemy::Enemy(Point inputLocation, double inputBodyHeight, double inputRadius,
     speed = inputSpeed;
     rotationSpeed = inputRotationSpeed;
     number = inputNumber;
+    velocity = {0,0,0};
     initializeSolids();
 }
 
