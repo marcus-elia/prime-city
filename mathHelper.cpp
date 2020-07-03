@@ -159,3 +159,13 @@ double directedDistance(double A, double B, double C, double x, double y)
 {
     return (A*x + B*y + C) / sqrt(A*A + B*B);
 }
+
+int getIDofNearestPlot(Point p, int chunkSize, int plotsPerSide)
+{
+    Point2D chunkCoords = {(int)floor(p.x / chunkSize), (int)floor(p.z / chunkSize)};
+    int plotSize = chunkSize / plotsPerSide;
+    int plotX = (int)floor((p.x - chunkCoords.x*chunkSize) / plotSize);
+    int plotZ = (int)floor((p.z - chunkCoords.z*chunkSize) / plotSize);
+    Point2D plotCoords = {plotX, plotZ};
+    return makeID(chunkCoords, plotCoords, plotsPerSide);
+}

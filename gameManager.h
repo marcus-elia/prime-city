@@ -11,6 +11,7 @@
 #include "structs.h"
 #include "chunk.h"
 #include "plotNetwork.h"
+#include "mathHelper.h"
 
 class GameManager
 {
@@ -63,7 +64,6 @@ public:
     std::shared_ptr<Chunk> pointToChunk(Point p);
 
     // Path finding
-    int getIDofNearestPlot(Point p);
     void updateEnemyPathFinding();
 
     // Missiles

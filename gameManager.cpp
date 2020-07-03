@@ -76,7 +76,7 @@ void GameManager::tick()
 
     // Update the player's plot
     Vector3 newLocation = player.getLocation();
-    int newID = getIDofNearestPlot({newLocation.x, newLocation.y, newLocation.z});
+    int newID = getIDofNearestPlot({newLocation.x, newLocation.y, newLocation.z}, chunkSize, plotsPerSide);
     if(newID != playerPlotID)
     {
         playerPlotID = newID;
@@ -219,31 +219,12 @@ std::shared_ptr<Chunk> GameManager::pointToChunk(Point p)
 //      Path Finding
 //
 // =========================
-int GameManager::getIDofNearestPlot(Point p)
-{
-    Point2D chunkCoords = {(int)(p.x / chunkSize), (int)(p.z / chunkSize)};
-    int plotSize = chunkSize / plotsPerSide;
-    // Subtract plotSize/2 because we want to target center of plot, but
-    // plotCoords refer to top left of plot
-    int plotX = (int)round((p.x - chunkCoords.x*chunkSize - plotSize/2) / plotSize);
-    if(plotX < 0)
-    {
-        plotX = 0;
-    }
-    int plotZ = (int)round((p.z - chunkCoords.z*chunkSize - plotSize/2) / plotSize);
-    if(plotZ < 0)
-    {
-        plotZ = 0;
-    }
-    Point2D plotCoords = {plotX, plotZ};
-    return makeID(chunkCoords, plotCoords, plotsPerSide);
-}
 
 void GameManager::updateEnemyPathFinding()
 {
     for(int i = 0; i < enemies.size(); i++)
     {
-        int enemyPlotID = getIDofNearestPlot(enemies[i]->getLocation());
+        int enemyPlotID = getIDofNearestPlot(enemies[i]->getLocation(), chunkSize, plotsPerSide);
         enemies[i]->setFutureLocations(network.getShortestPathPoints(enemyPlotID, playerPlotID));
     }
 }
@@ -327,9 +308,11 @@ int mod(int a, int m)
 void GameManager::printPlayerBuildingDebug()
 {
     Vector3 v = player.getLocation();
-    std::cout << std::endl<< "Player location: " << v.x << "," << v.y << "," << v.z << std::endl;
-    Point2D curPlayerChunk = player.whatChunk();
-    std::shared_ptr<Chunk> c = allSeenChunks[pointToInt(curPlayerChunk)];
+    //std::cout << std::endl<< "Player location: " << v.x << "," << v.y << "," << v.z << std::endl;
+    //Point2D curPlayerChunk = player.whatChunk();
+    //std::shared_ptr<Chunk> c = allSeenChunks[pointToInt(curPlayerChunk)];
+    std::cout << "Player plot " << playerPlotID << std::endl;
+    std::cout << "Enemy plot " << getIDofNearestPlot(enemies[0]->getLocation(), chunkSize, plotsPerSide) << std::endl;
     /*for(Building &b : c->getBuildings())
     {
         for(std::shared_ptr<Solid> s : b.getSolids())

@@ -39,4 +39,8 @@ double distance(Point2D p1, Point2D p2);
 // 2d directed distance
 double directedDistance(double A, double B, double C, double x, double y);
 
+// Returns the id of the plot whose center is closest to the given Point
+// This should be the plot that the point is contained in
+int getIDofNearestPlot(Point p, int chunkSize, int plotsPerSide);
+
 #endif //PRIME_CITY_MATHHELPER_H
