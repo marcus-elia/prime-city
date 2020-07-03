@@ -63,6 +63,9 @@ public:
     void tick();
 
     void draw() const;
+
+    // Returns true if the missile is currently colliding with this
+    bool isHitByMissile(Point missileLoc, double missileRadius);
 };
 
 #endif //PRIME_CITY_ENEMY_H

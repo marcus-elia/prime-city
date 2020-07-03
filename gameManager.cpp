@@ -109,6 +109,7 @@ void GameManager::tick()
     {
         m->tick();
     }
+    // Check for missile collisions with buildings and enemies
     checkMissiles();
 }
 
@@ -263,9 +264,10 @@ void GameManager::checkMissiles()
             L -= 1;
             i--;
         }
-        // Check if the missile is hitting a building
+        // Check if the missile is hitting something
         else
         {
+            // First, check for Buildings
             std::shared_ptr<Chunk> c = pointToChunk(m->getLocation());
             for(Building &b : c->getBuildings())
             {
@@ -274,6 +276,19 @@ void GameManager::checkMissiles()
                     missiles.erase(missiles.begin() + i);
                     L -= 1;
                     i--;
+                    break;
+                }
+            }
+            // Then check for Enemies
+            for(int j = 0; j < enemies.size(); j++)
+            {
+                std::shared_ptr<Enemy> enemy = enemies[j];
+                if(enemy->isHitByMissile(m->getLocation(), m->getRadius()))
+                {
+                    missiles.erase(missiles.begin() + i);
+                    L -= 1;
+                    i--;
+                    enemies.erase(enemies.begin() + j);
                     break;
                 }
             }
