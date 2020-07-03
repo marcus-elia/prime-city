@@ -43,4 +43,7 @@ double directedDistance(double A, double B, double C, double x, double y);
 // This should be the plot that the point is contained in
 int getIDofNearestPlot(Point p, int chunkSize, int plotsPerSide);
 
+// Given a plotID, return the center of the plot
+Point getPlotCenterFromID(int plotID, int chunkSize, int plotsPerSide);
+
 #endif //PRIME_CITY_MATHHELPER_H

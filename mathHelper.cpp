@@ -169,3 +169,15 @@ int getIDofNearestPlot(Point p, int chunkSize, int plotsPerSide)
     Point2D plotCoords = {plotX, plotZ};
     return makeID(chunkCoords, plotCoords, plotsPerSide);
 }
+
+Point getPlotCenterFromID(int plotID, int chunkSize, int plotsPerSide)
+{
+    int plotsPerChunk = plotsPerSide*plotsPerSide;
+    int chunkID = plotID / plotsPerChunk;
+    Point2D chunkCoords = chunkIDtoPoint(chunkID);
+    Point2D plotCoords = idToPlotCoords(plotID, plotsPerSide);
+    int plotSize = chunkSize / plotsPerSide;
+    double x = chunkCoords.x*chunkSize + plotCoords.x*plotSize;
+    double z = chunkCoords.z*chunkSize + plotCoords.z*plotSize;
+    return {x, 0, z};
+}
