@@ -90,6 +90,12 @@ void Enemy::tick()
 {
     if(distance2d(location, targetLocation) < speed)
     {
+        for(auto s : solids)
+        {
+            s->move(targetLocation.x - location.x,
+                    0,
+                    targetLocation.z - location.z);
+        }
         location = targetLocation;
         arriveAtTarget();
     }
