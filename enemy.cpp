@@ -111,6 +111,6 @@ void Enemy::draw() const
 bool Enemy::isHitByMissile(Point missileLoc, double missileRadius)
 {
     bool lowEnough =  missileLoc.y < bodyHeight + 2*radius - missileRadius/2;
-    bool closeEnough = distance2d(location, missileLoc) < missileRadius/2 + radius/2;
+    bool closeEnough = distance2d(location, missileLoc) < missileRadius/2 + radius;
     return  closeEnough && lowEnough;
 }
