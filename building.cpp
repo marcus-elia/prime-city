@@ -9,19 +9,16 @@ Building::Building()
     color = {0,0.4,1,1};
     edgeColor = {.9,.9,.9, 1};
 
-    buildingType = Plain;
-
     initializeSolids();
 }
 Building::Building(Point2D inputTopLeft, int inputSideLength, int inputHeight,
-                   RGBAcolor inputColor, RGBAcolor inputEdgeColor, typeOfBuilding inputBuildingType)
+                   RGBAcolor inputColor, RGBAcolor inputEdgeColor)
 {
     topLeft = inputTopLeft;
     sideLength = inputSideLength;
     height = inputHeight;
     color = inputColor;
     edgeColor = inputEdgeColor;
-    buildingType = inputBuildingType;
 
     initializeSolids();
 
@@ -62,7 +59,7 @@ void Building::initializeSolids1()
     // Make a rectangle most of the time
     if(shapeSeed < 65)
     {
-        solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
+        solids.push_back(std::unique_ptr<RecPrism>(new RecPrism(center, color,
                                                             sideLength, height, sideLength, edgeColor, lineDensity)));
     }
     // Then try a frustum
@@ -70,14 +67,14 @@ void Building::initializeSolids1()
     {
         double upperXWidth = sideLength - (rand() % (sideLength/2));
         double upperZWidth = sideLength - (rand() % (sideLength/2));
-        solids.push_back(std::make_shared<Frustum>(Frustum(center, color,
+        solids.push_back(std::unique_ptr<Frustum>(new Frustum(center, color,
                                                            sideLength, height, sideLength, edgeColor,
                                                            upperXWidth, upperZWidth, lineDensity)));
     }
     // Finally a cylinder
     else
     {
-        solids.push_back(std::make_shared<Cylinder>(Cylinder(center, color,
+        solids.push_back(std::unique_ptr<Cylinder>(new Cylinder(center, color,
                                                            sideLength, height, sideLength, edgeColor,
                                                            sideLength, sideLength, lineDensity)));
     }
@@ -116,10 +113,10 @@ void Building::initializeSolids2()
         // Make a frustum that fits the rec prism base
         if(baseShapeSeed < 20)
         {
-            solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
+            solids.push_back(std::unique_ptr<RecPrism>(new RecPrism(center, color,
                                                                  sideLength, baseHeight, sideLength, edgeColor, lineDensity)));
             center = {center.x, center.y + baseHeight, center.z};
-            solids.push_back(std::make_shared<Frustum>(Frustum(center, color,
+            solids.push_back(std::unique_ptr<Frustum>(new Frustum(center, color,
                                                                sideLength, baseHeight, sideLength, edgeColor,
                                                                sideLength/2, sideLength/2, lineDensity)));
         }
@@ -129,18 +126,18 @@ void Building::initializeSolids2()
             // Make the base
             if(baseShapeSeed < 50)
             {
-                solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
+                solids.push_back(std::unique_ptr<RecPrism>(new RecPrism(center, color,
                                                                      sideLength, baseHeight, sideLength, edgeColor, lineDensity)));
             }
             else if(baseShapeSeed < 75)
             {
-                solids.push_back(std::make_shared<Cylinder>(Cylinder(center, color,
+                solids.push_back(std::unique_ptr<Cylinder>(new Cylinder(center, color,
                                                                      sideLength, baseHeight, sideLength, edgeColor,
                                                                      sideLength, sideLength, lineDensity)));
             }
             else
             {
-                solids.push_back(std::make_shared<Frustum>(Frustum(center, color,
+                solids.push_back(std::unique_ptr<Frustum>(new Frustum(center, color,
                                                                      sideLength, baseHeight, sideLength, edgeColor,
                                                                      sideLength/2, sideLength/2, lineDensity)));
             }
@@ -152,7 +149,7 @@ void Building::initializeSolids2()
             {
                 xWidth = sideLength/2 - (rand() % (sideLength/4));
                 zWidth = sideLength/2 - (rand() % (sideLength/4));
-                solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color, xWidth, baseHeight, zWidth,
+                solids.push_back(std::unique_ptr<RecPrism>(new RecPrism(center, color, xWidth, baseHeight, zWidth,
                                                                      edgeColor, lineDensity)));
             }
             else if(topShapeSeed < 70) // Cylinder
@@ -161,7 +158,7 @@ void Building::initializeSolids2()
                 zWidth = sideLength/2 - (rand() % (sideLength/4));
                 topXWidth = sideLength/2 - (rand() % (sideLength/4));
                 topZWidth = sideLength/2 - (rand() % (sideLength/4));
-                solids.push_back(std::make_shared<Cylinder>(Cylinder(center, color,
+                solids.push_back(std::unique_ptr<Cylinder>(new Cylinder(center, color,
                                                                      xWidth, baseHeight, zWidth, edgeColor,
                                                                      topXWidth, topZWidth, lineDensity)));
             }
@@ -171,7 +168,7 @@ void Building::initializeSolids2()
                 zWidth = sideLength/2 - (rand() % (sideLength/4));
                 topXWidth = sideLength/2 - (rand() % (sideLength/4));
                 topZWidth = sideLength/2 - (rand() % (sideLength/4));
-                solids.push_back(std::make_shared<Frustum>(Frustum(center, color,
+                solids.push_back(std::unique_ptr<Frustum>(new Frustum(center, color,
                                                                      xWidth, baseHeight, zWidth, edgeColor,
                                                                      topXWidth, topZWidth, lineDensity)));
             }
@@ -198,18 +195,18 @@ void Building::initializeSolids3()
         {
             xWidth = sideLength;
             zWidth = sideLength;
-            solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
+            solids.push_back(std::unique_ptr<RecPrism>(new RecPrism(center, color,
                                                                  xWidth, solidHeight, zWidth, edgeColor, lineDensity)));
             center.y += solidHeight;
             xWidth = 3*sideLength/4;
             zWidth = 3*sideLength/4;
-            solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
+            solids.push_back(std::unique_ptr<RecPrism>(new RecPrism(center, color,
                                                                  xWidth, solidHeight,
                                                                  zWidth, edgeColor, lineDensity)));
             center.y += solidHeight;
             xWidth = sideLength/2;
             zWidth = sideLength/2;
-            solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
+            solids.push_back(std::unique_ptr<RecPrism>(new RecPrism(center, color,
                                                                  xWidth, solidHeight,
                                                                  zWidth, edgeColor, lineDensity)));
         }
@@ -217,18 +214,18 @@ void Building::initializeSolids3()
         {
             xWidth = sideLength;
             zWidth = sideLength;
-            solids.push_back(std::make_shared<Cylinder>(Cylinder(center, color,
+            solids.push_back(std::unique_ptr<Cylinder>(new Cylinder(center, color,
                                                                  xWidth, solidHeight, zWidth, edgeColor, lineDensity)));
             center.y += solidHeight;
             xWidth = 3*sideLength/4;
             zWidth = 3*sideLength/4;
-            solids.push_back(std::make_shared<Cylinder>(Cylinder(center, color,
+            solids.push_back(std::unique_ptr<Cylinder>(new Cylinder(center, color,
                                                                  xWidth, solidHeight,
                                                                  zWidth, edgeColor, lineDensity)));
             center.y += solidHeight;
             xWidth = sideLength/2;
             zWidth = sideLength/2;
-            solids.push_back(std::make_shared<Cylinder>(Cylinder(center, color,
+            solids.push_back(std::unique_ptr<Cylinder>(new Cylinder(center, color,
                                                                  xWidth, solidHeight,
                                                                  zWidth, edgeColor, lineDensity)));
         }
@@ -238,7 +235,7 @@ void Building::initializeSolids3()
             zWidth = sideLength;
             topXWidth = 7*sideLength/8;
             topZWidth = 7*sideLength/8;
-            solids.push_back(std::make_shared<Frustum>(Frustum(center, color,
+            solids.push_back(std::unique_ptr<Frustum>(new Frustum(center, color,
                                                                  xWidth, solidHeight, zWidth, edgeColor,
                                                                  topXWidth, topZWidth, lineDensity)));
             center.y += solidHeight;
@@ -246,7 +243,7 @@ void Building::initializeSolids3()
             zWidth = 3*sideLength/4;
             topXWidth = 5*sideLength/8;
             topZWidth = 5*sideLength/8;
-            solids.push_back(std::make_shared<Frustum>(Frustum(center, color,
+            solids.push_back(std::unique_ptr<Frustum>(new Frustum(center, color,
                                                                xWidth, solidHeight, zWidth, edgeColor,
                                                                topXWidth, topZWidth, lineDensity)));
             center.y += solidHeight;
@@ -254,7 +251,7 @@ void Building::initializeSolids3()
             zWidth = sideLength/2;
             topXWidth = 3*sideLength/8;
             topZWidth = 3*sideLength/8;
-            solids.push_back(std::make_shared<Frustum>(Frustum(center, color,
+            solids.push_back(std::unique_ptr<Frustum>(new Frustum(center, color,
                                                                xWidth, solidHeight, zWidth, edgeColor,
                                                                topXWidth, topZWidth, lineDensity)));
         }
@@ -385,7 +382,7 @@ void Building::initializeSolids4()
     if(bonusSeed < 45) // Full cylinder
     {
         Point center = {(double)topLeft.x + sideLength/2, 15*height/16.0, (double)topLeft.z + sideLength/2};
-        solids.push_back(std::make_shared<Cylinder>(Cylinder(center, color,
+        solids.push_back(std::unique_ptr<Cylinder>(new Cylinder(center, color,
                                                              xWidth, solidHeight, zWidth, edgeColor, lineDensity)));
     }
     else if(bonusSeed < 90) // Rectangular spire
@@ -394,7 +391,7 @@ void Building::initializeSolids4()
         xWidth = sideLength/8;
         zWidth = sideLength/8;
         Point center = {(double)topLeft.x + sideLength/2, 7*height/8.0 + solidHeight/2, (double)topLeft.z + sideLength/2};
-        solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
+        solids.push_back(std::unique_ptr<RecPrism>(new RecPrism(center, color,
                                                              xWidth, solidHeight, zWidth, edgeColor, lineDensity)));
     }
     else // Frustum
@@ -402,7 +399,7 @@ void Building::initializeSolids4()
         topXWidth = sideLength/2;
         topZWidth = sideLength/2;
         Point center = {(double)topLeft.x + sideLength/2, 15*height/16.0, (double)topLeft.z + sideLength/2};
-        solids.push_back(std::make_shared<Frustum>(Frustum(center, color,
+        solids.push_back(std::unique_ptr<Frustum>(new Frustum(center, color,
                                                            xWidth, solidHeight, zWidth, edgeColor,
                                                            topXWidth, topZWidth, lineDensity)));
     }
@@ -441,19 +438,19 @@ void Building::addRandomSolid(int centerHeight, int yWidth, int xWidth, int zWid
     int shapeSeed = rand() % 100;
     if(shapeSeed < rectPrismSeed)
     {
-        solids.push_back(std::make_shared<RecPrism>(RecPrism(center, color,
+        solids.push_back(std::unique_ptr<RecPrism>(new RecPrism(center, color,
                                                              xWidth, yWidth,
                                                              zWidth, edgeColor, lineDensity)));
     }
     else if(shapeSeed < cylinderSeed)
     {
-        solids.push_back(std::make_shared<Cylinder>(Cylinder(center, color,
+        solids.push_back(std::unique_ptr<Cylinder>(new Cylinder(center, color,
                                                              xWidth, yWidth, zWidth, edgeColor,
                                                              topXWidth, topZWidth, lineDensity)));
     }
     else
     {
-        solids.push_back(std::make_shared<Frustum>(Frustum(center, color,
+        solids.push_back(std::unique_ptr<Frustum>(new Frustum(center, color,
                                                              xWidth, yWidth, zWidth, edgeColor,
                                                              topXWidth, topZWidth, lineDensity)));
     }
@@ -473,18 +470,14 @@ void Building::addRandomSolid(int centerHeight, int yWidth, int xWidth, int zWid
 //
 // ===================================
 
-std::vector<std::shared_ptr<Solid>> Building::getSolids() const
+std::vector<std::unique_ptr<Solid>> Building::getSolids() const
 {
     return solids;
-}
-typeOfBuilding Building::getBuildingType() const
-{
-    return buildingType;
 }
 
 void Building::draw() const
 {
-    for(std::shared_ptr<Solid> s : solids)
+    for(const std::unique_ptr<Solid> &s : solids)
     {
         s->draw();
     }
@@ -492,7 +485,7 @@ void Building::draw() const
 
 std::experimental::optional<Point> Building::correctCollision(Point p, int buffer)
 {
-    for(std::shared_ptr<Solid> s : solids)
+    for(const std::unique_ptr<Solid> &s : solids)
     {
         std::experimental::optional<Point> newPoint = s->correctCollision(p, buffer);
         if(newPoint)

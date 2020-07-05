@@ -8,13 +8,10 @@
 #include <vector>
 #include <memory>
 
-enum typeOfBuilding {Plain, House, Skyscraper, Empire, UFO, CN, Hourglass, Pyramid,
-    Church, Mansion, WaterTower, ControlTower, House2};
-
 class Building
 {
 protected:
-    std::vector<std::shared_ptr<Solid>> solids;
+    std::vector<std::unique_ptr<Solid>> solids;
 
     // The rectangular base of the building's property
     Point2D topLeft;
@@ -24,15 +21,13 @@ protected:
     RGBAcolor color;
     RGBAcolor edgeColor;
 
-    typeOfBuilding buildingType;
-
     const static bool GRIDLINES_ENABLED = false;
 
 public:
     Building();
 
     Building(Point2D inputTopLeft, int inputSideLength, int inputHeight,
-             RGBAcolor inputColor, RGBAcolor inputEdgeColor, typeOfBuilding inputBuildingType);
+             RGBAcolor inputColor, RGBAcolor inputEdgeColor);
 
     void initializeSolids();
     // Create the solids, using a different helper function depending on how many solids there are
@@ -53,9 +48,7 @@ public:
     linesDrawnEnum getRandomLineDensity() const;
 
     // Getters
-    std::vector<std::shared_ptr<Solid>> getSolids() const;
-
-    typeOfBuilding getBuildingType() const;
+    std::vector<std::unique_ptr<Solid>> getSolids() const;
 
     void draw() const;
 

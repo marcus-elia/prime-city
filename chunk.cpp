@@ -87,7 +87,7 @@ void Chunk::makeBuildings()
                 Point2D topLeftOfBuilding = {topLeft.x * sideLength + i * plotSize,
                                              topLeft.z * sideLength + j * plotSize};
                 buildings.push_back(Building(topLeftOfBuilding, plotSize, height,
-                                             color, edgeColor, Plain));
+                                             color, edgeColor));
                 plotEmpty[i][j] = false;
             }
         }
