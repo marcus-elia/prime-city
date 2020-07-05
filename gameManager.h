@@ -31,6 +31,9 @@ private:
     int perlinSize;  // how many chunks before perlin repeats
     PerlinNoiseGenerator png;
 
+    // Timer
+    int frameNumberMod90;
+
     // Enemies
     double enemyBodyHeight;
     double enemyRadius;

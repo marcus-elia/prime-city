@@ -13,7 +13,8 @@ GameManager::GameManager()
     enemyBodyHeight = 12;
     enemyRadius = 4;
     enemySpeed = 1.5;
-    //enemies.push_back(std::make_shared<Enemy>());
+
+    frameNumberMod90 = 0;
 }
 GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize)
 {
@@ -27,6 +28,8 @@ GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRen
     enemyBodyHeight = 12;
     enemyRadius = 4;
     enemySpeed = 1.5;
+
+    frameNumberMod90 = 0;
 }
 
 void GameManager::reactToMouseMovement(double theta)
@@ -86,13 +89,16 @@ void GameManager::tick()
     // The player moves
     player.tick();
 
-    // Update the player's plot
-    Vector3 newLocation = player.getLocation();
-    int newID = getIDofNearestPlot({newLocation.x, newLocation.y, newLocation.z}, chunkSize, plotsPerSide);
-    if(newID != playerPlotID)
+    // Update the player's plot once per second
+    if(frameNumberMod90 % 30 == 0)
     {
-        playerPlotID = newID;
-        updateEnemyPathFinding();
+        Vector3 newLocation = player.getLocation();
+        int newID = getIDofNearestPlot({newLocation.x, newLocation.y, newLocation.z}, chunkSize, plotsPerSide);
+        if(newID != playerPlotID)
+        {
+            playerPlotID = newID;
+            updateEnemyPathFinding();
+        }
     }
 
     // Check for the player hitting a building
@@ -111,8 +117,11 @@ void GameManager::tick()
     {
         enemy->tick();
     }
-    // Spawn and despawn enemies
-    manageEnemies();
+    // Spawn and despawn enemies once every 1.5 seconds
+    if(frameNumberMod90 % 45 == 0)
+    {
+        manageEnemies();
+    }
 
     // The missiles move
     for(std::shared_ptr<Missile> m : missiles)
@@ -121,6 +130,9 @@ void GameManager::tick()
     }
     // Check for missile collisions with buildings and enemies
     checkMissiles();
+
+    frameNumberMod90++;
+    frameNumberMod90 %= 90;
 }
 
 Player GameManager::getPlayer() const
