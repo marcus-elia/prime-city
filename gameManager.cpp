@@ -94,7 +94,7 @@ void GameManager::tick()
     {
         Vector3 newLocation = player.getLocation();
         int newID = getIDofNearestPlot({newLocation.x, newLocation.y, newLocation.z}, chunkSize, plotsPerSide);
-        if(newID != playerPlotID)
+        if(newID != playerPlotID || frameNumberMod90 == 0)
         {
             playerPlotID = newID;
             updateEnemyPathFinding();
@@ -253,7 +253,7 @@ void GameManager::updateEnemyPathFinding()
     for(int i = 0; i < enemies.size(); i++)
     {
         int enemyPlotID = getIDofNearestPlot(enemies[i]->getLocation(), chunkSize, plotsPerSide);
-        enemies[i]->setFutureLocations(network.getShortestPathPoints(enemyPlotID, playerPlotID));
+        enemies[i]->setFutureLocations(network.getShortestPathPoints(enemyPlotID, playerPlotID, 4));
     }
 }
 
