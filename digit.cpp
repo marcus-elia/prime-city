@@ -14,6 +14,7 @@ Digit::Digit()
     height = 20;
     thickness = 4;
     xzAngle = PI/2; // Face toward positive z by default
+    initializeCorners();
 }
 
 Digit::Digit(Point inputCenter, RGBAcolor inputColor, Point &inputOwnerCenter, int inputDigit,
@@ -34,6 +35,7 @@ Digit::Digit(Point inputCenter, RGBAcolor inputColor, Point &inputOwnerCenter, i
     height = inputHeight;
     thickness = inputThickness;
     xzAngle = PI/2; // Face toward positive z by default
+    initializeCorners();
 }
 
 void Digit::initializeCorners()
@@ -137,7 +139,7 @@ void Digit::move(double deltaX, double deltaY, double deltaZ)
     center.x += deltaX;
     center.y += deltaY;
     center.z += deltaZ;
-    for(Point p : corners)
+    for(Point &p : corners)
     {
         p.x += deltaX;
         p.y += deltaY;
@@ -153,7 +155,7 @@ void Digit::moveSelfAndOwner(double deltaX, double deltaY, double deltaZ)
 }
 void Digit::rotate(double thetaX, double thetaY, double thetaZ)
 {
-    for(Point p : corners)
+    for(Point &p : corners)
     {
         rotatePointAroundPoint(p, center, thetaX, thetaY, thetaZ);
     }
@@ -161,7 +163,7 @@ void Digit::rotate(double thetaX, double thetaY, double thetaZ)
 }
 void Digit::rotateAroundOwner(double thetaX, double thetaY, double thetaZ)
 {
-    for(Point p : corners)
+    for(Point &p : corners)
     {
         rotatePointAroundPoint(p, ownerCenter, thetaX, thetaY, thetaZ);
     }

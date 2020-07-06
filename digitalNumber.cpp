@@ -70,6 +70,10 @@ void DigitalNumber::initializeDigits()
     }
 }
 
+Point DigitalNumber::getCenter() const
+{
+    return center;
+}
 
 void DigitalNumber::setColor(RGBAcolor inputColor)
 {
@@ -82,6 +86,8 @@ void DigitalNumber::setColor(RGBAcolor inputColor)
 
 void DigitalNumber::draw() const
 {
+    glDisable(GL_CULL_FACE);
+
     // Draw each digit
     for(Digit d : digits)
     {
@@ -102,6 +108,15 @@ void DigitalNumber::move(double deltaX, double deltaY, double deltaZ)
         d.moveSelfAndOwner(deltaX, deltaY, deltaZ);
     }
 }
+
+void DigitalNumber::moveSelfAndOwner(double deltaX, double deltaY, double deltaZ)
+{
+    move(deltaX, deltaY, deltaZ);
+    ownerCenter.x += deltaX;
+    ownerCenter.y += deltaY;
+    ownerCenter.z += deltaZ;
+}
+
 
 void DigitalNumber::rotate(double thetaX, double thetaY, double thetaZ)
 {

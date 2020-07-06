@@ -27,12 +27,15 @@ public:
     // Create the vector of Digit objects.
     void initializeDigits();
 
+    Point getCenter() const;
+
     void draw() const;
 
     // Setters
     void setColor(RGBAcolor inputColor);
 
-    void move(double delta_x, double delta_y, double delta_z);
+    void move(double deltaX, double deltaY, double deltaZ);
+    void moveSelfAndOwner(double deltaX, double deltaY, double deltaZ);
     void rotate(double thetaX, double thetaY, double thetaZ);
 };
 
