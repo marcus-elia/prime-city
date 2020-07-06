@@ -7,6 +7,7 @@
 #include "cylinder.h"
 #include "ellipsoid.h"
 #include "capsule.h"
+#include "digitalNumber.h"
 
 // Physically, the Enemy is a sphere on top of a capsule. The capsule and
 // the sphere have the same radius. The y-value of location is the center of
@@ -33,6 +34,7 @@ private:
     Vector3 velocity; // current x y and z velocity
 
     int number;
+    DigitalNumber dn;
 
     std::vector<std::shared_ptr<Solid>> solids;
 

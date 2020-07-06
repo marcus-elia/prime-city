@@ -15,6 +15,8 @@ Enemy::Enemy()
     number = 123;
 
     initializeSolids();
+    Point headCenter = {location.x, location.y + bodyHeight/2 + radius, location.z};
+    dn = DigitalNumber(headCenter, {1,1,1,1}, headCenter, number, radius, radius);
 }
 Enemy::Enemy(Point inputLocation, double inputBodyHeight, double inputRadius,
              double inputSpeed, double inputRotationSpeed, int inputNumber)
@@ -27,6 +29,8 @@ Enemy::Enemy(Point inputLocation, double inputBodyHeight, double inputRadius,
     number = inputNumber;
     velocity = {0,0,0};
     initializeSolids();
+    Point headCenter = {location.x, location.y + bodyHeight/2 + radius, location.z};
+    dn = DigitalNumber(headCenter, {1,1,1,1}, headCenter, number, 1.5*radius, radius);
 }
 
 void Enemy::initializeSolids()
@@ -66,6 +70,11 @@ void Enemy::move()
     location.x += velocity.x;
     location.y += velocity.y;
     location.z += velocity.z;
+    dn.moveSelfAndOwner(velocity.x, velocity.y, velocity.z);
+    if(location.x != dn.getCenter().x || location.z != dn.getCenter().z)
+    {
+        int a = 1;
+    }
 }
 
 
@@ -96,6 +105,9 @@ void Enemy::tick()
                     0,
                     targetLocation.z - location.z);
         }
+        dn.moveSelfAndOwner(targetLocation.x - location.x,
+                0,
+                targetLocation.z - location.z);
         location = targetLocation;
         arriveAtTarget();
     }
@@ -103,11 +115,16 @@ void Enemy::tick()
     {
         move();
     }
+    if(location.x != dn.getCenter().x || location.z != dn.getCenter().z)
+    {
+        int a = 1;
+    }
 }
 
 
 void Enemy::draw() const
 {
+    dn.draw();
     for(std::shared_ptr<Solid> s : solids)
     {
         s->draw();
