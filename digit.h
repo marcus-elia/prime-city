@@ -49,9 +49,14 @@ public:
 
     void initializeCorners();
 
+    void setColor(RGBAcolor inputColor);
+    void setXZAngle(double inputAngle); // Rotates around y-axis so xzAngle = the input
+
     void draw() const;
     void move(double deltaX, double deltaY, double deltaZ);
+    void moveSelfAndOwner(double deltaX, double deltaY, double deltaZ); // also update ownerCenter
     void rotate(double thetaX, double thetaY, double thetaZ);
+    void rotateAroundOwner(double thetaX, double thetaY, double thetaZ);
 };
 
 #endif //PRIME_CITY_DIGIT_H

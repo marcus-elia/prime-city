@@ -13,7 +13,7 @@ Digit::Digit()
     width = 10;
     height = 20;
     thickness = 4;
-    xzAngle = 0;
+    xzAngle = PI/2; // Face toward positive z by default
 }
 
 Digit::Digit(Point inputCenter, RGBAcolor inputColor, Point &inputOwnerCenter, int inputDigit,
@@ -33,7 +33,7 @@ Digit::Digit(Point inputCenter, RGBAcolor inputColor, Point &inputOwnerCenter, i
     width = inputWidth;
     height = inputHeight;
     thickness = inputThickness;
-    xzAngle = 0;
+    xzAngle = PI/2; // Face toward positive z by default
 }
 
 void Digit::initializeCorners()
@@ -104,6 +104,16 @@ void Digit::initializeCorners()
     }
 }
 
+void Digit::setColor(RGBAcolor inputColor)
+{
+    color = inputColor;
+}
+void Digit::setXZAngle(double inputAngle)
+{
+    double rotationAmount = inputAngle - xzAngle;
+    rotate(0, rotationAmount, 0);
+}
+
 void Digit::draw() const
 {
     glColor4f(color.r, color.g, color.b, color.a);
@@ -134,11 +144,26 @@ void Digit::move(double deltaX, double deltaY, double deltaZ)
         p.z += deltaZ;
     }
 }
-
+void Digit::moveSelfAndOwner(double deltaX, double deltaY, double deltaZ)
+{
+    move(deltaX, deltaY, deltaZ);
+    ownerCenter.x += deltaX;
+    ownerCenter.y += deltaY;
+    ownerCenter.z += deltaZ;
+}
 void Digit::rotate(double thetaX, double thetaY, double thetaZ)
 {
     for(Point p : corners)
     {
         rotatePointAroundPoint(p, center, thetaX, thetaY, thetaZ);
     }
+    xzAngle += thetaY;
+}
+void Digit::rotateAroundOwner(double thetaX, double thetaY, double thetaZ)
+{
+    for(Point p : corners)
+    {
+        rotatePointAroundPoint(p, ownerCenter, thetaX, thetaY, thetaZ);
+    }
+    rotatePointAroundPoint(center, ownerCenter, thetaX, thetaY, thetaZ);
 }
