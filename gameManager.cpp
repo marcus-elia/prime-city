@@ -10,8 +10,8 @@ GameManager::GameManager()
     playerPlotID = 0;
     updateCurrentChunks();
 
-    enemyBodyHeight = 12;
-    enemyRadius = 4;
+    enemyBodyHeight = 24;
+    enemyRadius = 8;
     enemySpeed = 1.5;
 
     frameNumberMod90 = 0;
@@ -25,8 +25,8 @@ GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRen
     playerPlotID = 0;
     png = PerlinNoiseGenerator(perlinSize, perlinSize, 1);
     updateCurrentChunks();
-    enemyBodyHeight = 12;
-    enemyRadius = 4;
+    enemyBodyHeight = 24;
+    enemyRadius = 8;
     enemySpeed = 1.5;
 
     frameNumberMod90 = 0;
