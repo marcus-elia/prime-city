@@ -26,6 +26,15 @@ int isqrt(int n)
     return round(sqrt(n));
 }
 
+bool twoDigitIsPrime(int n)
+{
+    if(n < 2)
+    {
+        return false;
+    }
+    return n % 2 != 0 && n % 3 != 0 && n % 5 != 0 && n % 7 != 0;
+}
+
 Point2D chunkIDtoPoint(int n)
 {
     int s = nearestPerfectSquare(n);

@@ -13,6 +13,9 @@ int nearestPerfectSquare(int n);
 // Returns the square root of n, assuming that n is a perfect square
 int isqrt(int n);
 
+// Prime test, works for n = 0 through n = 120
+bool twoDigitIsPrime(int n);
+
 // Given the ID of a Chunk, this returns the Chunk coords
 Point2D chunkIDtoPoint(int n);
 
