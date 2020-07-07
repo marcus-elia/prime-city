@@ -42,6 +42,7 @@ private:
     const int MAX_NUM_ENEMIES = 10;
 
     // Missiles
+    RGBAcolor PLAYER_MISSILE_COLOR = {1, 0, 0, 1};
     std::vector<std::shared_ptr<Missile>> missiles;
 
     // Path finding

@@ -2,6 +2,8 @@
 #define PRIME_CITY_MISSILE_H
 
 #include "recPrism.h"
+#include "ellipsoid.h"
+#include "structs.h"
 
 class Missile
 {
@@ -12,10 +14,13 @@ private:
     Point rotationalVelocity;
     double radius;
     RecPrism cube;
+    RGBAcolor coreColor;
+    Ellipsoid core;
     bool wasShotByPlayer; // true if this is a player missile, false if computer
 public:
     Missile();
-    Missile(Point inputLocation, double inputSpeed, Point inputVelocity, double inputRadius, bool inputWasShotByPlayer);
+    Missile(Point inputLocation, double inputSpeed, Point inputVelocity, double inputRadius, bool inputWasShotByPlayer,
+            RGBAcolor inputCoreColor);
 
     // Getters
     Point getLocation() const;

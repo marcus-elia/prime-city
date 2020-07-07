@@ -10,7 +10,8 @@ Missile::Missile()
     wasShotByPlayer = true;
     cube = RecPrism();
 }
-Missile::Missile(Point inputLocation, double inputSpeed, Point inputVelocity, double inputRadius, bool inputWasShotByPlayer)
+Missile::Missile(Point inputLocation, double inputSpeed, Point inputVelocity, double inputRadius, bool inputWasShotByPlayer,
+        RGBAcolor inputCoreColor)
 {
     location = inputLocation;
     speed = inputSpeed;
@@ -18,7 +19,9 @@ Missile::Missile(Point inputLocation, double inputSpeed, Point inputVelocity, do
     rotationalVelocity = {1,1,1};
     radius = inputRadius;
     wasShotByPlayer = inputWasShotByPlayer;
+    coreColor = inputCoreColor;
     cube = RecPrism(location, {1,1,1,1}, radius, radius, radius, {1,1,1,1});
+    core = Ellipsoid(location, coreColor, radius, radius, radius, coreColor);
 }
 
 // Getters
@@ -64,6 +67,7 @@ void Missile::setRadius(double inputRadius)
 void Missile::draw() const
 {
     cube.drawLines();
+    core.drawFaces();
 }
 
 void Missile::tick()
@@ -73,6 +77,7 @@ void Missile::tick()
     location.z += velocity.z;
     cube.move(velocity.x, velocity.y, velocity.z);
     cube.rotate(rotationalVelocity.x, rotationalVelocity.y, rotationalVelocity.z);
+    core.move(velocity.x, velocity.y, velocity.z);
 }
 bool Missile::isOutOfBounds(Point playerLocation, int maxDistance)
 {

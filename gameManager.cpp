@@ -321,7 +321,7 @@ void GameManager::createMissile()
     Point velocity = {player.getLookingAt().x - location.x,
                       player.getLookingAt().y - location.y,
                       player.getLookingAt().z - location.z};
-    missiles.push_back(std::make_shared<Missile>(Missile(location, 5, velocity, 5, true)));
+    missiles.push_back(std::make_shared<Missile>(Missile(location, 5, velocity, 5, true, PLAYER_MISSILE_COLOR)));
 }
 void GameManager::checkMissiles()
 {
