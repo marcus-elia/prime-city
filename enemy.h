@@ -51,6 +51,9 @@ public:
 
     Point getLocation() const;
 
+    // Rotate the digital number to face the player
+    void lookAtPlayer(Point playerLocation);
+
     void setFutureLocations(std::vector<Point> inputFutureLocations);
 
     // Set angle and velocity to face toward the targetLocation

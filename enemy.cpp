@@ -49,6 +49,14 @@ Point Enemy::getLocation() const
     return location;
 }
 
+
+
+void Enemy::lookAtPlayer(Point playerLocation)
+{
+    double angle = atan2(playerLocation.z - location.z, playerLocation.x - location.x);
+    dn.setXZAngle(angle);
+}
+
 void Enemy::setFutureLocations(std::vector<Point> inputFutureLocations)
 {
     futureLocations = inputFutureLocations;

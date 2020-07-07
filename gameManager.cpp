@@ -122,6 +122,15 @@ void GameManager::tick()
     {
         manageEnemies();
     }
+    // The enemies look at the player
+    if(frameNumberMod90 % 16 == 0)
+    {
+        Point playerLocation = {player.getLocation().x, 0, player.getLocation().z};
+        for(std::shared_ptr<Enemy> enemy : enemies)
+        {
+            enemy->lookAtPlayer(playerLocation);
+        }
+    }
 
     // The missiles move
     for(std::shared_ptr<Missile> m : missiles)
