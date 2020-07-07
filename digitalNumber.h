@@ -17,6 +17,8 @@ private:
     int maxWidth;
     int maxHeight;
 
+    double xzAngle;
+
     // The digits we have
     std::vector<Digit> digits;
 public:
@@ -28,6 +30,8 @@ public:
     void initializeDigits();
 
     Point getCenter() const;
+
+    void setXZAngle(double inputAngle);
 
     void draw() const;
 

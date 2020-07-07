@@ -18,6 +18,7 @@ DigitalNumber::DigitalNumber(Point inputCenter, RGBAcolor inputColor, Point &inp
     }
     center = inputCenter;
     ownerCenter = inputOwnerCenter;
+    xzAngle = PI/2;
     color = inputColor;
     maxWidth = inputMaxWidth;
     maxHeight = inputMaxHeight;
@@ -82,6 +83,11 @@ void DigitalNumber::setColor(RGBAcolor inputColor)
     {
         d.setColor(inputColor);
     }
+}
+void DigitalNumber::setXZAngle(double inputAngle)
+{
+    rotate(0, inputAngle - xzAngle, 0);
+    xzAngle = inputAngle;
 }
 
 void DigitalNumber::draw() const
