@@ -26,6 +26,11 @@ public:
 
     void lookAt(Point &p);
 
+    // This causes corners to be re-created
+    void setRadii(double inputXWidth, double inputYWidth, double inputZWidth);
+
+    void setColor(RGBAcolor inputColor);
+
     void draw() const;
     void drawLines() const;
     void drawFaces() const;

@@ -84,6 +84,21 @@ void Ellipsoid::lookAt(Point &p)
 
 }
 
+void Ellipsoid::setRadii(double inputXWidth, double inputYWidth, double inputZWidth)
+{
+    xWidth = inputXWidth;
+    yWidth = inputYWidth;
+    zWidth = inputZWidth;
+    corners = std::vector<Point>();
+    initializeCorners();
+}
+void Ellipsoid::setColor(RGBAcolor inputColor)
+{
+    color = inputColor;
+}
+
+
+
 void Ellipsoid::draw() const
 {
     glDisable(GL_CULL_FACE);
