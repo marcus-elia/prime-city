@@ -16,6 +16,7 @@ DigitalNumber::DigitalNumber(Point inputCenter, RGBAcolor inputColor, Point &inp
     {
         number = -inputNumber;
     }
+    numberIsPrime = twoDigitIsPrime(number);
     center = inputCenter;
     ownerCenter = inputOwnerCenter;
     xzAngle = PI/2;
@@ -74,6 +75,10 @@ void DigitalNumber::initializeDigits()
 Point DigitalNumber::getCenter() const
 {
     return center;
+}
+bool DigitalNumber::getNumberIsPrime() const
+{
+    return numberIsPrime;
 }
 
 void DigitalNumber::setColor(RGBAcolor inputColor)

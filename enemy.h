@@ -49,7 +49,10 @@ public:
 
     void initializeSolids();
 
+    // Getters
     Point getLocation() const;
+    bool getIsPrime() const;
+    int getNumber() const;
 
     // Rotate the digital number to face the player
     void lookAtPlayer(Point playerLocation);

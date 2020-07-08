@@ -2,12 +2,14 @@
 #define PRIME_CITY_DIGITALNUMBER_H
 
 #include "digit.h"
+#include "mathHelper.h"
 
 class DigitalNumber
 {
 private:
     // The number we are representing
     int number;
+    bool numberIsPrime;
 
     Point center;
     Point ownerCenter;
@@ -30,6 +32,7 @@ public:
     void initializeDigits();
 
     Point getCenter() const;
+    bool getNumberIsPrime() const;
 
     void setXZAngle(double inputAngle);
 

@@ -18,6 +18,7 @@ class GameManager
 {
 private:
     Player player;
+    int playerScore;
 
     // Controls
     bool wKey, aKey, sKey, dKey, rKey, cKey;
@@ -104,6 +105,7 @@ public:
 
     // UI
     void drawPlayerDirection(double x, double y) const;
+    void displayScores() const;
 };
 
 // Since % can return negatives

@@ -48,6 +48,14 @@ Point Enemy::getLocation() const
 {
     return location;
 }
+bool Enemy::getIsPrime() const
+{
+    return dn.getNumberIsPrime();
+}
+int Enemy::getNumber() const
+{
+    return number;
+}
 
 
 

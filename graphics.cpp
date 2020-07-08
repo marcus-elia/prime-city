@@ -120,6 +120,7 @@ void display()
     glLoadIdentity();
 
     manager.drawPlayerDirection(width - height/10, 9*height/10);
+    manager.displayScores();
 
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();

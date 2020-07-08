@@ -10,6 +10,7 @@ GameManager::GameManager()
     playerPlotID = 0;
     updateCurrentChunks();
 
+    playerScore = 0;
     enemyBodyHeight = 24;
     enemyRadius = 8;
     enemySpeed = 1.5;
@@ -25,6 +26,8 @@ GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRen
     playerPlotID = 0;
     png = PerlinNoiseGenerator(perlinSize, perlinSize, 1);
     updateCurrentChunks();
+
+    playerScore = 0;
     enemyBodyHeight = 24;
     enemyRadius = 8;
     enemySpeed = 1.5;
@@ -360,6 +363,10 @@ void GameManager::checkMissiles()
                 std::shared_ptr<Enemy> enemy = enemies[j];
                 if(enemy->isHitByMissile(m->getLocation(), m->getRadius()))
                 {
+                    if(enemy->getIsPrime())
+                    {
+                        playerScore += enemy->getNumber();
+                    }
                     missiles.erase(missiles.begin() + i);
                     L -= 1;
                     i--;
@@ -448,4 +455,14 @@ void GameManager::drawPlayerDirection(double x, double y) const
         glVertex2f(x + compassRadius*cos(i*2*PI/smoothness), y + compassRadius*sin(i*2*PI/smoothness));
     }
     glEnd();
+}
+void GameManager::displayScores() const
+{
+    glColor4f(0.0, 0.0, 0.0, 1.0);
+    std::string score = "Player: " + std::to_string(playerScore);
+    glRasterPos2i(10 + (4 * score.length()), 25);
+    for (const char &letter : score)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, letter);
+    }
 }
