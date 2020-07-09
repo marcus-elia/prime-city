@@ -27,6 +27,7 @@ public:
     double getSpeed() const;
     Point getVelocity() const;
     double getRadius() const;
+    RGBAcolor getCoreColor() const;
     bool getWasShotByPlayer() const;
 
     // Setters

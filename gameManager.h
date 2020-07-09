@@ -13,6 +13,7 @@
 #include "chunk.h"
 #include "plotNetwork.h"
 #include "mathHelper.h"
+#include "explosion.h"
 
 class GameManager
 {
@@ -45,6 +46,9 @@ private:
     // Missiles
     RGBAcolor PLAYER_MISSILE_COLOR = {1, 0, 0, 1};
     std::vector<std::shared_ptr<Missile>> missiles;
+
+    // Explosions
+    std::vector<std::shared_ptr<Explosion>> explosions;
 
     // Path finding
     PlotNetwork network;
@@ -87,6 +91,10 @@ public:
     // Missiles
     void createMissile();
     void checkMissiles();
+
+    // Explosions
+    void createMissileExplosion(std::shared_ptr<Missile> m);
+    void manageExplosions();
 
     // Camera
     Vector3 getCameraLocation() const;

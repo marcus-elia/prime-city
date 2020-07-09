@@ -52,7 +52,7 @@ std::experimental::optional<int> Explosion::getNumber() const
 }
 bool Explosion::isDone() const
 {
-    return age == lifeTime;
+    return age > lifeTime;
 }
 // Returns true if the point is in the sphere
 bool Explosion::containsPoint(Point p) const

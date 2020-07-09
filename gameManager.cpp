@@ -63,6 +63,11 @@ void GameManager::draw() const
     {
         m->draw();
     }
+
+    for(auto &e : explosions)
+    {
+        e->draw();
+    }
     // Draw a red square under the player for debug
     /*glDisable(GL_CULL_FACE);
     Vector3 v = player.getLocation();
@@ -142,6 +147,15 @@ void GameManager::tick()
     }
     // Check for missile collisions with buildings and enemies
     checkMissiles();
+
+
+    // Explosions
+    for(std::shared_ptr<Explosion> e : explosions)
+    {
+        e->tick();
+    }
+    manageExplosions();
+
 
     frameNumberMod90++;
     frameNumberMod90 %= 90;
@@ -338,6 +352,7 @@ void GameManager::checkMissiles()
         // If the missile went out of bounds without hitting anything, remove it
         if(m->isOutOfBounds(playerLocation, renderRadius*chunkSize))
         {
+            createMissileExplosion(m); // Make an explosion where the missile hit
             missiles.erase(missiles.begin() + i);
             L -= 1;
             i--;
@@ -351,6 +366,7 @@ void GameManager::checkMissiles()
             {
                 if(b.correctCollision(m->getLocation(), m->getRadius()))
                 {
+                    createMissileExplosion(m); // Make an explosion where the missile hit
                     missiles.erase(missiles.begin() + i);
                     L -= 1;
                     i--;
@@ -363,10 +379,11 @@ void GameManager::checkMissiles()
                 std::shared_ptr<Enemy> enemy = enemies[j];
                 if(enemy->isHitByMissile(m->getLocation(), m->getRadius()))
                 {
-                    if(enemy->getIsPrime())
+                    if(enemy->getIsPrime()) // Give the player points if the number was prime
                     {
                         playerScore += enemy->getNumber();
                     }
+                    createMissileExplosion(m); // Make an explosion where the missile hit
                     missiles.erase(missiles.begin() + i);
                     L -= 1;
                     i--;
@@ -380,6 +397,40 @@ void GameManager::checkMissiles()
 }
 
 
+
+// ===========================
+//
+//         Explosions
+//
+// ===========================
+void GameManager::createMissileExplosion(std::shared_ptr<Missile> m)
+{
+    Point loc = m->getLocation();
+    double rad = m->getRadius();
+    int lifeTime = 60;
+    RGBAcolor color = m->getCoreColor();
+    double deltaRad = 0.5;
+    explosions.push_back(std::make_shared<Explosion>(loc, rad, lifeTime, color, deltaRad));
+}
+void GameManager::manageExplosions()
+{
+    int L = explosions.size();
+    int i = 0;
+
+    // Iterate through the explosions and delete any that are done
+    while(i < L)
+    {
+        std::shared_ptr<Explosion> e = explosions[i];
+        if(e->isDone())
+        {
+            explosions.erase(explosions.begin() + i);
+            L -= 1;
+            i--;
+            break;
+        }
+        i++;
+    }
+}
 
 
 // Camera

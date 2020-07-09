@@ -41,6 +41,10 @@ double Missile::getRadius() const
 {
     return radius;
 }
+RGBAcolor Missile::getCoreColor() const
+{
+    return coreColor;
+}
 
 // Setters
 void Missile::setLocation(Point inputLocation)
