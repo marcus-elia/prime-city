@@ -49,47 +49,23 @@ void GameManager::reactToMouseClick()
 
 void GameManager::draw() const
 {
-    for(auto &c : currentChunks)
+    // Draw in order because of transparency
+    for(std::shared_ptr<Chunk> c : currentChunks)
     {
         c->draw();
     }
-
-    for(auto &e : enemies)
+    for(std::shared_ptr<Explosion> e : explosions)
     {
         e->draw();
     }
-
-    for(auto &m : missiles)
+    for(std::shared_ptr<Missile> m : missiles)
     {
         m->draw();
     }
-
-    for(auto &e : explosions)
+    for(std::shared_ptr<Enemy> e : enemies)
     {
         e->draw();
     }
-    // Draw a red square under the player for debug
-    /*glDisable(GL_CULL_FACE);
-    Vector3 v = player.getLocation();
-    glBegin(GL_QUADS);
-    glColor4f(1,0,0,1);
-    glVertex3f(v.x + 20,3, v.z + 20);
-    glVertex3f(v.x - 20,3, v.z + 20);
-    glVertex3f(v.x - 20,3, v.z - 20);
-    glVertex3f(v.x + 20,3, v.z - 20);
-
-    glEnd();
-    glEnable(GL_CULL_FACE);*/
-    // Make current chunk red for debug
-    /*Point2D p = player.getCurrentChunkCoords();
-    glBegin(GL_QUADS);
-    glColor4f(1,0,0,1);
-    glVertex3f(chunkSize*p.x,1, chunkSize*p.z);
-    glVertex3f(chunkSize*p.x,1, chunkSize*p.z + chunkSize);
-    glVertex3f(chunkSize*p.x + chunkSize,1, chunkSize*p.z + chunkSize);
-    glVertex3f(chunkSize*p.x + chunkSize,1, chunkSize*p.z);
-
-    glEnd();*/
 }
 
 void GameManager::tick()
