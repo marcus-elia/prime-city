@@ -54,7 +54,7 @@ void GameManager::draw() const
     {
         c->draw();
     }
-    for(std::shared_ptr<Explosion> e : explosions)
+    for(std::shared_ptr<Enemy> e : enemies)
     {
         e->draw();
     }
@@ -62,7 +62,7 @@ void GameManager::draw() const
     {
         m->draw();
     }
-    for(std::shared_ptr<Enemy> e : enemies)
+    for(std::shared_ptr<Explosion> e : explosions)
     {
         e->draw();
     }
