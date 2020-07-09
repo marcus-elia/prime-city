@@ -101,13 +101,11 @@ void Ellipsoid::setColor(RGBAcolor inputColor)
 
 void Ellipsoid::draw() const
 {
-    glDisable(GL_CULL_FACE);
     if(!hideLines)
     {
         drawLines();
     }
     drawFaces();
-    glEnable(GL_CULL_FACE);
 }
 
 void Ellipsoid::drawLines() const
@@ -157,6 +155,7 @@ void Ellipsoid::drawLines() const
 }
 void Ellipsoid::drawFaces() const
 {
+    glDisable(GL_CULL_FACE);
     glColor4f(color.r, color.g, color.b, color.a);
 
     // Top
@@ -193,6 +192,7 @@ void Ellipsoid::drawFaces() const
         drawPoint(corners[ring*pointsPerRing + 2]);
         glEnd();
     }
+    glEnable(GL_CULL_FACE);
 }
 
 std::experimental::optional<Point> Ellipsoid::correctCollision(Point p, int buffer)
