@@ -115,6 +115,10 @@ std::vector<PlotNode*> PlotNetwork::breadthFirstSearch(int idStart, int idEnd, i
                 }
             }
             // Check the neighbor right of this plot
+            if(id2node.count(plotID) == 0)
+            {
+                int a = 0;
+            }
             if(id2node.at(plotID)->hasRightNeighbor())
             {
                 int rightNeighborID = idRight(plotID, plotsPerSide);
@@ -138,7 +142,7 @@ std::vector<PlotNode*> PlotNetwork::breadthFirstSearch(int idStart, int idEnd, i
     {
         curID = idEnd;
     }
-    else if(curDepth == maxDepth)  // Pick as close to the end as possible
+    else if(id2node.count(idEnd) > 0 && curDepth == maxDepth)  // Pick as close to the end as possible
     {
         double shortestDistance = distance2d(id2node.at(idEnd)->getCenter(), id2node.at(prevLevel[0])->getCenter());
         int idOfClosest = prevLevel[0];
