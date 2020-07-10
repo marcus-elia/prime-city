@@ -57,5 +57,5 @@ bool Explosion::isDone() const
 // Returns true if the point is in the sphere
 bool Explosion::containsPoint(Point p) const
 {
-    return false;
+    return distance3d(p, location) < currentRadius;
 }
