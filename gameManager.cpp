@@ -428,9 +428,10 @@ void GameManager::checkExplosionForEnemies(std::shared_ptr<Explosion> ex)
 {
     for(std::shared_ptr<Enemy> enemy : enemies)
     {
-        if(ex->containsPoint(enemy->getLocation()))
+        if(!enemy->containsExplosion(ex) && ex->containsPoint(enemy->getLocation()))
         {
             enemy->setNumber((enemy->getNumber() + ex->getNumber().value()) % 100);
+            enemy->addRecentExplosion(ex);
         }
     }
 }

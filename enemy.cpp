@@ -14,6 +14,8 @@ Enemy::Enemy()
 
     number = 123;
 
+    ticksSinceLastExplosion = 0;
+
     initializeSolids();
     Point headCenter = {location.x, location.y + bodyHeight/2 + radius, location.z};
     dn = DigitalNumber(headCenter, {1,1,1,1}, headCenter, number, radius, radius);
@@ -29,6 +31,7 @@ Enemy::Enemy(Point inputLocation, double inputBodyHeight, double inputRadius,
     number = inputNumber;
     velocity = {0,0,0};
     initializeSolids();
+    ticksSinceLastExplosion = 0;
     Point headCenter = {location.x, location.y + bodyHeight/2 + radius, location.z};
     dn = DigitalNumber(headCenter, {1,1,1,1}, headCenter, number, 1.5*radius, radius);
 }
@@ -72,6 +75,23 @@ void Enemy::setNumber(int newNumber)
     dn = DigitalNumber(headCenter, {1,1,1,1}, headCenter, number, 1.5*radius, radius);
 }
 
+
+void Enemy::addRecentExplosion(std::shared_ptr<Explosion> ex)
+{
+    recentExplosions.push_back(ex);
+    ticksSinceLastExplosion = 0;
+}
+bool Enemy::containsExplosion(std::shared_ptr<Explosion> ex) const
+{
+    for(std::shared_ptr<Explosion> recentEx : recentExplosions)
+    {
+        if(recentEx == ex)
+        {
+            return true;
+        }
+    }
+    return false;
+}
 
 
 void Enemy::lookAtPlayer(Point playerLocation)
@@ -149,6 +169,14 @@ void Enemy::tick()
     if(location.x != dn.getCenter().x || location.z != dn.getCenter().z)
     {
         int a = 1;
+    }
+
+    // Deal with the vector storing recent explosions
+    ticksSinceLastExplosion++;
+    if(ticksSinceLastExplosion == CLEAR_EXPLOSIONS_TIME)
+    {
+        recentExplosions = std::vector<std::shared_ptr<Explosion>>();
+        ticksSinceLastExplosion = 0;
     }
 }
 

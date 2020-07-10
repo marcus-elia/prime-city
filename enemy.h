@@ -8,6 +8,7 @@
 #include "ellipsoid.h"
 #include "capsule.h"
 #include "digitalNumber.h"
+#include "explosion.h"
 
 // Physically, the Enemy is a sphere on top of a capsule. The capsule and
 // the sphere have the same radius. The y-value of location is the center of
@@ -42,6 +43,11 @@ private:
     RGBAcolor bodyColor = {0.0, 0.5, 1.0, 1.0};
     //constexpr const static
     RGBAcolor headColor = {0.8, 0.8, 0.8, 0.5};
+
+    // Must store recent explosions that hit this, so they only get added once
+    std::vector<std::shared_ptr<Explosion>> recentExplosions;
+    int ticksSinceLastExplosion;
+    const static int CLEAR_EXPLOSIONS_TIME = 101;
 public:
     Enemy();
     Enemy(Point inputLocation, double inputBodyHeight, double inputRadius,
@@ -58,6 +64,10 @@ public:
 
     // Setter
     void setNumber(int newNumber);
+
+    // Explosions
+    void addRecentExplosion(std::shared_ptr<Explosion> ex);
+    bool containsExplosion(std::shared_ptr<Explosion> ex) const;
 
     // Rotate the digital number to face the player
     void lookAtPlayer(Point playerLocation);
