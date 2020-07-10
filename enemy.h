@@ -53,6 +53,11 @@ public:
     Point getLocation() const;
     bool getIsPrime() const;
     int getNumber() const;
+    double getRadius() const;
+    RGBAcolor getBodyColor() const;
+
+    // Setter
+    void setNumber(int newNumber);
 
     // Rotate the digital number to face the player
     void lookAtPlayer(Point playerLocation);

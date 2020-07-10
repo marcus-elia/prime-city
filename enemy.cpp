@@ -56,6 +56,21 @@ int Enemy::getNumber() const
 {
     return number;
 }
+double Enemy::getRadius() const
+{
+    return radius;
+}
+RGBAcolor Enemy::getBodyColor() const
+{
+    return bodyColor;
+}
+
+void Enemy::setNumber(int newNumber)
+{
+    number = newNumber;
+    Point headCenter = {location.x, location.y + bodyHeight/2 + radius, location.z};
+    dn = DigitalNumber(headCenter, {1,1,1,1}, headCenter, number, 1.5*radius, radius);
+}
 
 
 

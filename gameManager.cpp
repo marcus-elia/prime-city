@@ -297,10 +297,20 @@ void  GameManager::manageEnemies()
         }
         i++;
     }
+    // If we need more, make more
     if(enemies.size() < MAX_NUM_ENEMIES)
     {
         createRandomEnemy();
     }
+}
+void GameManager::createEnemyExplosion(std::shared_ptr<Enemy> e)
+{
+    Point loc = e->getLocation();
+    double rad = e->getRadius();
+    int lifeTime = 60;
+    RGBAcolor color = e->getBodyColor();
+    double deltaRad = 2;
+    explosions.push_back(std::make_shared<Explosion>(loc, rad, lifeTime, color, deltaRad, e->getNumber()));
 }
 
 // =========================
@@ -363,6 +373,7 @@ void GameManager::checkMissiles()
                     missiles.erase(missiles.begin() + i);
                     L -= 1;
                     i--;
+                    createEnemyExplosion(enemy);
                     enemies.erase(enemies.begin() + j);
                     break;
                 }
@@ -393,7 +404,9 @@ void GameManager::manageExplosions()
     int L = explosions.size();
     int i = 0;
 
-    // Iterate through the explosions and delete any that are done
+    // Iterate through the explosions
+    // Delete any that are done and
+    // check for enemies in the blast radius
     while(i < L)
     {
         std::shared_ptr<Explosion> e = explosions[i];
@@ -404,7 +417,21 @@ void GameManager::manageExplosions()
             i--;
             break;
         }
+        if(e->getNumber())
+        {
+            checkExplosionForEnemies(e);
+        }
         i++;
+    }
+}
+void GameManager::checkExplosionForEnemies(std::shared_ptr<Explosion> ex)
+{
+    for(std::shared_ptr<Enemy> enemy : enemies)
+    {
+        if(ex->containsPoint(enemy->getLocation()))
+        {
+            enemy->setNumber((enemy->getNumber() + ex->getNumber().value()) % 100);
+        }
     }
 }
 

@@ -87,6 +87,7 @@ public:
     Point getRandomOpenLocation();  // Returns the center of an empty plot
     void manageEnemies(); // create new enemies if needed, despawn if too far away
     void createRandomEnemy();
+    void createEnemyExplosion(std::shared_ptr<Enemy> e);
 
     // Missiles
     void createMissile();
@@ -95,6 +96,7 @@ public:
     // Explosions
     void createMissileExplosion(std::shared_ptr<Missile> m);
     void manageExplosions();
+    void checkExplosionForEnemies(std::shared_ptr<Explosion> ex);
 
     // Camera
     Vector3 getCameraLocation() const;
