@@ -368,12 +368,16 @@ void GameManager::checkMissiles()
                     if(enemy->getIsPrime()) // Give the player points if the number was prime
                     {
                         playerScore += enemy->getNumber();
+                        createMissileExplosion(m); // Make an explosion where the missile hit
                     }
-                    createMissileExplosion(m); // Make an explosion where the missile hit
+                    else   // If composite, make an enemy explosion
+                    {
+                        createEnemyExplosion(enemy);
+                    }
                     missiles.erase(missiles.begin() + i);
                     L -= 1;
                     i--;
-                    createEnemyExplosion(enemy);
+
                     enemies.erase(enemies.begin() + j);
                     break;
                 }
