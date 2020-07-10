@@ -122,10 +122,6 @@ void Enemy::move()
     location.y += velocity.y;
     location.z += velocity.z;
     dn.moveSelfAndOwner(velocity.x, velocity.y, velocity.z);
-    if(location.x != dn.getCenter().x || location.z != dn.getCenter().z)
-    {
-        int a = 1;
-    }
 }
 
 
@@ -159,16 +155,13 @@ void Enemy::tick()
         dn.moveSelfAndOwner(targetLocation.x - location.x,
                 0,
                 targetLocation.z - location.z);
-        location = targetLocation;
+        location.x = targetLocation.x;
+        location.z = targetLocation.z;
         arriveAtTarget();
     }
     else
     {
         move();
-    }
-    if(location.x != dn.getCenter().x || location.z != dn.getCenter().z)
-    {
-        int a = 1;
     }
 
     // Deal with the vector storing recent explosions
