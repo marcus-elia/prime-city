@@ -1,8 +1,10 @@
 #include "plotNetwork.h"
 
-PlotNetwork::PlotNetwork()
+PlotNetwork::PlotNetwork(int inputChunkSize, int inputPlotsPerSide)
 {
-    plotsPerSide = 8;
+    chunkSize = inputChunkSize;
+    plotsPerSide = inputPlotsPerSide;
+    plotSize = chunkSize / plotsPerSide;
 }
 
 bool PlotNetwork::hasNode(int id) const
@@ -196,3 +198,214 @@ std::vector<Point> PlotNetwork::getShortestPathPoints(int idStart, int idEnd, in
     }
     return output;
 }
+
+std::vector<int> PlotNetwork::getPlotIDsBetween(int plotID1, int plotID2) const
+{
+    std::vector<int> ids;
+    Point startCenter = getPlotCenterFromID(plotID1, chunkSize, plotsPerSide);
+    Point endCenter = getPlotCenterFromID(plotID2, chunkSize, plotsPerSide);
+
+    // First, handle the four cases of lines along axes
+    if(startCenter.x == endCenter.x || startCenter.z == endCenter.z)
+    {
+        direction dir;
+        // If end is up relative to start
+        if(startCenter.z > endCenter.z)
+        {
+            dir = Up;
+        }
+        else if(startCenter.z < endCenter.z)
+        {
+            dir = Down;
+        }
+        else if(startCenter.x < endCenter.x)
+        {
+            dir = Right;
+        }
+        else
+        {
+            dir = Left;
+        }
+        int curPlotID = getIDinDirection(plotID1, plotsPerSide, dir);
+        while(curPlotID != plotID2)
+        {
+            ids.push_back(curPlotID);
+            curPlotID = getIDinDirection(curPlotID, plotsPerSide, dir);
+        }
+    }
+
+    // Now handle the four cases of diagonal lines
+    // End is up and right of start
+    if(endCenter.x > startCenter.x && endCenter.z < startCenter.z)
+    {
+        // We need to know the two lines from the opposite corners of the
+        // start plot to the end plot (the two slopes are probably the same)
+        // Higher line
+        Point startTopLeft = getPlotTopLeftFromID(plotID1, chunkSize, plotsPerSide);
+        Point endTopLeft = getPlotTopLeftFromID(plotID2, chunkSize, plotsPerSide);
+        double higherSlope = (endTopLeft.z - startTopLeft.z) / (endTopLeft.x - startTopLeft.x);
+        double higherZint = startTopLeft.z - higherSlope*startTopLeft.x;
+        // Lower line
+        Point startBottomRight = getPlotBottomRightFromID(plotID1, chunkSize, plotsPerSide);
+        Point endBottomRight = getPlotBottomRightFromID(plotID2, chunkSize, plotsPerSide);
+        double lowerSlope = (endBottomRight.z - startBottomRight.z) / (endBottomRight.x - startBottomRight.x);
+        double lowerZint = startBottomRight.z - lowerSlope*startBottomRight.x;
+
+        int curPlotID = plotID1;          // The plot we are considering adding
+        int bottomOfColumnID = plotID1;   // Keep track of the bottom of each column also
+        Point curTopLeft = getPlotTopLeftFromID(curPlotID, chunkSize, plotsPerSide);
+        Point curBottomRight = getPlotBottomRightFromID(curPlotID, chunkSize, plotsPerSide);
+        while(curBottomRight.x <= endBottomRight.x) // From left to right, go up the columns
+        {
+            // Go up while the bottom of the plot is low enough to possibly be in the line
+            while(!pointAboveLine(curBottomRight, higherSlope, higherZint))
+            {
+                // If the top of the plot is high enough, then it is on the line
+                if(pointAboveLine(curTopLeft, lowerSlope, lowerZint))
+                {
+                    ids.push_back(curPlotID);
+                }
+                // Now look at the next plot up vertically
+                curPlotID = idAbove(curPlotID, plotsPerSide);
+                curTopLeft = getPlotTopLeftFromID(curPlotID, chunkSize, plotsPerSide);
+                curBottomRight = getPlotBottomRightFromID(curPlotID, chunkSize, plotsPerSide);
+            }
+            // Move to the next column of plots
+            bottomOfColumnID = idRight(bottomOfColumnID, plotsPerSide);
+            curPlotID = bottomOfColumnID;
+            curTopLeft = getPlotTopLeftFromID(curPlotID, chunkSize, plotsPerSide);
+            curBottomRight = getPlotBottomRightFromID(curPlotID, chunkSize, plotsPerSide);
+        }
+    }
+    // End is up and left of start
+    else if(endCenter.x < startCenter.x && endCenter.z < startCenter.z)
+    {
+        // We need to know the two lines from the opposite corners of the
+        // start plot to the end plot (the two slopes are probably the same)
+        // Higher line
+        Point startTopRight = getPlotTopRightFromID(plotID1, chunkSize, plotsPerSide);
+        Point endTopRight = getPlotTopRightFromID(plotID2, chunkSize, plotsPerSide);
+        double higherSlope = (endTopRight.z - startTopRight.z) / (endTopRight.x - startTopRight.x);
+        double higherZint = startTopRight.z - higherSlope*startTopRight.x;
+        // Lower line
+        Point startBottomLeft = getPlotBottomLeftFromID(plotID1, chunkSize, plotsPerSide);
+        Point endBottomLeft = getPlotBottomLeftFromID(plotID2, chunkSize, plotsPerSide);
+        double lowerSlope = (endBottomLeft.z - startBottomLeft.z) / (endBottomLeft.x - startBottomLeft.x);
+        double lowerZint = startBottomLeft.z - lowerSlope*startBottomLeft.x;
+
+        int curPlotID = plotID1;          // The plot we are considering adding
+        int bottomOfColumnID = plotID1;   // Keep track of the bottom of each column also
+        Point curTopRight = getPlotTopRightFromID(curPlotID, chunkSize, plotsPerSide);
+        Point curBottomLeft = getPlotBottomLeftFromID(curPlotID, chunkSize, plotsPerSide);
+        while(curBottomLeft.x >= endBottomLeft.x) // From right to left, go up the columns
+        {
+            // Go up while the bottom of the plot is low enough to possibly be in the line
+            while(!pointAboveLine(curBottomLeft, higherSlope, higherZint))
+            {
+                // If the top of the plot is high enough, then it is on the line
+                if(pointAboveLine(curTopRight, lowerSlope, lowerZint))
+                {
+                    ids.push_back(curPlotID);
+                }
+                // Now look at the next plot up vertically
+                curPlotID = idAbove(curPlotID, plotsPerSide);
+                curTopRight = getPlotTopRightFromID(curPlotID, chunkSize, plotsPerSide);
+                curBottomLeft = getPlotBottomLeftFromID(curPlotID, chunkSize, plotsPerSide);
+            }
+            // Move to the next column of plots
+            bottomOfColumnID = idLeft(bottomOfColumnID, plotsPerSide);
+            curPlotID = bottomOfColumnID;
+            curTopRight = getPlotTopRightFromID(curPlotID, chunkSize, plotsPerSide);
+            curBottomLeft = getPlotBottomLeftFromID(curPlotID, chunkSize, plotsPerSide);
+        }
+    }
+    // End is down and left of start
+    else if(endCenter.x < startCenter.x && endCenter.z < startCenter.z)
+    {
+        // We need to know the two lines from the opposite corners of the
+        // start plot to the end plot (the two slopes are probably the same)
+        // Higher line
+        Point startTopLeft = getPlotTopLeftFromID(plotID1, chunkSize, plotsPerSide);
+        Point endTopLeft = getPlotTopLeftFromID(plotID2, chunkSize, plotsPerSide);
+        double higherSlope = (endTopLeft.z - startTopLeft.z) / (endTopLeft.x - startTopLeft.x);
+        double higherZint = startTopLeft.z - higherSlope*startTopLeft.x;
+        // Lower line
+        Point startBottomRight = getPlotBottomRightFromID(plotID1, chunkSize, plotsPerSide);
+        Point endBottomRight = getPlotBottomRightFromID(plotID2, chunkSize, plotsPerSide);
+        double lowerSlope = (endBottomRight.z - startBottomRight.z) / (endBottomRight.x - startBottomRight.x);
+        double lowerZint = startBottomRight.z - lowerSlope*startBottomRight.x;
+
+        int curPlotID = plotID1;          // The plot we are considering adding
+        int topOfColumnID = plotID1;      // Keep track of the top of each column also
+        Point curTopLeft = getPlotTopLeftFromID(curPlotID, chunkSize, plotsPerSide);
+        Point curBottomRight = getPlotBottomRightFromID(curPlotID, chunkSize, plotsPerSide);
+        while(curTopLeft.x <= endTopLeft.x) // From right to left, go down the columns
+        {
+            // Go down while the top of the plot is high enough to possibly be in the line
+            while(pointAboveLine(curTopLeft, lowerSlope, lowerZint))
+            {
+                // If the bottom of the plot is low enough, then it is on the line
+                if(!pointAboveLine(curBottomRight, higherSlope, higherZint))
+                {
+                    ids.push_back(curPlotID);
+                }
+                // Now look at the next plot down vertically
+                curPlotID = idBelow(curPlotID, plotsPerSide);
+                curTopLeft = getPlotTopLeftFromID(curPlotID, chunkSize, plotsPerSide);
+                curBottomRight = getPlotBottomRightFromID(curPlotID, chunkSize, plotsPerSide);
+            }
+            // Move to the next column of plots
+            topOfColumnID = idLeft(topOfColumnID, plotsPerSide);
+            curPlotID = topOfColumnID;
+            curTopLeft = getPlotTopLeftFromID(curPlotID, chunkSize, plotsPerSide);
+            curBottomRight = getPlotBottomRightFromID(curPlotID, chunkSize, plotsPerSide);
+        }
+    }
+    // End is down and right of start
+    else
+    {
+        // We need to know the two lines from the opposite corners of the
+        // start plot to the end plot (the two slopes are probably the same)
+        // Higher line
+        Point startTopRight = getPlotTopRightFromID(plotID1, chunkSize, plotsPerSide);
+        Point endTopRight = getPlotTopRightFromID(plotID2, chunkSize, plotsPerSide);
+        double higherSlope = (endTopRight.z - startTopRight.z) / (endTopRight.x - startTopRight.x);
+        double higherZint = startTopRight.z - higherSlope*startTopRight.x;
+        // Lower line
+        Point startBottomLeft = getPlotBottomLeftFromID(plotID1, chunkSize, plotsPerSide);
+        Point endBottomLeft = getPlotBottomLeftFromID(plotID2, chunkSize, plotsPerSide);
+        double lowerSlope = (endBottomLeft.z - startBottomLeft.z) / (endBottomLeft.x - startBottomLeft.x);
+        double lowerZint = startBottomLeft.z - lowerSlope*startBottomLeft.x;
+
+        int curPlotID = plotID1;          // The plot we are considering adding
+        int topOfColumnID = plotID1;      // Keep track of the top of each column also
+        Point curTopRight = getPlotTopRightFromID(curPlotID, chunkSize, plotsPerSide);
+        Point curBottomLeft = getPlotBottomLeftFromID(curPlotID, chunkSize, plotsPerSide);
+        while(curTopRight.x <= endTopRight.x) // From left to right, go down the columns
+        {
+            // Go down while the top of the plot is high enough to possibly be in the line
+            while(pointAboveLine(curTopRight, lowerSlope, lowerZint))
+            {
+                // If the bottom of the plot is low enough, then it is on the line
+                if(!pointAboveLine(curBottomLeft, higherSlope, higherZint))
+                {
+                    ids.push_back(curPlotID);
+                }
+                // Now look at the next plot down vertically
+                curPlotID = idBelow(curPlotID, plotsPerSide);
+                curTopRight = getPlotTopRightFromID(curPlotID, chunkSize, plotsPerSide);
+                curBottomLeft = getPlotBottomLeftFromID(curPlotID, chunkSize, plotsPerSide);
+            }
+            // Move to the next column of plots
+            topOfColumnID = idRight(topOfColumnID, plotsPerSide);
+            curPlotID = topOfColumnID;
+            curTopRight = getPlotTopRightFromID(curPlotID, chunkSize, plotsPerSide);
+            curBottomLeft = getPlotBottomLeftFromID(curPlotID, chunkSize, plotsPerSide);
+        }
+    }
+    return ids;
+}
+
+bool PlotNetwork::hasLineOfSight(int plotID1, int plotID2) const;
+
+std::vector<PlotNode*> PlotNetwork::clipPath(std::vector<PlotNode*> path);
