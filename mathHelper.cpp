@@ -197,3 +197,33 @@ Point getPlotCenterFromID(int plotID, int chunkSize, int plotsPerSide)
     double z = chunkCoords.z*chunkSize + plotCoords.z*plotSize;
     return {x, 0, z};
 }
+Point getPlotTopLeftFromID(int plotID, int chunkSize, int plotsPerSide)
+{
+    Point p = getPlotCenterFromID(plotID, chunkSize, plotsPerSide);
+    int plotSizeOver2 = chunkSize / plotsPerSide / 2;
+    return {p.x - plotSizeOver2, 0, p.z - plotSizeOver2};
+}
+Point getPlotTopRightFromID(int plotID, int chunkSize, int plotsPerSide)
+{
+    Point p = getPlotCenterFromID(plotID, chunkSize, plotsPerSide);
+    int plotSizeOver2 = chunkSize / plotsPerSide / 2;
+    return {p.x + plotSizeOver2, 0, p.z - plotSizeOver2};
+}
+Point getPlotBottomLeftFromID(int plotID, int chunkSize, int plotsPerSide)
+{
+    Point p = getPlotCenterFromID(plotID, chunkSize, plotsPerSide);
+    int plotSizeOver2 = chunkSize / plotsPerSide / 2;
+    return {p.x - plotSizeOver2, 0, p.z + plotSizeOver2};
+}
+Point getPlotBottomRightFromID(int plotID, int chunkSize, int plotsPerSide)
+{
+    Point p = getPlotCenterFromID(plotID, chunkSize, plotsPerSide);
+    int plotSizeOver2 = chunkSize / plotsPerSide / 2;
+    return {p.x + plotSizeOver2, 0, p.z + plotSizeOver2};
+}
+
+bool pointAboveLine(Point p, double m, double b)
+{
+    double pluggedInZ = m*p.x + b;
+    return p.z < pluggedInZ;
+}

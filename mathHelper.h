@@ -51,4 +51,16 @@ int getIDofNearestPlot(Point p, int chunkSize, int plotsPerSide);
 // Given a plotID, return the center of the plot
 Point getPlotCenterFromID(int plotID, int chunkSize, int plotsPerSide);
 
+// Given a plotID, get the corners of the plot
+Point getPlotTopLeftFromID(int plotID, int chunkSize, int plotsPerSide);
+Point getPlotTopRightFromID(int plotID, int chunkSize, int plotsPerSide);
+Point getPlotBottomLeftFromID(int plotID, int chunkSize, int plotsPerSide);
+Point getPlotBottomRightFromID(int plotID, int chunkSize, int plotsPerSide);
+
+
+// Compare points to lines in the xz-plane
+// Returns true if the (x,z) part of the point is above the line,
+// meaning more negative in the z-direction, than the line
+bool pointAboveLine(Point p, double m, double b);
+
 #endif //PRIME_CITY_MATHHELPER_H
