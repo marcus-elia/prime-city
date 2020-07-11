@@ -1,5 +1,11 @@
 #include "plotNetwork.h"
 
+PlotNetwork::PlotNetwork()
+{
+    chunkSize = 512;
+    plotsPerSide = 8;
+    plotSize = chunkSize / plotsPerSide;
+}
 PlotNetwork::PlotNetwork(int inputChunkSize, int inputPlotsPerSide)
 {
     chunkSize = inputChunkSize;

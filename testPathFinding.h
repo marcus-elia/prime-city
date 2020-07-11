@@ -68,4 +68,18 @@ bool testBFSexample3();
 // When path length is limited
 bool testBFSexample4();
 
+/*
+ * + - - - - - - - - +
+ * | X s o o X X X X |
+ * | X o o o o X X X |
+ * | X X o o o X X X |
+ * | X X X X o X X X |
+ * | X X X X o X X X |
+ * | X X X X F X X X |
+ * | X X X X X X X X |
+ * | X X x X X X X X |
+ * + - - - - - - - - +
+ */
+bool testClippingExample1();
+
 #endif //PRIME_CITY_TESTPATHFINDING_H

@@ -17,6 +17,7 @@ private:
     int chunkSize;
     int plotSize;
 public:
+    PlotNetwork();
     PlotNetwork(int inputChunkSize, int inputPlotsPerSide);
 
     bool hasNode(int id) const;

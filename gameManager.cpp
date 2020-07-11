@@ -6,6 +6,7 @@ GameManager::GameManager()
     png = PerlinNoiseGenerator(10, 10, 1);
     chunkSize = 512;
     plotsPerSide = 8;
+    network = PlotNetwork(chunkSize, plotsPerSide);
     renderRadius = 5;
     playerPlotID = 0;
     updateCurrentChunks();
@@ -21,6 +22,7 @@ GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRen
 {
     chunkSize = inputChunkSize;
     plotsPerSide = inputPlotsPerSide;
+    network = PlotNetwork(chunkSize, plotsPerSide);
     renderRadius = inputRenderRadius;
     perlinSize = inputPerlinSize;
     playerPlotID = 0;

@@ -17,7 +17,7 @@
 bool testBFSexample1()
 {
     std::cout << "Testing Breadth First Search on Example 1" << std::endl;
-    PlotNetwork pn;
+    PlotNetwork pn = PlotNetwork(512, 8);
     std::vector<int> nodeIDs{1,2,3,5,6,7,8,9,11,12,13,16,21,24,25,26,29,30,31,32,39,40,41,45,46,47,49,53,57,58,59,60,61,62,63};
     for(int id : nodeIDs)
     {
@@ -63,7 +63,7 @@ bool testBFSexample1()
 bool testBFSexample2()
 {
     std::cout << "Testing Breadth First Search on Example 2" << std::endl;
-    PlotNetwork pn;
+    PlotNetwork pn = PlotNetwork(512, 8);
     std::vector<int> nodeIDs{1,2,3,5,6,7,8,9,11,12,13,16,21,24,25,26,29,30,31,32,39,40,41,45,46,47,49,53,57,58,59,60,61,62,63,
                              320,321,322,323,324,325,327,328,333,334,335,336,344,352,360,368,376};
     for(int id : nodeIDs)
@@ -110,7 +110,7 @@ bool testBFSexample2()
 bool testBFSexample3()
 {
     std::cout << "Testing Breadth First Search on Example 3" << std::endl;
-    PlotNetwork pn;
+    PlotNetwork pn = PlotNetwork(512, 8);
     std::vector<int> nodeIDs{1,2,3,8,9,11,16,24,25,26,32,40,41,49,57,58,59,60,62,63};
     for(int id : nodeIDs)
     {
@@ -156,7 +156,7 @@ bool testBFSexample3()
 bool testBFSexample4()
 {
     std::cout << "Testing Breadth First Search on Example 4" << std::endl;
-    PlotNetwork pn;
+    PlotNetwork pn = PlotNetwork(512, 8);
     std::vector<int> nodeIDs{1,2,3,8,9,11,12,16,20,24,25,26,28,32,40,41,49,57,58,59,60,62,63};
     for(int id : nodeIDs)
     {
@@ -184,4 +184,21 @@ bool testBFSexample4()
     }
     std::cout << "Test passed." << std::endl;
     return true;
+}
+
+/*
+ * + - - - - - - - - +
+ * | X s o o X X X X |
+ * | X o o o o X X X |
+ * | X X o o o X X X |
+ * | X X X X o X X X |
+ * | X X X X o X X X |
+ * | X X X X F X X X |
+ * | X X X X X X X X |
+ * | X X x X X X X X |
+ * + - - - - - - - - +
+ */
+bool testClippingExample1()
+{
+    return false;
 }
