@@ -46,9 +46,9 @@ void PlotNetwork::addNode(PlotNode n)
 
 // Returns the shortest path between the nodes given by idStart and idEnd in
 // reverse order
-std::vector<PlotNode*> PlotNetwork::breadthFirstSearch(int idStart, int idEnd, int maxDepth) const
+std::vector<int> PlotNetwork::breadthFirstSearch(int idStart, int idEnd, int maxDepth) const
 {
-    std::vector<PlotNode*> output;
+    std::vector<int> output;
 
     // Keep track of two layers of nodes at each step by storing
     // their plotID's
@@ -167,10 +167,11 @@ std::vector<PlotNode*> PlotNetwork::breadthFirstSearch(int idStart, int idEnd, i
 
     while(curID != idStart)
     {
-        output.push_back(&*id2node.at(curID));
+        //output.push_back(&*id2node.at(curID));
+        output.push_back(curID);
         curID = node2prev[curID];
     }
-    output.push_back(&*id2node.at(idStart));
+    output.push_back(idStart);
     return output;
 
 
@@ -180,10 +181,10 @@ std::vector<PlotNode*> PlotNetwork::breadthFirstSearch(int idStart, int idEnd, i
 std::vector<PlotNode*> PlotNetwork::getShortestPath(int idStart, int idEnd, int maxDepth) const
 {
     std::vector<PlotNode*> output;
-    std::vector<PlotNode*> reverseNodes = breadthFirstSearch(idStart, idEnd, maxDepth);
+    std::vector<int> reverseNodes = breadthFirstSearch(idStart, idEnd, maxDepth);
     for(int i = reverseNodes.size() - 1; i >= 0; i--)
     {
-        output.push_back(reverseNodes[i]);
+        output.push_back(&*id2node.at(reverseNodes[i]));
     }
     return output;
 }
@@ -191,10 +192,10 @@ std::vector<PlotNode*> PlotNetwork::getShortestPath(int idStart, int idEnd, int 
 std::vector<Point> PlotNetwork::getShortestPathPoints(int idStart, int idEnd, int maxDepth) const
 {
     std::vector<Point> output;
-    std::vector<PlotNode*> nodes = breadthFirstSearch(idStart, idEnd, maxDepth);
+    std::vector<int> nodes = breadthFirstSearch(idStart, idEnd, maxDepth);
     for(int i = 0; i < nodes.size(); i++)
     {
-        output.push_back(nodes[i]->getCenter());
+        output.push_back(id2node.at(nodes[i])->getCenter());
     }
     return output;
 }
@@ -406,6 +407,21 @@ std::vector<int> PlotNetwork::getPlotIDsBetween(int plotID1, int plotID2) const
     return ids;
 }
 
-bool PlotNetwork::hasLineOfSight(int plotID1, int plotID2) const;
+bool PlotNetwork::hasLineOfSight(int plotID1, int plotID2) const
+{
+    std::vector<int> idsBetween = getPlotIDsBetween(plotID1, plotID2);
+    for(int id : idsBetween)
+    {
+        if(id2node.count(id) == 0)
+        {
+            return false;
+        }
+    }
+    return true;
+}
 
-std::vector<PlotNode*> PlotNetwork::clipPath(std::vector<PlotNode*> path);
+std::vector<PlotNode*> PlotNetwork::clipPath(std::vector<PlotNode*> path)
+{
+    std::vector<PlotNode*> clippedPath;
+
+}
