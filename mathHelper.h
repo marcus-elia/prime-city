@@ -6,6 +6,9 @@
 
 // This file contains general math helper functions
 
+// Directions
+enum direction {Left, Right, Up, Down};
+
 // Assuming n > 0, this returns the integer closest to n that
 // is a perfect square
 int nearestPerfectSquare(int n);
@@ -31,6 +34,8 @@ int idAbove(int id, int plotsPerSide);
 int idBelow(int id, int plotsPerSide);
 int idLeft(int id, int plotsPerSide);
 int idRight(int id, int plotsPerSide);
+
+int getIDinDirection(int plotID, int plotsPerSide, direction dir);
 
 
 // Returns the distance in the xz plane
