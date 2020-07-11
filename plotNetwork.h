@@ -47,7 +47,7 @@ public:
 
     // Returns a shortened version of path if is possible to cut across diagonals
     // and still stay in valid nodes in the network
-    std::vector<PlotNode*> clipPath(std::vector<PlotNode*> path);
+    std::vector<int> clipPath(std::vector<int> path);
 };
 
 #endif //PRIME_CITY_PLOTNETWORK_H

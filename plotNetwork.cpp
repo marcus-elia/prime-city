@@ -420,8 +420,24 @@ bool PlotNetwork::hasLineOfSight(int plotID1, int plotID2) const
     return true;
 }
 
-std::vector<PlotNode*> PlotNetwork::clipPath(std::vector<PlotNode*> path)
+std::vector<int> PlotNetwork::clipPath(std::vector<int> path)
 {
-    std::vector<PlotNode*> clippedPath;
+    if(path.empty())
+    {
+        return path;
+    }
+    std::vector<int> clippedPath;
+    clippedPath.push_back(path[0]);
 
+    int startIndex = 0;
+
+    for(int i = 2; i < path.size(); i++)
+    {
+        if(!hasLineOfSight(path[startIndex], path[i]))
+        {
+            clippedPath.push_back(path[i-1]);
+            startIndex = i-1;
+        }
+    }
+    return clippedPath;
 }
