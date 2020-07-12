@@ -242,13 +242,13 @@ Point getPlotBottomRightFromID(int plotID, int chunkSize, int plotsPerSide)
     return {p.x + plotSizeOver2, 0, p.z + plotSizeOver2};
 }
 
-bool pointStrictlyAboveLine(Point p, double m, double b)
+bool pointStrictlyAboveLine(Point p, double m, double b, double tolerance)
 {
     double pluggedInZ = m*p.x + b;
-    return p.z < pluggedInZ;
+    return p.z < pluggedInZ - tolerance;
 }
-bool pointWeaklyAboveLine(Point p, double m, double b)
+bool pointWeaklyAboveLine(Point p, double m, double b, double tolerance)
 {
     double pluggedInZ = m*p.x + b;
-    return p.z <= pluggedInZ;
+    return p.z <= pluggedInZ - tolerance;
 }

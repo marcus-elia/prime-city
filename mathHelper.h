@@ -66,7 +66,7 @@ Point getPlotBottomRightFromID(int plotID, int chunkSize, int plotsPerSide);
 // Compare points to lines in the xz-plane
 // Returns true if the (x,z) part of the point is above the line,
 // meaning more negative in the z-direction, than the line
-bool pointStrictlyAboveLine(Point p, double m, double b);
-bool pointWeaklyAboveLine(Point p, double m, double b);
+bool pointStrictlyAboveLine(Point p, double m, double b, double tolerance=0.0);
+bool pointWeaklyAboveLine(Point p, double m, double b, double tolerance=0.0);
 
 #endif //PRIME_CITY_MATHHELPER_H
