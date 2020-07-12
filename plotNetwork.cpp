@@ -233,17 +233,19 @@ std::vector<int> PlotNetwork::getPlotIDsBetween(int plotID1, int plotID2) const
         {
             dir = Left;
         }
-        int curPlotID = getIDinDirection(plotID1, plotsPerSide, dir);
+        //int curPlotID = getIDinDirection(plotID1, plotsPerSide, dir);
+        int curPlotID = plotID1;
         while(curPlotID != plotID2)
         {
             ids.push_back(curPlotID);
             curPlotID = getIDinDirection(curPlotID, plotsPerSide, dir);
         }
+        ids.push_back(plotID2);
     }
 
     // Now handle the four cases of diagonal lines
     // End is up and right of start
-    if(endCenter.x > startCenter.x && endCenter.z < startCenter.z)
+    else if(endCenter.x > startCenter.x && endCenter.z < startCenter.z)
     {
         // We need to know the two lines from the opposite corners of the
         // start plot to the end plot (the two slopes are probably the same)
@@ -265,10 +267,16 @@ std::vector<int> PlotNetwork::getPlotIDsBetween(int plotID1, int plotID2) const
         while(curBottomRight.x <= endBottomRight.x) // From left to right, go up the columns
         {
             // Go up while the bottom of the plot is low enough to possibly be in the line
-            while(!pointAboveLine(curBottomRight, higherSlope, higherZint))
+            while(!pointStrictlyAboveLine(curBottomRight, higherSlope, higherZint, -0.1))
             {
+                // If we are at the destination, add it to the list and stop looking
+                if(curPlotID == plotID2)
+                {
+                    ids.push_back(curPlotID);
+                    break;
+                }
                 // If the top of the plot is high enough, then it is on the line
-                if(pointAboveLine(curTopLeft, lowerSlope, lowerZint))
+                if(pointWeaklyAboveLine(curTopLeft, lowerSlope, lowerZint))
                 {
                     ids.push_back(curPlotID);
                 }
@@ -307,10 +315,16 @@ std::vector<int> PlotNetwork::getPlotIDsBetween(int plotID1, int plotID2) const
         while(curBottomLeft.x >= endBottomLeft.x) // From right to left, go up the columns
         {
             // Go up while the bottom of the plot is low enough to possibly be in the line
-            while(!pointAboveLine(curBottomLeft, higherSlope, higherZint))
+            while(!pointStrictlyAboveLine(curBottomLeft, higherSlope, higherZint, -0.1))
             {
+                // If we are at the destination, add it to the list and stop looking
+                if(curPlotID == plotID2)
+                {
+                    ids.push_back(curPlotID);
+                    break;
+                }
                 // If the top of the plot is high enough, then it is on the line
-                if(pointAboveLine(curTopRight, lowerSlope, lowerZint))
+                if(pointWeaklyAboveLine(curTopRight, lowerSlope, lowerZint))
                 {
                     ids.push_back(curPlotID);
                 }
@@ -327,7 +341,7 @@ std::vector<int> PlotNetwork::getPlotIDsBetween(int plotID1, int plotID2) const
         }
     }
     // End is down and left of start
-    else if(endCenter.x < startCenter.x && endCenter.z < startCenter.z)
+    else if(endCenter.x < startCenter.x && endCenter.z > startCenter.z)
     {
         // We need to know the two lines from the opposite corners of the
         // start plot to the end plot (the two slopes are probably the same)
@@ -346,13 +360,19 @@ std::vector<int> PlotNetwork::getPlotIDsBetween(int plotID1, int plotID2) const
         int topOfColumnID = plotID1;      // Keep track of the top of each column also
         Point curTopLeft = getPlotTopLeftFromID(curPlotID, chunkSize, plotsPerSide);
         Point curBottomRight = getPlotBottomRightFromID(curPlotID, chunkSize, plotsPerSide);
-        while(curTopLeft.x <= endTopLeft.x) // From right to left, go down the columns
+        while(curTopLeft.x >= endTopLeft.x) // From right to left, go down the columns
         {
             // Go down while the top of the plot is high enough to possibly be in the line
-            while(pointAboveLine(curTopLeft, lowerSlope, lowerZint))
+            while(pointStrictlyAboveLine(curTopLeft, lowerSlope, lowerZint, 0.1))
             {
+                // If we are at the destination, add it to the list and stop looking
+                if(curPlotID == plotID2)
+                {
+                    ids.push_back(curPlotID);
+                    break;
+                }
                 // If the bottom of the plot is low enough, then it is on the line
-                if(!pointAboveLine(curBottomRight, higherSlope, higherZint))
+                if(!pointWeaklyAboveLine(curBottomRight, higherSlope, higherZint))
                 {
                     ids.push_back(curPlotID);
                 }
@@ -391,10 +411,16 @@ std::vector<int> PlotNetwork::getPlotIDsBetween(int plotID1, int plotID2) const
         while(curTopRight.x <= endTopRight.x) // From left to right, go down the columns
         {
             // Go down while the top of the plot is high enough to possibly be in the line
-            while(pointAboveLine(curTopRight, lowerSlope, lowerZint))
+            while(pointStrictlyAboveLine(curTopRight, lowerSlope, lowerZint, 0.1))
             {
+                // If we are at the destination, add it to the list and stop looking
+                if(curPlotID == plotID2)
+                {
+                    ids.push_back(curPlotID);
+                    break;
+                }
                 // If the bottom of the plot is low enough, then it is on the line
-                if(!pointAboveLine(curBottomLeft, higherSlope, higherZint))
+                if(!pointWeaklyAboveLine(curBottomLeft, higherSlope, higherZint))
                 {
                     ids.push_back(curPlotID);
                 }
@@ -428,7 +454,7 @@ bool PlotNetwork::hasLineOfSight(int plotID1, int plotID2) const
 
 std::vector<int> PlotNetwork::clipPath(std::vector<int> path)
 {
-    if(path.empty())
+    if(path.size() < 3)
     {
         return path;
     }
@@ -445,5 +471,6 @@ std::vector<int> PlotNetwork::clipPath(std::vector<int> path)
             startIndex = i-1;
         }
     }
+    clippedPath.push_back(path.back());
     return clippedPath;
 }

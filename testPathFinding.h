@@ -68,6 +68,12 @@ bool testBFSexample3();
 // When path length is limited
 bool testBFSexample4();
 
+
+bool testGetPlotIDsBetween();
+
+
+
+
 /*
  * + - - - - - - - - +
  * | X s o o X X X X |

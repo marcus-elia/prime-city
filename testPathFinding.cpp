@@ -186,6 +186,80 @@ bool testBFSexample4()
     return true;
 }
 
+bool testGetPlotIDsBetween()
+{
+    bool passed = true;
+    std::cout << "\nTesting GetPlotIDsBetween" << std::endl;
+    PlotNetwork network;
+    std::vector<std::vector<int>> exp;
+    std::vector<std::vector<int>> obs;
+    std::vector<std::string> cases;
+
+    cases.push_back(" end is the same as start");
+    obs.push_back(network.getPlotIDsBetween(22, 22));
+    exp.push_back(std::vector<int>{22});
+
+    cases.push_back(" end is to the right of start");
+    obs.push_back(network.getPlotIDsBetween(1, 7));
+    exp.push_back(std::vector<int>{1,2,3,4,5,6,7});
+
+    cases.push_back(" end is to the left of start");
+    obs.push_back(network.getPlotIDsBetween(7, 1));
+    exp.push_back(std::vector<int>{7,6,5,4,3,2,1});
+
+    cases.push_back(" end is below start");
+    obs.push_back(network.getPlotIDsBetween(1, 17));
+    exp.push_back(std::vector<int>{1,9,17});
+
+    cases.push_back(" end is above start");
+    obs.push_back(network.getPlotIDsBetween(17, 1));
+    exp.push_back(std::vector<int>{17,9,1});
+
+    cases.push_back(" end is up and right from start");
+    obs.push_back(network.getPlotIDsBetween(25, 14));
+    exp.push_back(std::vector<int>{25,17,26,18,27,19,11,28,20,12,21,13,22,14});
+
+    cases.push_back(" end is down and left from start");
+    obs.push_back(network.getPlotIDsBetween(14, 25));
+    exp.push_back(std::vector<int>{14,22,13,21,12,20,28,11,19,27,18,26,17,25});
+
+    cases.push_back(" end is up and left from start");
+    obs.push_back(network.getPlotIDsBetween(30, 9));
+    exp.push_back(std::vector<int>{30,22,29,21,28,20,12,27,19,11,18,10,17,9});
+
+    cases.push_back(" end is down and right from start");
+    obs.push_back(network.getPlotIDsBetween(9, 30));
+    exp.push_back(std::vector<int>{9,17,10,18,11,19,27,12,20,28,21,29,22,30});
+
+    for(int j = 0; j < cases.size(); j++)
+    {
+        if(obs[j].size() != exp[j].size())
+        {
+            std::cout << "Test FAILED when " + cases[j] << std::endl;
+            std::cout << "Expected vec of size " << exp[j].size() << ", but got vec of size " << obs[j].size() << std::endl;
+            passed = false;
+        }
+        else
+        {
+            for(int i = 0; i < obs[j].size(); i++)
+            {
+                if(exp[j][i] != obs[j][i])
+                {
+                    std::cout << "Test FAILED when " + cases[j] << std::endl;
+                    std::cout << "Expected entry " << exp[j][i] << ", but got " << obs[j][i] << std::endl;
+                    passed = false;
+                }
+            }
+        }
+    }
+
+    if(passed)
+    {
+        std::cout << "All tests passed." << std::endl;
+    }
+    return passed;
+}
+
 /*
  * + - - - - - - - - +
  * | X s o o X X X X |
@@ -195,10 +269,37 @@ bool testBFSexample4()
  * | X X X X o X X X |
  * | X X X X F X X X |
  * | X X X X X X X X |
- * | X X x X X X X X |
+ * | X X X X X X X X |
  * + - - - - - - - - +
  */
 bool testClippingExample1()
 {
-    return false;
+    std::cout << "\nTesting Clip Path on Example 1" << std::endl;
+    PlotNetwork pn = PlotNetwork(512, 8);
+    std::vector<int> nodeIDs{1,2,3,9,10,11,12,18,19,20,28,36,44};
+    for(int id : nodeIDs)
+    {
+        pn.addNode(PlotNode(id, 512, 8));
+    }
+
+    std::vector<int> observedClippedPath = pn.clipPath(pn.breadthFirstSearch(1, 44));
+    std::vector<int> expectedPath{44};
+    if(observedClippedPath.size() != expectedPath.size())
+    {
+        std::cout << "Test FAILED" << std::endl;
+        std::cout << "Expected path of size " << expectedPath.size() << ", but got path of size " << observedClippedPath.size() << std::endl;
+        return false;
+    }
+
+    for(int i = 0; i < expectedPath.size(); i++)
+    {
+        if(expectedPath[i] != observedClippedPath[i])
+        {
+            std::cout << "Test FAILED" << std::endl;
+            std::cout << "Expected entry to be " << expectedPath[i] << ", but got " << observedClippedPath[i]<< std::endl;
+            return false;
+        }
+    }
+    std::cout << "Test passed." << std::endl;
+    return true;
 }

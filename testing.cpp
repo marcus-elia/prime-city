@@ -45,7 +45,8 @@ int main()
     testBFSexample2();
     testBFSexample3();
     testBFSexample4();
-    testGetIDofNearestPlot();
+    testGetPlotIDsBetween();
+    testClippingExample1();
     return 0;
 }
 
