@@ -276,7 +276,7 @@ std::vector<int> PlotNetwork::getPlotIDsBetween(int plotID1, int plotID2) const
                     break;
                 }
                 // If the top of the plot is high enough, then it is on the line
-                if(pointWeaklyAboveLine(curTopLeft, lowerSlope, lowerZint))
+                if(pointStrictlyAboveLine(curTopLeft, lowerSlope, lowerZint, 0.1))
                 {
                     ids.push_back(curPlotID);
                 }
@@ -324,7 +324,7 @@ std::vector<int> PlotNetwork::getPlotIDsBetween(int plotID1, int plotID2) const
                     break;
                 }
                 // If the top of the plot is high enough, then it is on the line
-                if(pointWeaklyAboveLine(curTopRight, lowerSlope, lowerZint))
+                if(pointStrictlyAboveLine(curTopRight, lowerSlope, lowerZint, 0.1))
                 {
                     ids.push_back(curPlotID);
                 }
@@ -463,14 +463,28 @@ std::vector<int> PlotNetwork::clipPath(std::vector<int> path)
 
     int startIndex = 0;
 
-    for(int i = 2; i < path.size(); i++)
+    int lookingAtIndex = path.size() - 1; // Start by checking if we can go straight to the end
+    while(lookingAtIndex > startIndex + 1)
     {
-        if(!hasLineOfSight(path[startIndex], path[i]))
+        // If we can go straight to where we are looking, add that
+        // to the vector, and now start looking from the place we
+        // just added
+        if(hasLineOfSight(path[startIndex], path[lookingAtIndex]))
         {
-            clippedPath.push_back(path[i-1]);
-            startIndex = i-1;
+            clippedPath.push_back(path[lookingAtIndex]);
+            if(lookingAtIndex == path.size() - 1) // If we got to the very end, return now
+            {
+                return clippedPath;
+            }
+            startIndex = lookingAtIndex;
+            lookingAtIndex = path.size() - 1;
         }
+        else // If we can't see straight there, look a little closer
+        {
+            lookingAtIndex--;
+        }
+
     }
-    clippedPath.push_back(path.back());
+    clippedPath.push_back(path.back()); // If we didn't get to the end, add the end in
     return clippedPath;
 }

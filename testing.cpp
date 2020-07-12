@@ -47,6 +47,8 @@ int main()
     testBFSexample4();
     testGetPlotIDsBetween();
     testClippingExample1();
+    testClippingExample2();
+    testClippingExample3();
     return 0;
 }
 

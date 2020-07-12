@@ -88,4 +88,21 @@ bool testGetPlotIDsBetween();
  */
 bool testClippingExample1();
 
+// Just a straight line
+bool testClippingExample2();
+
+/*
+ * + - - - - - - - - +
+ * | X s o o o X X X |
+ * | X o o o o X X X |
+ * | X X o o o X X X |
+ * | X X X X o X X X |
+ * | X X X X o X X X |
+ * | X o o o o X X X |
+ * | o o o X X X X X |
+ * | F o x X X X X X |
+ * + - - - - - - - - +
+ */
+bool testClippingExample3();
+
 #endif //PRIME_CITY_TESTPATHFINDING_H
