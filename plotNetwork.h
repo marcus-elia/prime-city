@@ -30,12 +30,17 @@ public:
     // return whatever Plot that is maxDepth from Start is closest to End.
     std::vector<int> breadthFirstSearch(int idStart, int idEnd, int maxDepth=-1) const;
 
-    // Wrapper function
+    // Wrapper function. Reverses the order to make it more human-readable
     std::vector<PlotNode*> getShortestPath(int idStart, int idEnd, int maxDepth=-1) const;
 
     // Wrapper function that returns Points (the centers of the Plots), and leaves
     // the order reversed since the Enemies want that
     std::vector<Point> getShortestPathPoints(int idStart, int idEnd, int maxDepth=-1) const;
+
+    // Wrapper function that returns Points (the centers of the Plots), and leaves
+    // the order reversed since the Enemies want that. But it clips the path to remove
+    // unnecessary steps.
+    std::vector<Point> getClippedPathPoints(int idStart, int idEnd, int maxDepth=-1) const;
 
     // Returns a vector of the IDs of the plots intersected by the line between the
     // two input plots. This considers all lines between points in the two plots,
@@ -48,7 +53,7 @@ public:
 
     // Returns a shortened version of path if is possible to cut across diagonals
     // and still stay in valid nodes in the network
-    std::vector<int> clipPath(std::vector<int> path);
+    std::vector<int> clipPath(std::vector<int> path) const;
 };
 
 #endif //PRIME_CITY_PLOTNETWORK_H

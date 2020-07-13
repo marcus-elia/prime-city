@@ -123,10 +123,6 @@ std::vector<int> PlotNetwork::breadthFirstSearch(int idStart, int idEnd, int max
                 }
             }
             // Check the neighbor right of this plot
-            if(id2node.count(plotID) == 0)
-            {
-                int a = 0;
-            }
             if(id2node.at(plotID)->hasRightNeighbor())
             {
                 int rightNeighborID = idRight(plotID, plotsPerSide);
@@ -199,6 +195,17 @@ std::vector<Point> PlotNetwork::getShortestPathPoints(int idStart, int idEnd, in
 {
     std::vector<Point> output;
     std::vector<int> nodes = breadthFirstSearch(idStart, idEnd, maxDepth);
+    for(int i = 0; i < nodes.size(); i++)
+    {
+        output.push_back(id2node.at(nodes[i])->getCenter());
+    }
+    return output;
+}
+
+std::vector<Point> PlotNetwork::getClippedPathPoints(int idStart, int idEnd, int maxDepth) const
+{
+    std::vector<Point> output;
+    std::vector<int> nodes = clipPath(breadthFirstSearch(idStart, idEnd, maxDepth));
     for(int i = 0; i < nodes.size(); i++)
     {
         output.push_back(id2node.at(nodes[i])->getCenter());
@@ -452,7 +459,7 @@ bool PlotNetwork::hasLineOfSight(int plotID1, int plotID2) const
     return true;
 }
 
-std::vector<int> PlotNetwork::clipPath(std::vector<int> path)
+std::vector<int> PlotNetwork::clipPath(std::vector<int> path) const
 {
     if(path.size() < 3)
     {
@@ -482,6 +489,15 @@ std::vector<int> PlotNetwork::clipPath(std::vector<int> path)
         else // If we can't see straight there, look a little closer
         {
             lookingAtIndex--;
+            // If we are one step away from where we are looking,
+            // then no clipping can be done from start index.
+            // Advance to the next plot and start looking from there
+            if(lookingAtIndex == startIndex + 1)
+            {
+                clippedPath.push_back(path[lookingAtIndex]);
+                startIndex = lookingAtIndex;
+                lookingAtIndex = path.size() - 1;
+            }
         }
 
     }

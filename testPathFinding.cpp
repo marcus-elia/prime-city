@@ -396,3 +396,47 @@ bool testClippingExample3()
     std::cout << "Test passed." << std::endl;
     return true;
 }
+
+/*
+ * + - - - - - - - - +
+ * | X X X X X X X X |
+ * | X X X X X X X X |
+ * | X X X X X X X X |
+ * | X X X X X X X X |
+ * | X X X X X X X F |
+ * | X X X X X X o o |
+ * | X X X X X o o X |
+ * | X X X X s o X X |
+ * + - - - - - - - - +
+ */
+bool testClippingExample4()
+{
+    std::cout << "\nTesting Clip Path on Example 4" << std::endl;
+    PlotNetwork pn = PlotNetwork(512, 8);
+    std::vector<int> nodeIDs{60,61,53,54,46,47,39};
+    for(int id : nodeIDs)
+    {
+        pn.addNode(PlotNode(id, 512, 8));
+    }
+
+    std::vector<int> observedClippedPath = pn.clipPath(pn.breadthFirstSearch(60, 39));
+    std::vector<int> expectedPath{39,47,46,54,53,61,60};
+    if(observedClippedPath.size() != expectedPath.size())
+    {
+        std::cout << "Test FAILED" << std::endl;
+        std::cout << "Expected path of size " << expectedPath.size() << ", but got path of size " << observedClippedPath.size() << std::endl;
+        return false;
+    }
+
+    for(int i = 0; i < expectedPath.size(); i++)
+    {
+        if(expectedPath[i] != observedClippedPath[i])
+        {
+            std::cout << "Test FAILED" << std::endl;
+            std::cout << "Expected entry to be " << expectedPath[i] << ", but got " << observedClippedPath[i]<< std::endl;
+            return false;
+        }
+    }
+    std::cout << "Test passed." << std::endl;
+    return true;
+}

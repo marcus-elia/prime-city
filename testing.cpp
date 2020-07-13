@@ -49,6 +49,7 @@ int main()
     testClippingExample1();
     testClippingExample2();
     testClippingExample3();
+    testClippingExample4();
     return 0;
 }
 

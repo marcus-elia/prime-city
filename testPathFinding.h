@@ -83,7 +83,7 @@ bool testGetPlotIDsBetween();
  * | X X X X o X X X |
  * | X X X X F X X X |
  * | X X X X X X X X |
- * | X X x X X X X X |
+ * | X X X X X X X X |
  * + - - - - - - - - +
  */
 bool testClippingExample1();
@@ -100,9 +100,23 @@ bool testClippingExample2();
  * | X X X X o X X X |
  * | X o o o o X X X |
  * | o o o X X X X X |
- * | F o x X X X X X |
+ * | F o X X X X X X |
  * + - - - - - - - - +
  */
 bool testClippingExample3();
+
+/*
+ * + - - - - - - - - +
+ * | X X X X X X X X |
+ * | X X X X X X X X |
+ * | X X X X X X X X |
+ * | X X X X X X X X |
+ * | X X X X X X X F |
+ * | X X X X X X o o |
+ * | X X X X X o o X |
+ * | X X X X s o X X |
+ * + - - - - - - - - +
+ */
+bool testClippingExample4();
 
 #endif //PRIME_CITY_TESTPATHFINDING_H
