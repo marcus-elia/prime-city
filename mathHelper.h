@@ -56,6 +56,9 @@ int getIDofNearestPlot(Point p, int chunkSize, int plotsPerSide);
 // Given a plotID, return the center of the plot
 Point getPlotCenterFromID(int plotID, int chunkSize, int plotsPerSide);
 
+// Returns a random point in the same plot as p, but not within buffer of the edge
+Point getRandomPointWithinSamePlot(Point p, int chunkSize, int plotsPerSide, int buffer);
+
 // Given a plotID, get the corners of the plot
 Point getPlotTopLeftFromID(int plotID, int chunkSize, int plotsPerSide);
 Point getPlotTopRightFromID(int plotID, int chunkSize, int plotsPerSide);

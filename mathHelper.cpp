@@ -206,6 +206,16 @@ int getIDofNearestPlot(Point p, int chunkSize, int plotsPerSide)
     return makeID(chunkCoords, plotCoords, plotsPerSide);
 }
 
+Point getRandomPointWithinSamePlot(Point p, int chunkSize, int plotsPerSide, int buffer)
+{
+    int plotID = getIDofNearestPlot(p, chunkSize, plotsPerSide);
+    Point center = getPlotCenterFromID(plotID, chunkSize, plotsPerSide);
+    int sideLength = chunkSize / plotsPerSide;
+    double x = center.x + sideLength/2 - buffer - (rand() % (sideLength-2*buffer));
+    double z = center.z + sideLength/2 - buffer - (rand() % (sideLength-2*buffer));
+    return {x, 0, z};
+}
+
 Point getPlotCenterFromID(int plotID, int chunkSize, int plotsPerSide)
 {
     int plotsPerChunk = plotsPerSide*plotsPerSide;
