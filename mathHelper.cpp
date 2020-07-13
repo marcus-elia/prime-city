@@ -223,8 +223,8 @@ Point getPlotCenterFromID(int plotID, int chunkSize, int plotsPerSide)
     Point2D chunkCoords = chunkIDtoPoint(chunkID);
     Point2D plotCoords = idToPlotCoords(plotID, plotsPerSide);
     int plotSize = chunkSize / plotsPerSide;
-    double x = chunkCoords.x*chunkSize + plotCoords.x*plotSize;
-    double z = chunkCoords.z*chunkSize + plotCoords.z*plotSize;
+    double x = chunkCoords.x*chunkSize + plotCoords.x*plotSize + plotSize/2;
+    double z = chunkCoords.z*chunkSize + plotCoords.z*plotSize + plotSize/2;
     return {x, 0, z};
 }
 Point getPlotTopLeftFromID(int plotID, int chunkSize, int plotsPerSide)

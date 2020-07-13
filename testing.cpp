@@ -28,6 +28,7 @@ bool testIDAboveBelowLeftRight();
 
 bool testGetIDofNearestPlot();
 
+bool testGetPlotCenterFromID();
 
 int main()
 {
@@ -50,6 +51,8 @@ int main()
     testClippingExample2();
     testClippingExample3();
     testClippingExample4();
+    testGetIDofNearestPlot();
+    testGetPlotCenterFromID();
     return 0;
 }
 
@@ -1168,6 +1171,53 @@ bool testGetIDofNearestPlot()
         passed = false;
         std::cout << "Test FAILED for bottom right of plot" << std::endl;
         std::cout << "Expected " << exp << ", observed " << obs << std::endl;
+    }
+
+    if(passed)
+    {
+        std::cout << "All tests passed." << std::endl;
+    }
+    return passed;
+}
+
+bool testGetPlotCenterFromID()
+{
+    bool passed = true;
+    std::cout << "\nTesting getPlotCenterFromID" << std::endl;
+
+    int id;
+    int chunkSize = 512;
+    int plotsPerSide = 8;
+    std::vector<std::string> cases;
+    std::vector<int> ids;
+    std::vector<Point> exp;
+    std::vector<Point> obs;
+
+    cases.push_back("plotID = 0");
+    id = 0;
+    ids.push_back(id);
+    exp.push_back({32,0,32});
+    obs.push_back(getPlotCenterFromID(id, chunkSize, plotsPerSide));
+
+    cases.push_back("plotID = 1");
+    id = 1;
+    ids.push_back(id);
+    exp.push_back({96,0,32});
+    obs.push_back(getPlotCenterFromID(id, chunkSize, plotsPerSide));
+
+    cases.push_back("plotID = 71");
+    id = 71;
+    ids.push_back(id);
+    exp.push_back({-32,0,32});
+    obs.push_back(getPlotCenterFromID(id, chunkSize, plotsPerSide));
+
+    for(int i = 0; i < cases.size(); i++)
+    {
+        if(exp[i].x != obs[i].x || exp[i].z != obs[i].z)
+        {
+            passed = false;
+            std::cout << "Test FAILED for " + cases[i] << std::endl;
+        }
     }
 
     if(passed)
