@@ -257,7 +257,11 @@ void GameManager::updateEnemyPathFinding()
     for(int i = 0; i < enemies.size(); i++)
     {
         int enemyPlotID = getIDofNearestPlot(enemies[i]->getLocation(), chunkSize, plotsPerSide);
-        enemies[i]->setFutureLocations(network.getShortestPathPoints(enemyPlotID, playerPlotID, 4));
+        if(!network.hasNode(enemyPlotID))
+        {
+            int a = 1;
+        }
+        enemies[i]->setFutureLocations(network.getClippedPathPoints(enemyPlotID, playerPlotID, ENEMY_BFS_SEARCH_DEPTH));
     }
 }
 

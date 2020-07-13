@@ -52,6 +52,7 @@ private:
 
     // Path finding
     PlotNetwork network;
+    const int ENEMY_BFS_SEARCH_DEPTH = 6;
     int playerPlotID; // the plot the player is currently in
 public:
     GameManager();
