@@ -53,6 +53,7 @@ int main()
     testClippingExample4();
     testGetIDofNearestPlot();
     testGetPlotCenterFromID();
+    testHasLineOfSight();
     return 0;
 }
 

@@ -119,4 +119,18 @@ bool testClippingExample3();
  */
 bool testClippingExample4();
 
+/*
+ * + - - - - - - - - +
+ * | X o o o o X X X |
+ * | X o o o o X X X |
+ * | X X o o o X X X |
+ * | X o X X o X o o |
+ * | X X X X o o o X |
+ * | X o o o o X X o |
+ * | o o o X X X X X |
+ * | o o X X X X X X |
+ * + - - - - - - - - +
+ */
+bool testHasLineOfSight();
+
 #endif //PRIME_CITY_TESTPATHFINDING_H

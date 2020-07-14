@@ -54,6 +54,10 @@ void PlotNetwork::addNode(PlotNode n)
 // reverse order
 std::vector<int> PlotNetwork::breadthFirstSearch(int idStart, int idEnd, int maxDepth) const
 {
+    if(id2node.count(idStart) == 0) // If somehow the path finding is trying to start at an invalid node
+    {
+        std::cout << "Error: trying to use BFS starting at a node that isn't in the network. I will crash now." << std::endl;
+    }
     std::vector<int> output;
 
     // Keep track of two layers of nodes at each step by storing

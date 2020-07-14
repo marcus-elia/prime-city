@@ -247,6 +247,14 @@ bool testGetPlotIDsBetween()
     obs.push_back(network.getPlotIDsBetween(40, 58));
     exp.push_back(std::vector<int>{40,48,41,49,57,50,58});
 
+    cases.push_back(" end is down and left at a small angle");
+    obs.push_back(network.getPlotIDsBetween(71, 72));
+    exp.push_back(std::vector<int>{71,79,70,78,69,77,68,76,67,75,66,74,65,73,64,72});
+
+    cases.push_back(" end is up and right with a slope of 2");
+    obs.push_back(network.getPlotIDsBetween(2977, 2962));
+    exp.push_back(std::vector<int>{2977,2969,2961,2978,2970,2962});
+
     for(int j = 0; j < cases.size(); j++)
     {
         if(obs[j].size() != exp[j].size())
@@ -438,5 +446,95 @@ bool testClippingExample4()
         }
     }
     std::cout << "Test passed." << std::endl;
+    return true;
+}
+
+/*
+ * + - - - - - - - - +
+ * | X o o o o X X X |
+ * | X o o o o X X X |
+ * | X X o o o X X X |
+ * | X o X X o X o o |
+ * | X X X X o o o X |
+ * | X o o o o X X o |
+ * | o o o X X X X X |
+ * | o o X X X X X X |
+ * + - - - - - - - - +
+ */
+bool testHasLineOfSight()
+{
+    std::cout << "\nTesting hasLineOfSight" << std::endl;
+    PlotNetwork pn = PlotNetwork(512, 8);
+    std::vector<int> nodeIDs{1,2,3,4,9,10,11,12,18,19,20,25,28,30,31,36,37,38,41,42,43,44,47,48,49,50,56,57};
+    for(int id : nodeIDs)
+    {
+        pn.addNode(PlotNode(id, 512, 8));
+    }
+
+    int startID, endID;
+    std::vector<int> startIDs;
+    std::vector<int> endIDs;
+    std::vector<bool> exp;
+    std::vector<bool> obs;
+
+    startID = 56;
+    endID = 57;
+    startIDs.push_back(startID);
+    endIDs.push_back(endID);
+    exp.push_back(true);
+    obs.push_back(pn.hasLineOfSight(startID, endID));
+
+    startID = 38;
+    endID = 47;
+    startIDs.push_back(startID);
+    endIDs.push_back(endID);
+    exp.push_back(false);
+    obs.push_back(pn.hasLineOfSight(startID, endID));
+
+    startID = 47;
+    endID = 38;
+    startIDs.push_back(startID);
+    endIDs.push_back(endID);
+    exp.push_back(false);
+    obs.push_back(pn.hasLineOfSight(startID, endID));
+
+    startID = 31;
+    endID = 37;
+    startIDs.push_back(startID);
+    endIDs.push_back(endID);
+    exp.push_back(false);
+    obs.push_back(pn.hasLineOfSight(startID, endID));
+
+    startID = 30;
+    endID = 36;
+    startIDs.push_back(startID);
+    endIDs.push_back(endID);
+    exp.push_back(false);
+    obs.push_back(pn.hasLineOfSight(startID, endID));
+
+    startID = 36;
+    endID = 30;
+    startIDs.push_back(startID);
+    endIDs.push_back(endID);
+    exp.push_back(false);
+    obs.push_back(pn.hasLineOfSight(startID, endID));
+
+    startID = 1;
+    endID = 12;
+    startIDs.push_back(startID);
+    endIDs.push_back(endID);
+    exp.push_back(true);
+    obs.push_back(pn.hasLineOfSight(startID, endID));
+
+    for(int i = 0; i < startIDs.size(); i++)
+    {
+        if(exp[i] != obs[i])
+        {
+            std::cout << "Test FAILED" << std::endl;
+            std::cout << "Expected " << exp[i] << ", for start =  " << startIDs[i] << " and end = " << endIDs[i] << std::endl;
+            return false;
+        }
+    }
+    std::cout << "All tests passed." << std::endl;
     return true;
 }
