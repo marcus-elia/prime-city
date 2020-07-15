@@ -120,6 +120,20 @@ bool testClippingExample3();
 bool testClippingExample4();
 
 /*
+ * + - - - - - - - - + - - - - - - - - +
+ * | X X X X X X X X | X X X X X X X X |
+ * | X X X X X X X X | X X X X X X X X |
+ * | X X X X X X X X | X X X X X X X X |
+ * | X X X X X X F o | B s X X X X X X |
+ * | X X X X X X o o | o o X X X X X X |
+ * | X X X X X X X X | X X X X X X X X |
+ * | X X X X X X X X | X X X X X X X X |
+ * | X X X X x X X X | X X X X X X X X |
+ * + - - - - - - - - + - - - - - - - - +
+ */
+bool testClippingExample5();
+
+/*
  * + - - - - - - - - +
  * | X o o o o X X X |
  * | X o o o o X X X |

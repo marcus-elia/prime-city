@@ -210,6 +210,13 @@ std::vector<Point> PlotNetwork::getClippedPathPoints(int idStart, int idEnd, int
 {
     std::vector<Point> output;
     std::vector<int> nodes = clipPath(breadthFirstSearch(idStart, idEnd, maxDepth));
+    for(int i = 0; i < nodes.size()-1; i++)
+    {
+        if(!hasLineOfSight(nodes[i], nodes[i+1]))
+        {
+            int a = 1;
+        }
+    }
     for(int i = 0; i < nodes.size(); i++)
     {
         output.push_back(id2node.at(nodes[i])->getCenter());

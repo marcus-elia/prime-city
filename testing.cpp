@@ -51,6 +51,7 @@ int main()
     testClippingExample2();
     testClippingExample3();
     testClippingExample4();
+    testClippingExample5();
     testGetIDofNearestPlot();
     testGetPlotCenterFromID();
     testHasLineOfSight();
