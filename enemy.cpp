@@ -16,6 +16,12 @@ Enemy::Enemy()
 
     ticksSinceLastExplosion = 0;
 
+    // Temporary?
+    chunkSize = 512;
+    plotsPerSide = 8;
+
+    isCloseToPlayer = false;
+
     initializeSolids();
     Point headCenter = {location.x, location.y + bodyHeight/2 + radius, location.z};
     dn = DigitalNumber(headCenter, {1,1,1,1}, headCenter, number, radius, radius);
@@ -32,8 +38,13 @@ Enemy::Enemy(Point inputLocation, double inputBodyHeight, double inputRadius,
     velocity = {0,0,0};
     initializeSolids();
     ticksSinceLastExplosion = 0;
+    isCloseToPlayer = false;
     Point headCenter = {location.x, location.y + bodyHeight/2 + radius, location.z};
     dn = DigitalNumber(headCenter, {1,1,1,1}, headCenter, number, 1.5*radius, radius);
+
+    // Temporary?
+    chunkSize = 512;
+    plotsPerSide = 8;
 }
 
 void Enemy::initializeSolids()
@@ -103,7 +114,29 @@ void Enemy::lookAtPlayer(Point playerLocation)
 void Enemy::setFutureLocations(std::vector<Point> inputFutureLocations)
 {
     futureLocations = inputFutureLocations;
+    // If the current location is closer to the ultimate goal than the next step, skip it
+    /*if(!futureLocations.empty() && distance2d(location, futureLocations[0]) < distance2d(targetLocation, futureLocations[0]))
+    {
+        targetLocation = futureLocations.back();
+        futureLocations.pop_back();
+    }*/
     arriveAtTarget();
+}
+void Enemy::setPlotsPerSide(int inputPlotsPerSide)
+{
+    plotsPerSide = inputPlotsPerSide;
+}
+void Enemy::setChunkSize(int inputChunkSize)
+{
+    chunkSize = inputChunkSize;
+}
+void Enemy::setIsCloseToPlayer(bool input)
+{
+    if(!isCloseToPlayer && input) // If we just got close to the player, replace the previous list of locations
+    {
+        setFutureLocations(std::vector<Point>{getRandomPointWithinSamePlot(location, chunkSize, plotsPerSide, radius)});
+    }
+    isCloseToPlayer = input;
 }
 
 void Enemy::turnTowardTarget()
@@ -131,13 +164,12 @@ void Enemy::arriveAtTarget()
     {
         targetLocation = futureLocations.back();
         futureLocations.pop_back();
-        // If the current location is closer to the ultimate goal than the next step, skip it
-        if(!futureLocations.empty() && distance2d(location, futureLocations[0]) < distance2d(targetLocation, futureLocations[0]))
-        {
-            targetLocation = futureLocations.back();
-            futureLocations.pop_back();
-        }
 
+        turnTowardTarget();
+    }
+    else if(isCloseToPlayer)
+    {
+        targetLocation = getRandomPointWithinSamePlot(location, chunkSize, plotsPerSide, radius);
         turnTowardTarget();
     }
 }

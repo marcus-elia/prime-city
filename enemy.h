@@ -31,6 +31,10 @@ private:
     Point targetLocation;
     // The reverse-ordered list of points
     std::vector<Point> futureLocations;
+    bool isCloseToPlayer;
+
+    int chunkSize;
+    int plotsPerSide;
 
     Vector3 velocity; // current x y and z velocity
 
@@ -62,8 +66,11 @@ public:
     double getRadius() const;
     RGBAcolor getBodyColor() const;
 
-    // Setter
+    // Setters
     void setNumber(int newNumber);
+    void setPlotsPerSide(int inputPlotsPerSide);
+    void setChunkSize(int chunkSize);
+    void setIsCloseToPlayer(bool input);
 
     // Explosions
     void addRecentExplosion(std::shared_ptr<Explosion> ex);

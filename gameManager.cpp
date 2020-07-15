@@ -259,10 +259,15 @@ void GameManager::updateEnemyPathFinding()
         int enemyPlotID = getIDofNearestPlot(enemies[i]->getLocation(), chunkSize, plotsPerSide);
         if(enemyPlotID == playerPlotID) // If close to player, just target a random point near the player
         {
-            enemies[i]->setFutureLocations(std::vector<Point>{getRandomPointWithinSamePlot(enemies[i]->getLocation(), chunkSize, plotsPerSide, enemies[i]->getRadius())});
+            enemies[i]->setIsCloseToPlayer(true);
         }
         else // Otherwise, path find
         {
+            enemies[i]->setIsCloseToPlayer(false);
+            if(!network.hasNode(enemyPlotID))
+            {
+                int a = 1;
+            }
             enemies[i]->setFutureLocations(network.getClippedPathPoints(enemyPlotID, playerPlotID, ENEMY_BFS_SEARCH_DEPTH));
         }
     }
@@ -279,6 +284,10 @@ Point GameManager::getRandomOpenLocation()
     std::vector<int> emptyPlots = currentChunks[randIndex]->getEmptyPlotIDs();
     randIndex = rand() % emptyPlots.size();
     int plot = emptyPlots[randIndex];
+    if(!network.hasNode(plot))
+    {
+        int a = 1;
+    }
     return getPlotCenterFromID(plot, chunkSize, plotsPerSide);
 }
 void GameManager::createRandomEnemy()
