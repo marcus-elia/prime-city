@@ -36,7 +36,7 @@ private:
     int chunkSize;
     int plotsPerSide;
 
-    Vector3 velocity; // current x y and z velocity
+    Point velocity; // current x y and z velocity
 
     int number;
     DigitalNumber dn;

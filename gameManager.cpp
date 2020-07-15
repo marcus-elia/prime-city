@@ -86,8 +86,7 @@ void GameManager::tick()
     // Update the player's plot once per second
     if(frameNumberMod90 % 30 == 0)
     {
-        Vector3 newLocation = player.getLocation();
-        int newID = getIDofNearestPlot({newLocation.x, newLocation.y, newLocation.z}, chunkSize, plotsPerSide);
+        int newID = getIDofNearestPlot(player.getLocation(), chunkSize, plotsPerSide);
         if(newID != playerPlotID || frameNumberMod90 == 0)
         {
             playerPlotID = newID;
@@ -119,10 +118,9 @@ void GameManager::tick()
     // The enemies look at the player
     if(frameNumberMod90 % 16 == 0)
     {
-        Point playerLocation = {player.getLocation().x, 0, player.getLocation().z};
         for(std::shared_ptr<Enemy> enemy : enemies)
         {
-            enemy->lookAtPlayer(playerLocation);
+            enemy->lookAtPlayer(player.getLocation());
         }
     }
 
@@ -321,9 +319,8 @@ void  GameManager::manageEnemies()
     while(i < L)
     {
         std::shared_ptr<Enemy> e = enemies[i];
-        Point playerLocation = {player.getLocation().x, player.getLocation().y, player.getLocation().z};
 
-        if(distance2d(playerLocation, e->getLocation()) > renderRadius*chunkSize)
+        if(distance2d(player.getLocation(), e->getLocation()) > renderRadius*chunkSize)
         {
             enemies.erase(enemies.begin() + i);
             L -= 1;
@@ -354,7 +351,7 @@ void GameManager::createEnemyExplosion(std::shared_ptr<Enemy> e)
 // =========================
 void GameManager::createMissile()
 {
-    Point location = {player.getLocation().x, player.getLocation().y, player.getLocation().z};
+    Point location = player.getLocation();
     Point velocity = {player.getLookingAt().x - location.x,
                       player.getLookingAt().y - location.y,
                       player.getLookingAt().z - location.z};
@@ -367,7 +364,7 @@ void GameManager::checkMissiles()
     while(i < L)
     {
         std::shared_ptr<Missile> m = missiles[i];
-        Point playerLocation = {player.getLocation().x, player.getLocation().y, player.getLocation().z};
+        Point playerLocation = player.getLocation();
 
         // If the missile went out of bounds without hitting anything, remove it
         if(m->isOutOfBounds(playerLocation, renderRadius*chunkSize))
@@ -476,15 +473,15 @@ void GameManager::checkExplosionForEnemies(std::shared_ptr<Explosion> ex)
 
 
 // Camera
-Vector3 GameManager::getCameraLocation() const
+Point GameManager::getCameraLocation() const
 {
     return player.getLocation();
 }
-Vector3 GameManager::getCameraLookingAt() const
+Point GameManager::getCameraLookingAt() const
 {
     return player.getLookingAt();
 }
-Vector3 GameManager::getCameraUp() const
+Point GameManager::getCameraUp() const
 {
     return player.getUp();
 }
@@ -501,7 +498,7 @@ int mod(int a, int m)
 
 void GameManager::printPlayerBuildingDebug()
 {
-    Vector3 v = player.getLocation();
+    Point v = player.getLocation();
     //std::cout << std::endl<< "Player location: " << v.x << "," << v.y << "," << v.z << std::endl;
     //Point2D curPlayerChunk = player.whatChunk();
     //std::shared_ptr<Chunk> c = allSeenChunks[pointToInt(curPlayerChunk)];

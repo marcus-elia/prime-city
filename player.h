@@ -7,17 +7,17 @@
 class Player
 {
 private:
-    Vector3 location;
-    Vector3 lookingAt;
-    Vector3 up;
-    Vector3 sphericalDirection; // The direction the player is facing in spherical coordinates
+    Point location;
+    Point lookingAt;
+    Point up;
+    Point sphericalDirection; // The direction the player is facing in spherical coordinates
                                 // Must be on the unit sphere
 
     double xzAngle; // Where the player is looking in the xz-plane
     double yAngle;  // How much the player is looking up (in [-Pi, Pi])
 
     double speed;     // how fast the player can move
-    Vector3 velocity; // current x y and z velocity
+    Point velocity; // current x y and z velocity
 
     double sensitivity; // turning speed for mouse movement
 
@@ -25,12 +25,12 @@ private:
     Point2D currentChunkCoords; // which chunk the player is in
 public:
     Player();
-    Player(Vector3 inputLocation, Vector3 inputLookingAt, Vector3 inputUp, double inputSpeed, int inputChunkSize);
+    Player(Point inputLocation, Point inputLookingAt, Point inputUp, double inputSpeed, int inputChunkSize);
 
     // Getters
-    Vector3 getLocation() const;
-    Vector3 getLookingAt() const;
-    Vector3 getUp() const;
+    Point getLocation() const;
+    Point getLookingAt() const;
+    Point getUp() const;
     double getSpeed() const;
     double getXZAngle() const;
     double getYAngle() const;
@@ -38,9 +38,9 @@ public:
     int getCurrentChunkInt() const;
 
     // Setters
-    void setLocation(Vector3 inputLocation);
-    void setLookingAt(Vector3 inputLookingAt);
-    void setUp(Vector3 inputUp);
+    void setLocation(Point inputLocation);
+    void setLookingAt(Point inputLookingAt);
+    void setUp(Point inputUp);
     void setSpeed(double inputSpeed);
     void setXZAngle(double inputXZAngle);
     void setYAngle(double inputYAngle);
