@@ -36,22 +36,6 @@ void initGL()
               camUp.x, camUp.y, camUp.z); // up vector
 }
 
-void draw_axes()
-{
-    glLineWidth(3.0);
-    glBegin(GL_LINES);
-    glColor3f(1.0, 0.0, 0.0);
-    glVertex3f(-width/2.0, 0.0, 0.0);
-    glVertex3f(width/2.0, 0.0, 0.0);
-    glColor3f(0.0, 1.0, 0.0);
-    glVertex3f(0.0, height/2.0, 0.0);
-    glVertex3f(0.0, -height/2.0, 0.0);
-    glColor3f(0.0, 0.0, 1.0);
-    glVertex3f(0.0, 0.0, width);
-    glVertex3f(0.0, 0.0, -width);
-    glEnd();
-}
-
 /* Handler for window-repaint event. Call back when the window first appears and
  whenever the window needs to be re-painted. */
 void display()
@@ -80,7 +64,6 @@ void display()
               camUp.x, camUp.y, camUp.z); // up vector
 
     // Draw in 3d
-    //draw_axes();
     manager.draw();
 
 
@@ -94,31 +77,16 @@ void display()
     glPushMatrix();
     glLoadIdentity();
 
-    glDisable(GL_CULL_FACE);
+    // Draw the cursor
     glBegin(GL_QUADS);
-    glColor4f(0.8,0.1,0.1,1);
+    glColor4f(0.8, 0, 0, manager.getCursorAlpha());
     glVertex3f(width/2 + 5,height/2 + 5,0);
     glVertex3f(width/2 - 5,height/2 + 5,0);
     glVertex3f(width/2 - 5,height/2 - 5,0);
     glVertex3f(width/2 + 5,height/2 - 5,0);
     glEnd();
-    glEnable(GL_CULL_FACE);
 
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-    glMatrixMode(GL_MODELVIEW);
-    glPopMatrix();
-
-    // Switch to 2d mode
-    // Code from https://www.youtube.com/watch?v=i1mp4zflkYo
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-    gluOrtho2D(0.0,width,0.0,height);
-    glMatrixMode(GL_MODELVIEW);
-    glPushMatrix();
-    glLoadIdentity();
-
+    // Draw UI things
     manager.drawPlayerDirection(width - height/10, 9*height/10);
     manager.displayScores();
 
@@ -187,22 +155,6 @@ void kbu(unsigned char key, int x, int y)
 
 void kbdS(int key, int x, int y)
 {
-    /*switch(key)
-    {
-        case GLUT_KEY_DOWN:
-
-            break;
-        case GLUT_KEY_LEFT:
-            c.move(-5, 0, 0);
-            break;
-        case GLUT_KEY_RIGHT:
-            c.move(5, 0, 0);
-            break;
-        case GLUT_KEY_UP:
-
-            break;
-    }*/
-
     glutPostRedisplay();
 }
 

@@ -35,6 +35,7 @@ private:
 
     // Timer
     int frameNumberMod90;
+    int ticksSinceLastPlayerMissile;
 
     // Enemies
     double enemyBodyHeight;
@@ -46,6 +47,7 @@ private:
     // Missiles
     RGBAcolor PLAYER_MISSILE_COLOR = {1, 0, 0, 1};
     std::vector<std::shared_ptr<Missile>> missiles;
+    const int PLAYER_MISSILE_COOLDOWN = 15;
 
     // Explosions
     std::vector<std::shared_ptr<Explosion>> explosions;
@@ -54,18 +56,22 @@ private:
     PlotNetwork network;
     const int ENEMY_BFS_SEARCH_DEPTH = 6;
     int playerPlotID; // the plot the player is currently in
+
+    // UI
+    double cursorAlpha; // The cursor will be opaque when reloaded
 public:
     GameManager();
     GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize);
 
     // Getters
     Player getPlayer() const;
-    bool getWKey();
-    bool getAKey();
-    bool getSKey();
-    bool getDKey();
-    bool getRKey();
-    bool getCKey();
+    bool getWKey() const;
+    bool getAKey() const;
+    bool getSKey() const;
+    bool getDKey() const;
+    bool getRKey() const;
+    bool getCKey() const;
+    double getCursorAlpha() const;
 
     // Setters
     void setWKey(bool input);

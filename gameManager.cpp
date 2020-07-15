@@ -17,6 +17,8 @@ GameManager::GameManager()
     enemySpeed = 1.5;
 
     frameNumberMod90 = 0;
+    ticksSinceLastPlayerMissile = PLAYER_MISSILE_COOLDOWN;
+    cursorAlpha = 1.0;
 }
 GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize)
 {
@@ -35,6 +37,8 @@ GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRen
     enemySpeed = 1.5;
 
     frameNumberMod90 = 0;
+    ticksSinceLastPlayerMissile = PLAYER_MISSILE_COOLDOWN;
+    cursorAlpha = 1.0;
 }
 
 void GameManager::reactToMouseMovement(double theta)
@@ -45,7 +49,11 @@ void GameManager::reactToMouseMovement(double theta)
 }
 void GameManager::reactToMouseClick()
 {
-    createMissile();
+    if(ticksSinceLastPlayerMissile == PLAYER_MISSILE_COOLDOWN)
+    {
+        createMissile();
+        ticksSinceLastPlayerMissile = 0;
+    }
 }
 
 
@@ -137,35 +145,44 @@ void GameManager::tick()
 
     frameNumberMod90++;
     frameNumberMod90 %= 90;
+    if(ticksSinceLastPlayerMissile < PLAYER_MISSILE_COOLDOWN)
+    {
+        ticksSinceLastPlayerMissile++;
+        cursorAlpha = (double)ticksSinceLastPlayerMissile/PLAYER_MISSILE_COOLDOWN;
+    }
 }
 
 Player GameManager::getPlayer() const
 {
     return player;
 }
-bool GameManager::getWKey()
+bool GameManager::getWKey() const
 {
     return wKey;
 }
-bool GameManager::getAKey()
+bool GameManager::getAKey() const
 {
     return aKey;
 }
-bool GameManager::getSKey()
+bool GameManager::getSKey() const
 {
     return sKey;
 }
-bool GameManager::getDKey()
+bool GameManager::getDKey() const
 {
     return dKey;
 }
-bool GameManager::getRKey()
+bool GameManager::getRKey() const
 {
     return rKey;
 }
-bool GameManager::getCKey()
+bool GameManager::getCKey() const
 {
     return cKey;
+}
+double GameManager::getCursorAlpha() const
+{
+    return cursorAlpha;
 }
 
 void GameManager::setWKey(bool input)
@@ -287,10 +304,6 @@ Point GameManager::getRandomOpenLocation()
     std::vector<int> emptyPlots = currentChunks[randIndex]->getEmptyPlotIDs();
     randIndex = rand() % emptyPlots.size();
     int plot = emptyPlots[randIndex];
-    if(!network.hasNode(plot))
-    {
-        int a = 1;
-    }
     return getPlotCenterFromID(plot, chunkSize, plotsPerSide);
 }
 void GameManager::createRandomEnemy()
