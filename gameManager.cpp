@@ -264,11 +264,14 @@ void GameManager::updateEnemyPathFinding()
         else // Otherwise, path find
         {
             enemies[i]->setIsCloseToPlayer(false);
-            if(!network.hasNode(enemyPlotID))
+            std::vector<Point> path = network.getClippedPathPoints(enemyPlotID, playerPlotID, ENEMY_BFS_SEARCH_DEPTH);
+            // If the path will cause the enemy's first movement will be within the plot it's currently in,
+            // then pop that location off
+            if(!path.empty() && enemyPlotID == getIDofNearestPlot(path.back(), chunkSize, plotsPerSide))
             {
-                int a = 1;
+                path.pop_back();
             }
-            enemies[i]->setFutureLocations(network.getClippedPathPoints(enemyPlotID, playerPlotID, ENEMY_BFS_SEARCH_DEPTH));
+            enemies[i]->setFutureLocations(path);
         }
     }
 }

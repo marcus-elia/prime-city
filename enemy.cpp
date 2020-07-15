@@ -114,12 +114,6 @@ void Enemy::lookAtPlayer(Point playerLocation)
 void Enemy::setFutureLocations(std::vector<Point> inputFutureLocations)
 {
     futureLocations = inputFutureLocations;
-    // If the current location is closer to the ultimate goal than the next step, skip it
-    /*if(!futureLocations.empty() && distance2d(location, futureLocations[0]) < distance2d(targetLocation, futureLocations[0]))
-    {
-        targetLocation = futureLocations.back();
-        futureLocations.pop_back();
-    }*/
     arriveAtTarget();
 }
 void Enemy::setPlotsPerSide(int inputPlotsPerSide)
