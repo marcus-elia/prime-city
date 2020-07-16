@@ -14,6 +14,9 @@ Player::Player()
     sensitivity = 0.03;
     chunkSize = 512;
     currentChunkCoords = whatChunk();
+
+    height = 20;
+    radius = 8;
 }
 Player::Player(Point inputLocation, Point inputLookingAt, Point inputUp, double inputSpeed, int inputChunkSize)
 {
@@ -28,6 +31,9 @@ Player::Player(Point inputLocation, Point inputLookingAt, Point inputUp, double 
     sensitivity = 0.03;
     chunkSize = inputChunkSize;
     currentChunkCoords = whatChunk();
+
+    height = 20;
+    radius = 8;
 }
 
 // Getters
@@ -62,6 +68,21 @@ Point2D Player::getCurrentChunkCoords() const
 int Player::getCurrentChunkInt() const
 {
     return pointToInt(currentChunkCoords);
+}
+double Player::getHeight() const
+{
+    return height;
+}
+double Player::getRadius() const
+{
+    return radius;
+}
+
+bool Player::isHitByMissile(Point missileLoc, double missileRadius) const
+{
+    bool lowEnough =  missileLoc.y < height + missileRadius/2;
+    bool closeEnough = distance2d(location, missileLoc) < missileRadius/2 + radius;
+    return  closeEnough && lowEnough;
 }
 
 // Setters

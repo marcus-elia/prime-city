@@ -23,6 +23,9 @@ private:
 
     int chunkSize;
     Point2D currentChunkCoords; // which chunk the player is in
+
+    double height;
+    double radius;
 public:
     Player();
     Player(Point inputLocation, Point inputLookingAt, Point inputUp, double inputSpeed, int inputChunkSize);
@@ -36,6 +39,10 @@ public:
     double getYAngle() const;
     Point2D getCurrentChunkCoords() const;
     int getCurrentChunkInt() const;
+    double getHeight() const;
+    double getRadius() const;
+
+    bool isHitByMissile(Point missileLoc, double missileRadius) const;
 
     // Setters
     void setLocation(Point inputLocation);
