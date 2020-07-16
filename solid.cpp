@@ -122,6 +122,11 @@ void Solid::move(double deltaX, double deltaY, double deltaZ)
         movePoint(p, deltaX, deltaY, deltaZ);
     }
 }
+void Solid::moveSelfAndOwner(double deltaX, double deltaY, double deltaZ)
+{
+    move(deltaX, deltaY, deltaZ);
+    movePoint(ownerCenter, deltaX, deltaY, deltaZ);
+}
 
 void Solid::rotate(double thetaX, double thetaY, double thetaZ)
 {

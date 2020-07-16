@@ -60,11 +60,18 @@ public:
     void setFutureLocations(std::vector<Point> inputFutureLocations);
     void setPlayerLocation(Point inputPlayerLocation);
 
+    // Movement and Ticks
     void tick();
     void turnVelocityTowardTarget();
     void move();
-    void rotate();
+    void turn();
+    void rotate(double deltaXZAngle);
     void arriveAtTarget();
+
+    // AI
+    void updateTargetAngle();
+    void updateCanShootTarget(); // Computer can fire a missile toward the target if the desired
+                                 // angle is within a 90 degree field of vision
 
     void draw() const;
 

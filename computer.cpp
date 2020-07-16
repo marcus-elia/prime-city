@@ -100,6 +100,7 @@ void Computer::setPlayerLocation(Point inputPlayerLocation)
 {
     playerLocation = inputPlayerLocation;
     missileTarget = playerLocation;
+    updateTargetAngle();
 }
 
 void Computer::tick()
@@ -132,16 +133,57 @@ void Computer::move()
 {
     for(auto s : solids)
     {
-        s->move(velocity.x, velocity.y, velocity.z);
+        s->moveSelfAndOwner(velocity.x, velocity.y, velocity.z);
     }
     location.x += velocity.x;
     location.y += velocity.y;
     location.z += velocity.z;
+
+    // Rotate where the computer is looking
+    turn();
+    updateTargetAngle();
+    updateCanShootTarget();
 }
 
-void Computer::rotate()
+void Computer::turn()
 {
+    double dif = angleSweptOut(xzAngle, targetAngle);
+    if(dif < rotationSpeed)
+    {
+        rotate(targetAngle - xzAngle);
+    }
+    else if(dif > 2*PI - rotationSpeed)
+    {
+        rotate(xzAngle - targetAngle);
+    }
+    else if(dif < PI)
+    {
+        rotate(rotationSpeed);
+    }
+    else
+    {
+        rotate(-rotationSpeed);
+    }
+}
 
+void Computer::rotate(double deltaXZAngle)
+{
+    // Make sure the resulting angle is between 0 and 2*PI
+    xzAngle += deltaXZAngle;
+    while(xzAngle >= 2*PI)
+    {
+        xzAngle -= 2*PI;
+    }
+    while(xzAngle < 0)
+    {
+        xzAngle += 2*PI;
+    }
+
+    // Rotate the solids
+    for(std::shared_ptr<Solid> s : solids)
+    {
+        s->rotateAroundOwner(0, deltaXZAngle, 0);
+    }
 }
 
 void Computer::arriveAtTarget()
@@ -154,6 +196,23 @@ void Computer::arriveAtTarget()
         turnVelocityTowardTarget();
     }
 }
+
+// ==============================
+//
+//          AI Things
+//
+// ==============================
+
+void Computer::updateTargetAngle()
+{
+    targetAngle = atan2(playerLocation.z - location.z, playerLocation.x - location.x);
+}
+void Computer::updateCanShootTarget()
+{
+    double dif = angleSweptOut(xzAngle, targetAngle);
+    canShootTarget = dif < PI/4 || dif > 2*PI - PI/4;
+}
+
 
 void Computer::draw() const
 {

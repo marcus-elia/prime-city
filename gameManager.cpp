@@ -154,7 +154,7 @@ void GameManager::tick()
     if(frameNumberMod90 % 45 == 0)
     {
         updateComputerPathFinding();
-        if(ticksSinceLastComputerMissile == COMPUTER_MISSILE_COOLDOWN)
+        if(ticksSinceLastComputerMissile == COMPUTER_MISSILE_COOLDOWN && computer.getCanShootTarget())
         {
             createComputerMissile();
         }

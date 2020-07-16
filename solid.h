@@ -61,6 +61,7 @@ public:
 
     // Moving
     void move(double deltaX, double deltaY, double deltaZ);
+    void moveSelfAndOwner(double deltaX, double deltaY, double deltaZ);
     void rotate(double thetaX, double thetaY, double thetaZ);
     void rotateAroundOwner(double thetaX, double thetaY, double thetaZ);
 
