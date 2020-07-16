@@ -13,7 +13,7 @@ Computer::Computer()
     bodyHeight = 24;
 
     bodyColor = {1, 0.8, 0, 1};
-    headColor = {0.42, 0.2, 0.48, 0.8};
+    headColor = {0.42, 0.2, 0.48, 1};
     initializeSolids();
 
     targetLocation = location;
@@ -37,14 +37,14 @@ Computer::Computer(Point inputLocation, double inputSpeed, double inputRotationS
     targetAngle = PI/2;
 
     bodyColor = {1, 0.8, 0, 1};
-    headColor = {0.42, 0.2, 0.48, 0.8};
+    headColor = {0.42, 0.2, 0.48, 1};
     initializeSolids();
 
     targetLocation = location;
     playerLocation = {0, 0, 0};
 
     missileTarget = {0, 0, 0};
-    canShootTarget = false;
+    canShootTarget = true;
 }
 
 void Computer::initializeSolids()
@@ -79,6 +79,10 @@ bool Computer::getCanShootTarget() const
 {
     return canShootTarget;
 }
+Point Computer::getMissileTarget() const
+{
+    return missileTarget;
+}
 
 // Setters
 void Computer::setFutureLocations(std::vector<Point> inputFutureLocations)
@@ -88,11 +92,27 @@ void Computer::setFutureLocations(std::vector<Point> inputFutureLocations)
 void Computer::setPlayerLocation(Point inputPlayerLocation)
 {
     playerLocation = inputPlayerLocation;
+    missileTarget = playerLocation;
 }
 
 void Computer::tick()
 {
-
+    if(distance2d(location, targetLocation) < speed)
+    {
+        for(auto s : solids)
+        {
+            s->move(targetLocation.x - location.x,
+                    0,
+                    targetLocation.z - location.z);
+        }
+        location.x = targetLocation.x;
+        location.z = targetLocation.z;
+        arriveAtTarget();
+    }
+    else
+    {
+        move();
+    }
 }
 
 void Computer::turnVelocityTowardTarget()
@@ -114,22 +134,7 @@ void Computer::move()
 
 void Computer::rotate()
 {
-    if(distance2d(location, targetLocation) < speed)
-    {
-        for(auto s : solids)
-        {
-            s->move(targetLocation.x - location.x,
-                    0,
-                    targetLocation.z - location.z);
-        }
-        location.x = targetLocation.x;
-        location.z = targetLocation.z;
-        arriveAtTarget();
-    }
-    else
-    {
-        move();
-    }
+
 }
 
 void Computer::arriveAtTarget()

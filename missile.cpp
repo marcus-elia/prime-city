@@ -45,6 +45,10 @@ RGBAcolor Missile::getCoreColor() const
 {
     return coreColor;
 }
+bool Missile::getWasShotByPlayer() const
+{
+    return wasShotByPlayer;
+}
 
 // Setters
 void Missile::setLocation(Point inputLocation)

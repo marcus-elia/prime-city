@@ -12,6 +12,7 @@ GameManager::GameManager()
     updateCurrentChunks();
 
     playerScore = 0;
+    computerScore = 0;
     enemyBodyHeight = 24;
     enemyRadius = 8;
     enemySpeed = 1.5;
@@ -19,6 +20,8 @@ GameManager::GameManager()
     frameNumberMod90 = 0;
     ticksSinceLastPlayerMissile = PLAYER_MISSILE_COOLDOWN;
     cursorAlpha = 1.0;
+
+    computer = Computer();
 }
 GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize)
 {
@@ -32,6 +35,7 @@ GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRen
     updateCurrentChunks();
 
     playerScore = 0;
+    computerScore = 0;
     enemyBodyHeight = 24;
     enemyRadius = 8;
     enemySpeed = 1.5;
@@ -39,6 +43,8 @@ GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRen
     frameNumberMod90 = 0;
     ticksSinceLastPlayerMissile = PLAYER_MISSILE_COOLDOWN;
     cursorAlpha = 1.0;
+
+    computer = Computer({96, 12, 0}, 2, 0.1, &enemies);
 }
 
 void GameManager::reactToMouseMovement(double theta)
@@ -51,7 +57,7 @@ void GameManager::reactToMouseClick()
 {
     if(ticksSinceLastPlayerMissile == PLAYER_MISSILE_COOLDOWN)
     {
-        createMissile();
+        createPlayerMissile();
         ticksSinceLastPlayerMissile = 0;
     }
 }
@@ -68,6 +74,7 @@ void GameManager::draw() const
     {
         e->draw();
     }
+    computer.draw();
     for(std::shared_ptr<Missile> m : missiles)
     {
         m->draw();
@@ -83,6 +90,17 @@ void GameManager::tick()
     // The player moves
     player.tick();
 
+    // Check for the player hitting a building
+    Point2D curPlayerChunk = player.whatChunk();
+    std::shared_ptr<Chunk> c = allSeenChunks[pointToInt(curPlayerChunk)];
+    player.checkCollisionsAndCorrect(*c, 5);
+
+    // If the player is entering a different chunk
+    if(curPlayerChunk != player.getCurrentChunkCoords())
+    {
+        updateCurrentChunks();
+    }
+
     // Update the player's plot once per second
     if(frameNumberMod90 % 30 == 0)
     {
@@ -94,16 +112,8 @@ void GameManager::tick()
         }
     }
 
-    // Check for the player hitting a building
-    Point2D curPlayerChunk = player.whatChunk();
-    std::shared_ptr<Chunk> c = allSeenChunks[pointToInt(curPlayerChunk)];
-    player.checkCollisionsAndCorrect(*c, 5);
-
-    // If the player is entering a different chunk
-    if(curPlayerChunk != player.getCurrentChunkCoords())
-    {
-        updateCurrentChunks();
-    }
+    // The computer moves
+    computer.tick();
 
     // The enemies move
     for(std::shared_ptr<Enemy> enemy : enemies)
@@ -140,13 +150,27 @@ void GameManager::tick()
     }
     manageExplosions();
 
+    // Computer
+    if(frameNumberMod90 % 45 == 0)
+    {
+        updateComputerPathFinding();
+        if(ticksSinceLastComputerMissile == COMPUTER_MISSILE_COOLDOWN)
+        {
+            createComputerMissile();
+        }
+    }
 
+    // Time things
     frameNumberMod90++;
     frameNumberMod90 %= 90;
     if(ticksSinceLastPlayerMissile < PLAYER_MISSILE_COOLDOWN)
     {
         ticksSinceLastPlayerMissile++;
         cursorAlpha = (double)ticksSinceLastPlayerMissile/PLAYER_MISSILE_COOLDOWN;
+    }
+    if(ticksSinceLastComputerMissile < COMPUTER_MISSILE_COOLDOWN)
+    {
+        ticksSinceLastComputerMissile++;
     }
 }
 
@@ -290,6 +314,13 @@ void GameManager::updateEnemyPathFinding()
         }
     }
 }
+void GameManager::updateComputerPathFinding()
+{
+    int computerPlotID = getIDofNearestPlot(computer.getLocation(), chunkSize, plotsPerSide);
+    std::vector<Point> path = network.getClippedPathPoints(computerPlotID, playerPlotID, ENEMY_BFS_SEARCH_DEPTH);
+    computer.setFutureLocations(path);
+    computer.setPlayerLocation(player.getLocation());
+}
 
 // =========================
 //
@@ -349,13 +380,22 @@ void GameManager::createEnemyExplosion(std::shared_ptr<Enemy> e)
 //        Missiles
 //
 // =========================
-void GameManager::createMissile()
+void GameManager::createPlayerMissile()
 {
     Point location = player.getLocation();
     Point velocity = {player.getLookingAt().x - location.x,
                       player.getLookingAt().y - location.y,
                       player.getLookingAt().z - location.z};
     missiles.push_back(std::make_shared<Missile>(Missile(location, 5, velocity, 5, true, PLAYER_MISSILE_COLOR)));
+}
+void GameManager::createComputerMissile()
+{
+    Point location = computer.getLocation();
+    Point velocity = {computer.getMissileTarget().x - location.x,
+                      0, // Level
+                      computer.getMissileTarget().z - location.z};
+    missiles.push_back(std::make_shared<Missile>(Missile(location, 5, velocity, 5, false, computer.getHeadColor())));
+    ticksSinceLastComputerMissile = 0;
 }
 void GameManager::checkMissiles()
 {
@@ -398,7 +438,14 @@ void GameManager::checkMissiles()
                 {
                     if(enemy->getIsPrime()) // Give the player points if the number was prime
                     {
-                        playerScore += enemy->getNumber();
+                        if(m->getWasShotByPlayer())
+                        {
+                            playerScore += enemy->getNumber();
+                        }
+                        else
+                        {
+                            computerScore += enemy->getNumber();
+                        }
                         createMissileExplosion(m); // Make an explosion where the missile hit
                     }
                     else   // If composite, make an enemy explosion
@@ -412,6 +459,15 @@ void GameManager::checkMissiles()
                     enemies.erase(enemies.begin() + j);
                     break;
                 }
+            }
+            // Then check the player if it's a computer missile
+            if(!m->getWasShotByPlayer() && player.isHitByMissile(m->getLocation(), m->getRadius()))
+            {
+                createMissileExplosion(m);
+                missiles.erase(missiles.begin() + i);
+                L -= 1;
+                i--;
+                playerScore--;
             }
         }
         i++;
@@ -551,7 +607,14 @@ void GameManager::displayScores() const
     glColor4f(0.0, 0.0, 0.0, 1.0);
     std::string score = "Player: " + std::to_string(playerScore);
     glRasterPos2i(10 + (4 * score.length()), 25);
-    for (const char &letter : score)
+    for(const char &letter : score)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, letter);
+    }
+
+    score = "Computer: " + std::to_string(computerScore);
+    glRasterPos2i(10 + (4 * score.length()), 45);
+    for(const char &letter : score)
     {
         glutBitmapCharacter(GLUT_BITMAP_9_BY_15, letter);
     }

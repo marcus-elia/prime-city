@@ -52,6 +52,7 @@ public:
     RGBAcolor getHeadColor() const;
     RGBAcolor getBodyColor() const;
     bool getCanShootTarget() const;
+    Point getMissileTarget() const;
 
     // Setters
     void setFutureLocations(std::vector<Point> inputFutureLocations);

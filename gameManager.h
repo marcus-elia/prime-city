@@ -14,15 +14,21 @@
 #include "plotNetwork.h"
 #include "mathHelper.h"
 #include "explosion.h"
+#include "computer.h"
 
 class GameManager
 {
 private:
+    // The Player
     Player player;
     int playerScore;
 
     // Controls
     bool wKey, aKey, sKey, dKey, rKey, cKey;
+
+    // The Computer
+    Computer computer;
+    int computerScore;
 
     // Chunks
     int chunkSize;
@@ -36,6 +42,7 @@ private:
     // Timer
     int frameNumberMod90;
     int ticksSinceLastPlayerMissile;
+    int ticksSinceLastComputerMissile;
 
     // Enemies
     double enemyBodyHeight;
@@ -48,6 +55,7 @@ private:
     RGBAcolor PLAYER_MISSILE_COLOR = {1, 0, 0, 1};
     std::vector<std::shared_ptr<Missile>> missiles;
     const int PLAYER_MISSILE_COOLDOWN = 15;
+    const int COMPUTER_MISSILE_COOLDOWN = 15;
 
     // Explosions
     std::vector<std::shared_ptr<Explosion>> explosions;
@@ -89,6 +97,7 @@ public:
 
     // Path finding
     void updateEnemyPathFinding();
+    void updateComputerPathFinding();
 
     // Enemies
     Point getRandomOpenLocation();  // Returns the center of an empty plot
@@ -97,7 +106,8 @@ public:
     void createEnemyExplosion(std::shared_ptr<Enemy> e);
 
     // Missiles
-    void createMissile();
+    void createPlayerMissile();
+    void createComputerMissile();
     void checkMissiles();
 
     // Explosions
