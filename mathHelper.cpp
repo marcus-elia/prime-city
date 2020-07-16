@@ -35,6 +35,22 @@ bool twoDigitIsPrime(int n)
     return n % 2 != 0 && n % 3 != 0 && n % 5 != 0 && n % 7 != 0;
 }
 
+
+double angleSweptOut(double startAngle, double endAngle)
+{
+    double difference = endAngle - startAngle;
+    while(difference < 0)
+    {
+        difference += 2*PI;
+    }
+    while(difference >= 2*PI)
+    {
+        difference -= 2*PI;
+    }
+    return difference;
+}
+
+
 Point2D chunkIDtoPoint(int n)
 {
     int s = nearestPerfectSquare(n);

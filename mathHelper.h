@@ -6,6 +6,8 @@
 
 // This file contains general math helper functions
 
+const double PI = 3.14159265358979323846;
+
 // Directions
 enum direction {Left, Right, Up, Down};
 
@@ -18,6 +20,10 @@ int isqrt(int n);
 
 // Prime test, works for n = 0 through n = 120
 bool twoDigitIsPrime(int n);
+
+// Returns angle swept out moving clockwise from start to end
+// (always returns non-negative number < 2*PI)
+double angleSweptOut(double startAngle, double endAngle);
 
 // Given the ID of a Chunk, this returns the Chunk coords
 Point2D chunkIDtoPoint(int n);

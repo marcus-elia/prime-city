@@ -4,6 +4,7 @@
 #include "structs.h"
 #include "graphics.h"
 #include "movable.h" // for rotatePointAroundPoint
+#include "mathHelper.h"
 #include <vector>
 #include <memory>
 
