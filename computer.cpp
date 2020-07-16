@@ -84,6 +84,13 @@ Point Computer::getMissileTarget() const
     return missileTarget;
 }
 
+bool Computer::isHitByMissile(Point missileLoc, double missileRadius) const
+{
+    bool lowEnough =  missileLoc.y < bodyHeight + 2*radius + missileRadius/2;
+    bool closeEnough = distance2d(location, missileLoc) < missileRadius/2 + radius;
+    return  closeEnough && lowEnough;
+}
+
 // Setters
 void Computer::setFutureLocations(std::vector<Point> inputFutureLocations)
 {

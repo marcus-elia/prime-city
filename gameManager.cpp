@@ -469,6 +469,15 @@ void GameManager::checkMissiles()
                 i--;
                 playerScore--;
             }
+            // And check the computer if it's a player missile
+            if(m->getWasShotByPlayer() && computer.isHitByMissile(m->getLocation(), m->getRadius()))
+            {
+                createMissileExplosion(m);
+                missiles.erase(missiles.begin() + i);
+                L -= 1;
+                i--;
+                computerScore--;
+            }
         }
         i++;
     }

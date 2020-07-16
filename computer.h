@@ -54,6 +54,8 @@ public:
     bool getCanShootTarget() const;
     Point getMissileTarget() const;
 
+    bool isHitByMissile(Point missileLoc, double missileRadius) const;
+
     // Setters
     void setFutureLocations(std::vector<Point> inputFutureLocations);
     void setPlayerLocation(Point inputPlayerLocation);
