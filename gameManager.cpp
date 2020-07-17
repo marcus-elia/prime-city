@@ -44,7 +44,7 @@ GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRen
     ticksSinceLastPlayerMissile = PLAYER_MISSILE_COOLDOWN;
     cursorAlpha = 1.0;
 
-    computer = Computer({96, 12, 0}, 2, 0.1, &enemies);
+    computer = Computer({96, 12, 0}, 2, 0.02, &enemies);
 }
 
 void GameManager::reactToMouseMovement(double theta)

@@ -37,6 +37,7 @@ protected:
     // Where it wants to shoot
     Point missileTarget;
     bool canShootTarget;
+    bool needsToRotate;
 
     // Point to GameManager's vector of enemies
     std::vector<std::shared_ptr<Enemy>>* enemies;

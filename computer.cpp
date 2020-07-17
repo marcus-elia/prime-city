@@ -7,7 +7,7 @@ Computer::Computer()
     velocity = {0, 0, 0};
     xzAngle = PI/2;
     targetAngle = 0;
-    rotationSpeed = 0.1;
+    rotationSpeed = 0.02;
 
     radius = 8;
     bodyHeight = 24;
@@ -21,6 +21,7 @@ Computer::Computer()
 
     missileTarget = {0, 0, 0};
     canShootTarget = false;
+    needsToRotate = true;
 
     // Point to GameManager's vector of enemies
     std::vector<std::shared_ptr<Enemy>>* enemies = nullptr;
@@ -45,6 +46,7 @@ Computer::Computer(Point inputLocation, double inputSpeed, double inputRotationS
 
     missileTarget = {0, 0, 0};
     canShootTarget = true;
+    needsToRotate = true;
 }
 
 void Computer::initializeSolids()
@@ -56,6 +58,21 @@ void Computer::initializeSolids()
     center.y += bodyHeight/2 + radius;
     solids.push_back(std::make_shared<Ellipsoid>(Ellipsoid(center, headColor,
                                                            2*radius, 2*radius, 2*radius, edgeColor)));
+
+    // Left Arm
+    /*double armRadius = 4;
+    double armLength = 20;
+    center = {location.x + radius + armRadius, 2*bodyHeight/3, location.z + armLength/2};
+    std::shared_ptr<Capsule> leftArm = std::make_shared<Capsule>(Capsule(center, headColor,
+                                                                         2*armRadius, armLength, 2*armRadius, edgeColor));
+    leftArm->setOwnerCenter(location);
+    leftArm->rotate(PI/2, 0, 0);
+    solids.push_back(leftArm);
+
+    center = {location.x, location.y, location.z + radius + 8};
+    solids.push_back(std::make_shared<Ellipsoid>(Ellipsoid(center, {1,0,0,1},
+                                                           15, 15, 15, edgeColor)));
+    solids.back()->setOwnerCenter(location);*/
 }
 
 // Getters
@@ -88,7 +105,7 @@ bool Computer::isHitByMissile(Point missileLoc, double missileRadius) const
 {
     bool lowEnough =  missileLoc.y < bodyHeight + 2*radius + missileRadius/2;
     bool closeEnough = distance2d(location, missileLoc) < missileRadius/2 + radius;
-    return  closeEnough && lowEnough;
+    return closeEnough && lowEnough;
 }
 
 // Setters
@@ -119,8 +136,17 @@ void Computer::tick()
     }
     else
     {
-        move();
+        //move();
     }
+
+
+    // Rotate to where the computer is looking
+    if(needsToRotate)
+    {
+        turn();
+    }
+    updateTargetAngle();
+    updateCanShootTarget();
 }
 
 void Computer::turnVelocityTowardTarget()
@@ -138,11 +164,7 @@ void Computer::move()
     location.x += velocity.x;
     location.y += velocity.y;
     location.z += velocity.z;
-
-    // Rotate where the computer is looking
-    turn();
-    updateTargetAngle();
-    updateCanShootTarget();
+    needsToRotate = true;
 }
 
 void Computer::turn()
@@ -151,10 +173,12 @@ void Computer::turn()
     if(dif < rotationSpeed)
     {
         rotate(targetAngle - xzAngle);
+        needsToRotate = false;
     }
     else if(dif > 2*PI - rotationSpeed)
     {
         rotate(xzAngle - targetAngle);
+        needsToRotate = false;
     }
     else if(dif < PI)
     {
@@ -205,7 +229,12 @@ void Computer::arriveAtTarget()
 
 void Computer::updateTargetAngle()
 {
-    targetAngle = atan2(playerLocation.z - location.z, playerLocation.x - location.x);
+    double newAngle = atan2(playerLocation.z - location.z, playerLocation.x - location.x);
+    if(newAngle != targetAngle)
+    {
+        needsToRotate = true;
+    }
+    targetAngle = newAngle;
 }
 void Computer::updateCanShootTarget()
 {
@@ -220,4 +249,8 @@ void Computer::draw() const
     {
         s->draw();
     }
+    glBegin(GL_LINES);
+    glVertex3f(location.x, location.y, location.z);
+    glVertex3f(location.x + 30*cos(xzAngle), location.y, location.z + 30*sin(xzAngle));
+    glEnd();
 }
