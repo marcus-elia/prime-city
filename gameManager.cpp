@@ -417,12 +417,14 @@ void GameManager::checkMissiles()
         // Check if the missile is hitting something
         else
         {
+            bool hitSomething = false;
             // First, check for Buildings
             std::shared_ptr<Chunk> c = pointToChunk(m->getLocation());
             for(Building &b : c->getBuildings())
             {
                 if(b.correctCollision(m->getLocation(), m->getRadius()))
                 {
+                    hitSomething = true;
                     createMissileExplosion(m); // Make an explosion where the missile hit
                     missiles.erase(missiles.begin() + i);
                     L -= 1;
@@ -430,12 +432,19 @@ void GameManager::checkMissiles()
                     break;
                 }
             }
+            if(hitSomething)
+            {
+                i++;
+                continue;
+            }
+
             // Then check for Enemies
             for(int j = 0; j < enemies.size(); j++)
             {
                 std::shared_ptr<Enemy> enemy = enemies[j];
                 if(enemy->isHitByMissile(m->getLocation(), m->getRadius()))
                 {
+                    hitSomething = true;
                     if(enemy->getIsPrime()) // Give the player points if the number was prime
                     {
                         if(m->getWasShotByPlayer())
@@ -460,18 +469,32 @@ void GameManager::checkMissiles()
                     break;
                 }
             }
+            if(hitSomething)
+            {
+                i++;
+                continue;
+            }
+
             // Then check the player if it's a computer missile
             if(!m->getWasShotByPlayer() && player.isHitByMissile(m->getLocation(), m->getRadius()))
             {
+                hitSomething = true;
                 createMissileExplosion(m);
                 missiles.erase(missiles.begin() + i);
                 L -= 1;
                 i--;
                 playerScore--;
             }
+            if(hitSomething)
+            {
+                i++;
+                continue;
+            }
+
             // And check the computer if it's a player missile
             if(m->getWasShotByPlayer() && computer.isHitByMissile(m->getLocation(), m->getRadius()))
             {
+                hitSomething = true;
                 createMissileExplosion(m);
                 missiles.erase(missiles.begin() + i);
                 L -= 1;
