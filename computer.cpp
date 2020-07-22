@@ -60,7 +60,7 @@ void Computer::initializeSolids()
                                                            2*radius, 2*radius, 2*radius, edgeColor)));
 
     // Left Arm
-    /*double armRadius = 4;
+    double armRadius = 4;
     double armLength = 20;
     center = {location.x + radius + armRadius, 2*bodyHeight/3, location.z + armLength/2};
     std::shared_ptr<Capsule> leftArm = std::make_shared<Capsule>(Capsule(center, headColor,
@@ -68,11 +68,6 @@ void Computer::initializeSolids()
     leftArm->setOwnerCenter(location);
     leftArm->rotate(PI/2, 0, 0);
     solids.push_back(leftArm);
-
-    center = {location.x, location.y, location.z + radius + 8};
-    solids.push_back(std::make_shared<Ellipsoid>(Ellipsoid(center, {1,0,0,1},
-                                                           15, 15, 15, edgeColor)));
-    solids.back()->setOwnerCenter(location);*/
 }
 
 // Getters
@@ -151,8 +146,8 @@ void Computer::tick()
 
 void Computer::turnVelocityTowardTarget()
 {
-    xzAngle = atan2(targetLocation.z - location.z, targetLocation.x - location.x);
-    velocity = {speed*cos(xzAngle), 0, speed*sin(xzAngle)};
+    double movingAngle = atan2(targetLocation.z - location.z, targetLocation.x - location.x);
+    velocity = {speed*cos(movingAngle), 0, speed*sin(movingAngle)};
 }
 
 void Computer::move()
@@ -249,8 +244,4 @@ void Computer::draw() const
     {
         s->draw();
     }
-    glBegin(GL_LINES);
-    glVertex3f(location.x, location.y, location.z);
-    glVertex3f(location.x + 30*cos(xzAngle), location.y, location.z + 30*sin(xzAngle));
-    glEnd();
 }
