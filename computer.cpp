@@ -26,13 +26,15 @@ Computer::Computer()
     // Point to GameManager's vector of enemies
     std::vector<std::shared_ptr<Enemy>>* enemies = nullptr;
 }
-Computer::Computer(Point inputLocation, double inputSpeed, double inputRotationSpeed, std::vector<std::shared_ptr<Enemy>>* inputEnemies)
+Computer::Computer(Point inputLocation, double inputSpeed, double inputRotationSpeed,
+                   std::vector<std::shared_ptr<Enemy>>* inputEnemies, int inputEnemyBlastRadius)
 {
     location = inputLocation;
     speed = inputSpeed;
     velocity = {0, 0, 0};
     rotationSpeed = inputRotationSpeed;
     enemies = inputEnemies;
+    enemyBlastRadius = inputEnemyBlastRadius;
 
     xzAngle = PI/2;
     targetAngle = PI/2;
@@ -131,7 +133,7 @@ void Computer::tick()
     }
     else
     {
-        //move();
+        move();
     }
 
 
@@ -236,6 +238,64 @@ void Computer::updateCanShootTarget()
     double dif = angleSweptOut(xzAngle, targetAngle);
     canShootTarget = dif < PI/4 || dif > 2*PI - PI/4;
 }
+
+std::experimental::optional<std::shared_ptr<Enemy>> Computer::chooseBestEnemyToShootBasic()
+{
+    int max = 0;
+    std::experimental::optional<std::shared_ptr<Enemy>> bestEnemy = std::experimental::nullopt;
+    for(std::shared_ptr<Enemy> e : *enemies)
+    {
+        // If the number if prime and > the previous max and the enemy is close enough
+        if(e->getIsPrime() && e->getNumber() > max && distance2d(location, e->getLocation()) < ENEMY_TARGET_DISTANCE)
+        {
+            max = e->getNumber();
+            bestEnemy = e;
+        }
+    }
+    return bestEnemy;
+}
+
+std::experimental::optional<std::shared_ptr<Enemy>> Computer::chooseBestEnemyToShootAdvanced()
+{
+    int max = 0;
+    std::experimental::optional<std::shared_ptr<Enemy>> bestEnemy = std::experimental::nullopt;
+    for(int i = 0; i < enemies->size(); i++)
+    {
+        std::shared_ptr<Enemy> e = (*enemies)[i];
+        if(distance2d(location, e->getLocation()) < ENEMY_TARGET_DISTANCE)
+        {
+            if(e->getIsPrime() && e->getNumber() > max)
+            {
+                max = e->getNumber();
+                bestEnemy = e;
+            }
+            else // Check if the composite can create any high primes
+            {
+                for(int j = 0; j < enemies->size(); j++)
+                {
+                    if(i != j) // Don't check with itself
+                    {
+                        std::shared_ptr<Enemy> e2 = (*enemies)[j];
+                        if(distance2d(e->getLocation(), e2->getLocation()))
+                        {
+                            int newSum = (e->getNumber() + e2->getNumber()) % 100;
+                            if(twoDigitIsPrime(newSum) && newSum > max)
+                            {
+                                max = newSum;
+                                bestEnemy = e;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return bestEnemy;
+}
+
+
+
+
 
 
 void Computer::draw() const

@@ -41,9 +41,12 @@ protected:
 
     // Point to GameManager's vector of enemies
     std::vector<std::shared_ptr<Enemy>>* enemies;
+    int enemyBlastRadius;
+    const double ENEMY_TARGET_DISTANCE = 1024; // From how far away will the AI go after a prime number?
 public:
     Computer();
-    Computer(Point inputLocation, double inputSpeed, double inputRotationSpeed, std::vector<std::shared_ptr<Enemy>>* inputEnemies);
+    Computer(Point inputLocation, double inputSpeed, double inputRotationSpeed,
+            std::vector<std::shared_ptr<Enemy>>* inputEnemies, int inputEnemyBlastRadius);
 
     void initializeSolids();
 
@@ -71,8 +74,17 @@ public:
 
     // AI
     void updateTargetAngle();
-    void updateCanShootTarget(); // Computer can fire a missile toward the target if the desired
-                                 // angle is within a 90 degree field of vision
+
+    // Computer can fire a missile toward the target if the desired
+    // angle is within a 90 degree field of vision
+    void updateCanShootTarget();
+
+    // If there is a prime that can be shot, aim for the highest one
+    std::experimental::optional<std::shared_ptr<Enemy>> chooseBestEnemyToShootBasic();
+
+    // If there is a prime that can be shot or if a composite can create a higher prime,
+    // return the best enemy to shoot at
+    std::experimental::optional<std::shared_ptr<Enemy>> chooseBestEnemyToShootAdvanced();
 
     void draw() const;
 
