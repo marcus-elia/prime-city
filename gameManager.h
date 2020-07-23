@@ -50,6 +50,7 @@ private:
     double enemySpeed;
     std::vector<std::shared_ptr<Enemy>> enemies;
     const int MAX_NUM_ENEMIES = 10;
+    const double ENEMY_BLAST_RADIUS = 50;
 
     // Missiles
     RGBAcolor PLAYER_MISSILE_COLOR = {1, 0, 0, 1};
@@ -59,6 +60,8 @@ private:
 
     // Explosions
     std::vector<std::shared_ptr<Explosion>> explosions;
+    const double MISSILE_BLAST_RADIUS = 30;
+    const int EXPLOSION_LIFETIME = 60;
 
     // Path finding
     PlotNetwork network;

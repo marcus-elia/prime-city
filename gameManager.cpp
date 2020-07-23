@@ -365,15 +365,6 @@ void  GameManager::manageEnemies()
         createRandomEnemy();
     }
 }
-void GameManager::createEnemyExplosion(std::shared_ptr<Enemy> e)
-{
-    Point loc = e->getLocation();
-    double rad = e->getRadius();
-    int lifeTime = 60;
-    RGBAcolor color = e->getBodyColor();
-    double deltaRad = 2;
-    explosions.push_back(std::make_shared<Explosion>(loc, rad, lifeTime, color, deltaRad, e->getNumber()));
-}
 
 // =========================
 //
@@ -513,14 +504,21 @@ void GameManager::checkMissiles()
 //         Explosions
 //
 // ===========================
+void GameManager::createEnemyExplosion(std::shared_ptr<Enemy> e)
+{
+    Point loc = e->getLocation();
+    double rad = e->getRadius();
+    RGBAcolor color = e->getBodyColor();
+    double deltaRad = ENEMY_BLAST_RADIUS / EXPLOSION_LIFETIME;
+    explosions.push_back(std::make_shared<Explosion>(loc, rad, EXPLOSION_LIFETIME, color, deltaRad, e->getNumber()));
+}
 void GameManager::createMissileExplosion(std::shared_ptr<Missile> m)
 {
     Point loc = m->getLocation();
     double rad = m->getRadius();
-    int lifeTime = 60;
     RGBAcolor color = m->getCoreColor();
-    double deltaRad = 0.5;
-    explosions.push_back(std::make_shared<Explosion>(loc, rad, lifeTime, color, deltaRad));
+    double deltaRad = MISSILE_BLAST_RADIUS / EXPLOSION_LIFETIME;
+    explosions.push_back(std::make_shared<Explosion>(loc, rad, EXPLOSION_LIFETIME, color, deltaRad));
 }
 void GameManager::manageExplosions()
 {
