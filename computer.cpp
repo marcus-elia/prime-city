@@ -253,7 +253,7 @@ void Computer::arriveAtTarget()
 
 void Computer::updateTargetAngle()
 {
-    double newAngle = atan2(playerLocation.z - location.z, playerLocation.x - location.x);
+    double newAngle = atan2(missileTarget.z - location.z, missileTarget.x - location.x);
     if(newAngle != targetAngle)
     {
         needsToRotate = true;
@@ -325,6 +325,7 @@ void Computer::updateShootingTarget()
     // The targetEnemy will be nullopt if there is not a good enemy to shoot at
     std::experimental::optional<std::shared_ptr<Enemy>> bestEnemy = chooseBestEnemyToShootAdvanced();
     targetEnemy = bestEnemy;
+    updateShootingTargetInfo();
 }
 
 void Computer::updateShootingTargetInfo()

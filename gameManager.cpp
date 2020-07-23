@@ -21,7 +21,7 @@ GameManager::GameManager()
     ticksSinceLastPlayerMissile = PLAYER_MISSILE_COOLDOWN;
     cursorAlpha = 1.0;
 
-    computer = Computer({96, 12, 0}, 2, 0.02, &enemies, ENEMY_BLAST_RADIUS);
+    computer = Computer({96, 12, 0}, 2, 0.03, &enemies, ENEMY_BLAST_RADIUS);
 }
 GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize)
 {
@@ -44,7 +44,7 @@ GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRen
     ticksSinceLastPlayerMissile = PLAYER_MISSILE_COOLDOWN;
     cursorAlpha = 1.0;
 
-    computer = Computer({96, 12, 0}, 2, 0.02, &enemies, ENEMY_BLAST_RADIUS);
+    computer = Computer({96, 12, 0}, 2, 0.03, &enemies, ENEMY_BLAST_RADIUS);
 }
 
 void GameManager::reactToMouseMovement(double theta)
@@ -165,6 +165,8 @@ void GameManager::tick()
     }
     if(frameNumberMod90 % 9 == 0)
     {
+        computer.setPlayerLocation(player.getLocation());
+        computer.setPlayerVelocity(player.getVelocity());
         computer.updateShootingTargetInfo();
     }
 
@@ -325,10 +327,9 @@ void GameManager::updateEnemyPathFinding()
 void GameManager::updateComputerPathFinding()
 {
     int computerPlotID = getIDofNearestPlot(computer.getLocation(), chunkSize, plotsPerSide);
-    std::vector<Point> path = network.getClippedPathPoints(computerPlotID, playerPlotID, ENEMY_BFS_SEARCH_DEPTH);
+    int targetPlotID = getIDofNearestPlot(computer.getMissileTarget(), chunkSize, plotsPerSide);
+    std::vector<Point> path = network.getClippedPathPoints(computerPlotID, targetPlotID, ENEMY_BFS_SEARCH_DEPTH);
     computer.setFutureLocations(path);
-    computer.setPlayerLocation(player.getLocation());
-    computer.setPlayerVelocity(player.getVelocity());
 }
 
 // =========================
