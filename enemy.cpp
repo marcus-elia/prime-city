@@ -78,6 +78,10 @@ RGBAcolor Enemy::getBodyColor() const
 {
     return bodyColor;
 }
+Point Enemy::getVelocity() const
+{
+    return velocity;
+}
 
 void Enemy::setNumber(int newNumber)
 {

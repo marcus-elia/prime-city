@@ -33,6 +33,7 @@ public:
     // Getters
     Point getLocation() const;
     Point getLookingAt() const;
+    Point getVelocity() const;
     Point getUp() const;
     double getSpeed() const;
     double getXZAngle() const;

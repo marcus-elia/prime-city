@@ -61,6 +61,7 @@ public:
 
     // Getters
     Point getLocation() const;
+    Point getVelocity() const;
     bool getIsPrime() const;
     int getNumber() const;
     double getRadius() const;

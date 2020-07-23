@@ -18,10 +18,13 @@ Computer::Computer()
 
     targetLocation = location;
     playerLocation = {0, 0, 0};
+    playerVelocity = {0, 0, 0};
 
     missileTarget = {0, 0, 0};
     canShootTarget = false;
     needsToRotate = true;
+    targetEnemy = std::experimental::nullopt;
+    missileTargetVelocity = {0, 0, 0};
 
     // Point to GameManager's vector of enemies
     std::vector<std::shared_ptr<Enemy>>* enemies = nullptr;
@@ -36,6 +39,9 @@ Computer::Computer(Point inputLocation, double inputSpeed, double inputRotationS
     enemies = inputEnemies;
     enemyBlastRadius = inputEnemyBlastRadius;
 
+    radius = 8;
+    bodyHeight = 24;
+
     xzAngle = PI/2;
     targetAngle = PI/2;
 
@@ -45,10 +51,13 @@ Computer::Computer(Point inputLocation, double inputSpeed, double inputRotationS
 
     targetLocation = location;
     playerLocation = {0, 0, 0};
+    playerVelocity = {0, 0, 0};
 
     missileTarget = {0, 0, 0};
     canShootTarget = true;
     needsToRotate = true;
+    targetEnemy = std::experimental::nullopt;
+    missileTargetVelocity = {0, 0, 0};
 }
 
 void Computer::initializeSolids()
@@ -97,6 +106,10 @@ Point Computer::getMissileTarget() const
 {
     return missileTarget;
 }
+double Computer::getMissileSpeed() const
+{
+    return MISSILE_SPEED;
+}
 
 bool Computer::isHitByMissile(Point missileLoc, double missileRadius) const
 {
@@ -116,7 +129,21 @@ void Computer::setPlayerLocation(Point inputPlayerLocation)
     missileTarget = playerLocation;
     updateTargetAngle();
 }
+void Computer::setPlayerVelocity(Point inputPlayerVelocity)
+{
+    playerVelocity = inputPlayerVelocity;
+}
+void Computer::setEnemies(std::vector<std::shared_ptr<Enemy>> *inputEnemies)
+{
+    enemies = inputEnemies;
+}
 
+
+// ===================================
+//
+//         Moving and Ticks
+//
+// ==================================
 void Computer::tick()
 {
     if(distance2d(location, targetLocation) < speed)
@@ -276,7 +303,7 @@ std::experimental::optional<std::shared_ptr<Enemy>> Computer::chooseBestEnemyToS
                     if(i != j) // Don't check with itself
                     {
                         std::shared_ptr<Enemy> e2 = (*enemies)[j];
-                        if(distance2d(e->getLocation(), e2->getLocation()))
+                        if(distance2d(e->getLocation(), e2->getLocation()) < enemyBlastRadius)
                         {
                             int newSum = (e->getNumber() + e2->getNumber()) % 100;
                             if(twoDigitIsPrime(newSum) && newSum > max)
@@ -293,9 +320,36 @@ std::experimental::optional<std::shared_ptr<Enemy>> Computer::chooseBestEnemyToS
     return bestEnemy;
 }
 
+void Computer::updateShootingTarget()
+{
+    // The targetEnemy will be nullopt if there is not a good enemy to shoot at
+    std::experimental::optional<std::shared_ptr<Enemy>> bestEnemy = chooseBestEnemyToShootAdvanced();
+    targetEnemy = bestEnemy;
+}
 
+void Computer::updateShootingTargetInfo()
+{
+    if(!targetEnemy)
+    {
+        missileTarget = playerLocation;
+        missileTargetVelocity = playerVelocity;
+    }
+    else
+    {
+        missileTarget = (*targetEnemy)->getLocation();
+        missileTargetVelocity = (*targetEnemy)->getVelocity();
+    }
+}
 
-
+Point Computer::getActualTargetPoint() const
+{
+    double timeToGetThere = distance2d(missileTarget, location) / MISSILE_SPEED;
+    double targetSpeed = sqrt(missileTargetVelocity.x*missileTargetVelocity.x + missileTargetVelocity.z*missileTargetVelocity.z);
+    double targetAngle = atan2(missileTargetVelocity.z, missileTargetVelocity.x);
+    double x = missileTarget.x + cos(targetAngle)*targetSpeed*timeToGetThere;
+    double z = missileTarget.z + sin(targetAngle)*targetSpeed*timeToGetThere;
+    return {x, 0, z};
+}
 
 
 void Computer::draw() const

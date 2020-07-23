@@ -77,6 +77,10 @@ double Player::getRadius() const
 {
     return radius;
 }
+Point Player::getVelocity() const
+{
+    return velocity;
+}
 
 bool Player::isHitByMissile(Point missileLoc, double missileRadius) const
 {

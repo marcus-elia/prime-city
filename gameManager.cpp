@@ -21,7 +21,7 @@ GameManager::GameManager()
     ticksSinceLastPlayerMissile = PLAYER_MISSILE_COOLDOWN;
     cursorAlpha = 1.0;
 
-    computer = Computer();
+    computer = Computer({96, 12, 0}, 2, 0.02, &enemies, ENEMY_BLAST_RADIUS);
 }
 GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize)
 {
@@ -44,7 +44,7 @@ GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRen
     ticksSinceLastPlayerMissile = PLAYER_MISSILE_COOLDOWN;
     cursorAlpha = 1.0;
 
-    computer = Computer({96, 12, 0}, 2, 0.02, &enemies);
+    computer = Computer({96, 12, 0}, 2, 0.02, &enemies, ENEMY_BLAST_RADIUS);
 }
 
 void GameManager::reactToMouseMovement(double theta)
@@ -158,6 +158,14 @@ void GameManager::tick()
         {
             createComputerMissile();
         }
+    }
+    if(frameNumberMod90 % COMPUTER_MISSILE_COOLDOWN == 1)
+    {
+        computer.updateShootingTarget();
+    }
+    if(frameNumberMod90 % 9 == 0)
+    {
+        computer.updateShootingTargetInfo();
     }
 
     // Time things
@@ -320,6 +328,7 @@ void GameManager::updateComputerPathFinding()
     std::vector<Point> path = network.getClippedPathPoints(computerPlotID, playerPlotID, ENEMY_BFS_SEARCH_DEPTH);
     computer.setFutureLocations(path);
     computer.setPlayerLocation(player.getLocation());
+    computer.setPlayerVelocity(player.getVelocity());
 }
 
 // =========================
@@ -382,9 +391,10 @@ void GameManager::createPlayerMissile()
 void GameManager::createComputerMissile()
 {
     Point location = computer.getLocation();
-    Point velocity = {computer.getMissileTarget().x - location.x,
-                      0, // Level
-                      computer.getMissileTarget().z - location.z};
+    Point target = computer.getActualTargetPoint();
+    Point velocity = {target.x - location.x,
+                      0, // Shoot level
+                      target.z - location.z};
     missiles.push_back(std::make_shared<Missile>(Missile(location, 5, velocity, 5, false, computer.getHeadColor())));
     ticksSinceLastComputerMissile = 0;
 }
