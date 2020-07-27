@@ -78,4 +78,9 @@ Point getPlotBottomRightFromID(int plotID, int chunkSize, int plotsPerSide);
 bool pointStrictlyAboveLine(Point p, double m, double b, double tolerance=0.0);
 bool pointWeaklyAboveLine(Point p, double m, double b, double tolerance=0.0);
 
+// For AI
+// Determine the point the missile should be fired toward in order to hit the target, assuming
+// the target moves with constant velocity
+Point predictMovement(Point location, double missileSpeed, Point targetLocation, Point targetVelocity);
+
 #endif //PRIME_CITY_MATHHELPER_H

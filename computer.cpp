@@ -344,12 +344,13 @@ void Computer::updateShootingTargetInfo()
 
 Point Computer::getActualTargetPoint() const
 {
-    double timeToGetThere = distance2d(missileTarget, location) / MISSILE_SPEED;
+    /*double timeToGetThere = distance2d(missileTarget, location) / MISSILE_SPEED;
     double targetSpeed = sqrt(missileTargetVelocity.x*missileTargetVelocity.x + missileTargetVelocity.z*missileTargetVelocity.z);
     double targetAngle = atan2(missileTargetVelocity.z, missileTargetVelocity.x);
     double x = missileTarget.x + cos(targetAngle)*targetSpeed*timeToGetThere;
     double z = missileTarget.z + sin(targetAngle)*targetSpeed*timeToGetThere;
-    return {x, 0, z};
+    return {x, 0, z};*/
+    return predictMovement(location, MISSILE_SPEED, missileTarget, missileTargetVelocity);
 }
 
 

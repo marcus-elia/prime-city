@@ -49,7 +49,7 @@ private:
     double enemyRadius;
     double enemySpeed;
     std::vector<std::shared_ptr<Enemy>> enemies;
-    const int MAX_NUM_ENEMIES = 10;
+    const int MAX_NUM_ENEMIES = 20;
     const double ENEMY_BLAST_RADIUS = 100;
 
     // Missiles

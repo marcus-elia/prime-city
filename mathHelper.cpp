@@ -282,3 +282,32 @@ bool pointWeaklyAboveLine(Point p, double m, double b, double tolerance)
     double pluggedInZ = m*p.x + b;
     return p.z <= pluggedInZ - tolerance;
 }
+
+// To come up with the algebra, pretend there is a circle expanding out from location. Find the time
+// when the target is on the circumference of the circle, and return the point where the target is
+// at that time.
+Point predictMovement(Point location, double missileSpeed, Point targetLocation, Point targetVelocity)
+{
+    double x1 = location.x, z1 = location.z, x2 = targetLocation.x, z2 = targetLocation.z;
+    double vx = targetVelocity.x, vz = targetVelocity.z, s = missileSpeed;
+
+    // For the quadratic formula
+    double a = s*s - (vx*vx + vz*vz);
+    double b = 2*(vx*(x1-x2) + vz*(z1-z2));
+    double c = -(x1-x2)*(x1-x2) - (z1-z2)*(z1-z2);
+    double discriminant = b*b - 4*a*c;
+
+    // If there would be an arithmetic error, just return the target's current location
+    if(a <= 0 || discriminant < 0)
+    {
+        return targetLocation;
+    }
+    double t = (-b + sqrt(discriminant)) / (2*a);
+    // If hitting the target is impossible based on it's current velocity, just shoot at it
+    if(t < 0)
+    {
+        return targetLocation;
+    }
+    // Finally, if nothing went wrong, lead the target
+    return {x2 + vx*t, targetLocation.y, z2 + vz*t};
+}
