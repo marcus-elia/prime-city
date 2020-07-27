@@ -284,16 +284,26 @@ std::experimental::optional<std::shared_ptr<Enemy>> Computer::chooseBestEnemyToS
 
 std::experimental::optional<std::shared_ptr<Enemy>> Computer::chooseBestEnemyToShootAdvanced()
 {
-    int max = 0;
+    double max = 0; // the value of an Enemy is the prime you could get divided by the distance away it is
     std::experimental::optional<std::shared_ptr<Enemy>> bestEnemy = std::experimental::nullopt;
     for(int i = 0; i < enemies->size(); i++)
     {
         std::shared_ptr<Enemy> e = (*enemies)[i];
-        if(distance2d(location, e->getLocation()) < ENEMY_TARGET_DISTANCE)
+
+        // Check how far away it is. If it is at this location, just return it to avoid dividing by zero
+        double distanceAway = distance2d(location, e->getLocation());
+        if(distanceAway == 0)
         {
-            if(e->getIsPrime() && e->getNumber() > max)
+            return e;
+        }
+
+        // If the Enemy is close enough to consider shooting it
+        if(distanceAway < ENEMY_TARGET_DISTANCE)
+        {
+            double curEnemyValue = e->getNumber() / distanceAway;
+            if(e->getIsPrime() && curEnemyValue > max)
             {
-                max = e->getNumber();
+                max = curEnemyValue;
                 bestEnemy = e;
             }
             else // Check if the composite can create any high primes
@@ -306,9 +316,10 @@ std::experimental::optional<std::shared_ptr<Enemy>> Computer::chooseBestEnemyToS
                         if(distance2d(e->getLocation(), e2->getLocation()) < enemyBlastRadius)
                         {
                             int newSum = (e->getNumber() + e2->getNumber()) % 100;
-                            if(twoDigitIsPrime(newSum) && newSum > max)
+                            curEnemyValue = newSum / distanceAway;
+                            if(twoDigitIsPrime(newSum) && curEnemyValue > max)
                             {
-                                max = newSum;
+                                max = curEnemyValue;
                                 bestEnemy = e;
                             }
                         }
