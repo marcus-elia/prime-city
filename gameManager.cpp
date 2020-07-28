@@ -24,7 +24,7 @@ GameManager::GameManager()
     ticksSinceLastPlayerMissile = PLAYER_MISSILE_COOLDOWN;
     cursorAlpha = 1.0;
 
-    playButton = Button(screenWidth/2, screenHeight/2, 96, 40, 16, "Play", {0, 0.7, 0, 1}, {1,1,1,1}, {0, 1, 0, 0.5});
+    playButton = Button(screenWidth/2, screenHeight/2, 128, 64, 16, "Play", {0, 0, 0.7, 1}, {1,1,1,1}, {0, .2, 1, 1});
 
     computer = Computer({96, 12, 0}, 2, 0.1, &enemies, ENEMY_BLAST_RADIUS);
 }

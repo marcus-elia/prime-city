@@ -89,6 +89,14 @@ void Button::setIsHighlighted(bool input)
 
 void Button::draw() const
 {
+    // Draw the text first
+    glColor4f(textColor.r, textColor.g, textColor.b, textColor.a);
+    glRasterPos2i(centerX - (4*text.length()), centerY - 4);
+    for(const char &letter : text)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, letter);
+    }
+
     glDisable(GL_CULL_FACE);
 
     // Set the color for the Button background
@@ -105,7 +113,7 @@ void Button::draw() const
     double cx, cy; // the center of the quarter circle
     // Top Left Quarter Circle
     glBegin(GL_TRIANGLE_FAN);
-    curTheta = PI;
+    curTheta = PI/2;
     cx = xMin + cornerRadius;
     cy = yMax - cornerRadius;
     glVertex2f(cx, cy); // Circle center
@@ -120,7 +128,7 @@ void Button::draw() const
 
     // Bottom Left Quarter Circle
     glBegin(GL_TRIANGLE_FAN);
-    curTheta = PI/2;
+    curTheta = PI;
     cx = xMin + cornerRadius;
     cy = yMin + cornerRadius;
     glVertex2f(cx, cy); // Circle center
@@ -135,7 +143,7 @@ void Button::draw() const
 
     // Top Right Quarter Circle
     glBegin(GL_TRIANGLE_FAN);
-    curTheta = 3*PI/2;
+    curTheta = 0;
     cx = xMax - cornerRadius;
     cy = yMax - cornerRadius;
     glVertex2f(cx, cy); // Circle center
@@ -150,7 +158,7 @@ void Button::draw() const
 
     // Bottom Right Quarter Circle
     glBegin(GL_TRIANGLE_FAN);
-    curTheta = 0;
+    curTheta = 3*PI/2;
     cx = xMax - cornerRadius;
     cy = yMin + cornerRadius;
     glVertex2f(cx, cy); // Circle center
@@ -182,10 +190,4 @@ void Button::draw() const
     glEnd();
 
     glEnable(GL_CULL_FACE);
-    glColor4f(textColor.r, textColor.g, textColor.b, textColor.a);
-    glRasterPos2i(centerX - (text.length() / 2), centerY - 4);
-    for(const char &letter : text)
-    {
-        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, letter);
-    }
 }
