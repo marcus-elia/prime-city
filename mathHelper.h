@@ -47,6 +47,8 @@ int getIDinDirection(int plotID, int plotsPerSide, direction dir);
 // Returns the distance in the xz plane
 double distance2d(Point p1, Point p2);
 
+double distanceFormula(double x1, double y1, double x2, double y2);
+
 // Euclidean distance
 double distance(Point2D p1, Point2D p2);
 
