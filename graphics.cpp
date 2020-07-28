@@ -178,6 +178,10 @@ void mouse(int button, int state, int x, int y)
             // Make the cursor invisible
             glutSetCursor(GLUT_CURSOR_NONE);
         }
+        else
+        {
+            glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+        }
     }
     glutPostRedisplay();
 }

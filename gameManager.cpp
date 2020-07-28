@@ -25,6 +25,8 @@ GameManager::GameManager()
     cursorAlpha = 1.0;
 
     playButton = Button(screenWidth/2, screenHeight/2, 128, 64, 16, "Play", {0, 0, 0.7, 1}, {1,1,1,1}, {0, .2, 1, 1});
+    playAgainButton = Button(screenWidth/2, screenHeight/2, 128, 64, 16, "Play Again", {0, 0, 0.7, 1}, {1,1,1,1}, {0, .2, 1, 1});
+
 
     computer = Computer({96, 12, 0}, 2, 0.1, &enemies, ENEMY_BLAST_RADIUS);
 }
@@ -50,6 +52,7 @@ GameManager::GameManager(int inputScreenWidth, int inputScreenHeight, int inputC
     currentStatus = Intro;
 
     playButton = Button(screenWidth/2, screenHeight/2, 96, 40, 16, "Play", {0, 0.7, 0, 1}, {1,1,1,1}, {0, 1, 0, 0.5});
+    playAgainButton = Button(screenWidth/2, screenHeight/2, 128, 64, 16, "Play Again", {0, 0, 0.7, 1}, {1,1,1,1}, {0, .2, 1, 1});
 
     frameNumberMod90 = 0;
     ticksSinceLastPlayerMissile = PLAYER_MISSILE_COOLDOWN;
@@ -73,10 +76,20 @@ void GameManager::reactToMouseMovement(int mx, int my, double theta)
     }
     else if(currentStatus == Playing)
     {
-
         player.updateAngles(theta);
         player.updateSphericalDirectionBasedOnAngles();
         player.setVelocity(wKey, aKey, sKey, dKey, rKey, cKey);
+    }
+    else if(currentStatus == End)
+    {
+        if(playAgainButton.containsPoint(mx, my))
+        {
+            playAgainButton.setIsHighlighted(true);
+        }
+        else
+        {
+            playAgainButton.setIsHighlighted(false);
+        }
     }
 }
 void GameManager::reactToMouseClick(int mx, int my)
@@ -94,6 +107,13 @@ void GameManager::reactToMouseClick(int mx, int my)
         {
             createPlayerMissile();
             ticksSinceLastPlayerMissile = 0;
+        }
+    }
+    else if(currentStatus == End)
+    {
+        if(playAgainButton.containsPoint(mx, my))
+        {
+            resetGame();
         }
     }
 }
@@ -152,6 +172,8 @@ void GameManager::tick()
         // Time things
         frameNumberMod90++;
         frameNumberMod90 %= 90;
+
+        checkForGameEnd();
     }
 }
 
@@ -665,6 +687,39 @@ Point GameManager::getCameraUp() const
     return player.getUp();
 }
 
+
+// =============================
+//
+//        Game Management
+//
+// =============================
+
+void GameManager::checkForGameEnd()
+{
+    if(playerScore > 999 && playerScore > computerScore)
+    {
+        gameResult = "You won " + std::to_string(playerScore) + " to " + std::to_string(computerScore);
+        currentStatus = End;
+    }
+    else if(computerScore > 999 && computerScore > playerScore)
+    {
+        gameResult = "You lost " + std::to_string(computerScore) + " to " + std::to_string(playerScore);
+        currentStatus = End;
+    }
+}
+
+void GameManager::resetGame()
+{
+    playerScore = 0;
+    computerScore = 0;
+    enemies = std::vector<std::shared_ptr<Enemy>>();
+    missiles = std::vector<std::shared_ptr<Missile>>();
+    explosions = std::vector<std::shared_ptr<Explosion>>();
+    computer = Computer({96, 12, 0}, 2, 0.1, &enemies, ENEMY_BLAST_RADIUS);
+    player = Player();
+    currentStatus = Playing;
+}
+
 int mod(int a, int m)
 {
     int x = a % m;
@@ -704,6 +759,11 @@ void GameManager::drawUI() const
         drawCursor();
         drawPlayerDirection(screenWidth - screenHeight/10, 9*screenHeight/10);
         displayScores();
+    }
+    else if(currentStatus == End)
+    {
+        playAgainButton.draw();
+        displayGameResult();
     }
 }
 
@@ -753,7 +813,7 @@ void GameManager::drawPlayerDirection(double x, double y) const
 void GameManager::displayScores() const
 {
     glColor4f(0.0, 0.0, 0.0, 1.0);
-    std::string score = "Player: " + std::to_string(playerScore);
+    std::string score = "Player:   " + std::to_string(playerScore);
     glRasterPos2i(10 + (4 * score.length()), 25);
     for(const char &letter : score)
     {
@@ -763,6 +823,15 @@ void GameManager::displayScores() const
     score = "Computer: " + std::to_string(computerScore);
     glRasterPos2i(10 + (4 * score.length()), 45);
     for(const char &letter : score)
+    {
+        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, letter);
+    }
+}
+
+void GameManager::displayGameResult() const
+{
+    glRasterPos2i(screenWidth/2 - (4 * gameResult.length()), 3*screenHeight / 4);
+    for(const char &letter : gameResult)
     {
         glutBitmapCharacter(GLUT_BITMAP_9_BY_15, letter);
     }

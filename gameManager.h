@@ -76,6 +76,8 @@ private:
     int screenWidth, screenHeight;
     double cursorAlpha; // The cursor will be opaque when reloaded
     Button playButton;
+    Button playAgainButton;
+    std::string gameResult;
 public:
     GameManager();
     GameManager(int inputScreenWidth, int inputScreenHeight, int inputChunkSize, int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize);
@@ -144,6 +146,10 @@ public:
     void computerTick();
     void explosionTick();
 
+    // Game Management
+    void checkForGameEnd();
+    void resetGame();
+
     // Debug
     void printPlayerBuildingDebug();
 
@@ -152,6 +158,7 @@ public:
     void drawCursor() const;
     void drawPlayerDirection(double x, double y) const;
     void displayScores() const;
+    void displayGameResult() const;
 };
 
 // Since % can return negatives
