@@ -16,6 +16,7 @@ GameManager::GameManager()
     enemyBodyHeight = 24;
     enemyRadius = 8;
     enemySpeed = 1.5;
+    currentStatus = Intro;
 
     frameNumberMod90 = 0;
     ticksSinceLastPlayerMissile = PLAYER_MISSILE_COOLDOWN;
@@ -39,6 +40,7 @@ GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRen
     enemyBodyHeight = 24;
     enemyRadius = 8;
     enemySpeed = 1.5;
+    currentStatus = Intro;
 
     frameNumberMod90 = 0;
     ticksSinceLastPlayerMissile = PLAYER_MISSILE_COOLDOWN;
@@ -85,7 +87,34 @@ void GameManager::draw() const
     }
 }
 
+
+// ===========================
+//
+//           Tick
+//
+// ===========================
+
 void GameManager::tick()
+{
+    if(currentStatus == Playing)
+    {
+        playerTick();
+
+        enemyTick();
+
+        missileTick();
+
+        explosionTick();
+
+        computerTick();
+
+        // Time things
+        frameNumberMod90++;
+        frameNumberMod90 %= 90;
+    }
+}
+
+void GameManager::playerTick()
 {
     // The player moves
     player.tick();
@@ -111,10 +140,15 @@ void GameManager::tick()
             updateEnemyPathFinding();
         }
     }
-
-    // The computer moves
-    computer.tick();
-
+    // Update the player's missile cooldown
+    if(ticksSinceLastPlayerMissile < PLAYER_MISSILE_COOLDOWN)
+    {
+        ticksSinceLastPlayerMissile++;
+        cursorAlpha = (double)ticksSinceLastPlayerMissile/PLAYER_MISSILE_COOLDOWN;
+    }
+}
+void GameManager::enemyTick()
+{
     // The enemies move
     for(std::shared_ptr<Enemy> enemy : enemies)
     {
@@ -133,7 +167,9 @@ void GameManager::tick()
             enemy->lookAtPlayer(player.getLocation());
         }
     }
-
+}
+void GameManager::missileTick()
+{
     // The missiles move
     for(std::shared_ptr<Missile> m : missiles)
     {
@@ -141,16 +177,11 @@ void GameManager::tick()
     }
     // Check for missile collisions with buildings and enemies
     checkMissiles();
-
-
-    // Explosions
-    for(std::shared_ptr<Explosion> e : explosions)
-    {
-        e->tick();
-    }
-    manageExplosions();
-
-    // Computer
+}
+void GameManager::computerTick()
+{
+    // The computer moves
+    computer.tick();
     if(frameNumberMod90 % 45 == 0)
     {
         updateComputerPathFinding();
@@ -169,20 +200,26 @@ void GameManager::tick()
         computer.setPlayerVelocity(player.getVelocity());
         computer.updateShootingTargetInfo();
     }
-
-    // Time things
-    frameNumberMod90++;
-    frameNumberMod90 %= 90;
-    if(ticksSinceLastPlayerMissile < PLAYER_MISSILE_COOLDOWN)
-    {
-        ticksSinceLastPlayerMissile++;
-        cursorAlpha = (double)ticksSinceLastPlayerMissile/PLAYER_MISSILE_COOLDOWN;
-    }
+    // Update the computer's missile cooldown
     if(ticksSinceLastComputerMissile < COMPUTER_MISSILE_COOLDOWN)
     {
         ticksSinceLastComputerMissile++;
     }
 }
+void GameManager::explosionTick()
+{
+    for(std::shared_ptr<Explosion> e : explosions)
+    {
+        e->tick();
+    }
+    manageExplosions();
+}
+
+// ===========================
+//
+//          Getters
+//
+// ===========================
 
 Player GameManager::getPlayer() const
 {

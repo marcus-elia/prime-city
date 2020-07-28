@@ -16,6 +16,8 @@
 #include "explosion.h"
 #include "computer.h"
 
+enum GameStatus {Intro, Playing, End, Paused};
+
 class GameManager
 {
 private:
@@ -43,6 +45,7 @@ private:
     int frameNumberMod90;
     int ticksSinceLastPlayerMissile;
     int ticksSinceLastComputerMissile;
+    GameStatus currentStatus;
 
     // Enemies
     double enemyBodyHeight;
@@ -83,6 +86,7 @@ public:
     bool getRKey() const;
     bool getCKey() const;
     double getCursorAlpha() const;
+    GameStatus getCurrentStatus() const;
 
     // Setters
     void setWKey(bool input);
@@ -128,7 +132,14 @@ public:
     void reactToMouseClick();
 
     void draw() const;
+
+    // Tick helper functions
     void tick();
+    void playerTick();
+    void enemyTick();
+    void missileTick();
+    void computerTick();
+    void explosionTick();
 
     // Debug
     void printPlayerBuildingDebug();
