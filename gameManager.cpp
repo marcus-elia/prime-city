@@ -63,11 +63,13 @@ GameManager::GameManager(int inputScreenWidth, int inputScreenHeight, int inputC
     computer = Computer({96, 12, 0}, 2, 0.1, &enemies, ENEMY_BLAST_RADIUS);
 }
 
+// You have to input screenHeight - my, because the mouse functions have positive y down, even though
+// the 2d UI drawing is positive y up
 void GameManager::reactToMouseMovement(int mx, int my, double theta)
 {
     if(currentStatus == Intro)
     {
-        if(playButton.containsPoint(mx, my))
+        if(playButton.containsPoint(mx, screenHeight - my))
         {
             playButton.setIsHighlighted(true);
         }
@@ -76,7 +78,7 @@ void GameManager::reactToMouseMovement(int mx, int my, double theta)
             playButton.setIsHighlighted(false);
         }
 
-        if(quitButton.containsPoint(mx, my))
+        if(quitButton.containsPoint(mx, screenHeight - my))
         {
             quitButton.setIsHighlighted(true);
         }
@@ -93,7 +95,7 @@ void GameManager::reactToMouseMovement(int mx, int my, double theta)
     }
     else if(currentStatus == End)
     {
-        if(playAgainButton.containsPoint(mx, my))
+        if(playAgainButton.containsPoint(mx, screenHeight - my))
         {
             playAgainButton.setIsHighlighted(true);
         }
@@ -102,7 +104,7 @@ void GameManager::reactToMouseMovement(int mx, int my, double theta)
             playAgainButton.setIsHighlighted(false);
         }
 
-        if(quitButton.containsPoint(mx, my))
+        if(quitButton.containsPoint(mx, screenHeight - my))
         {
             quitButton.setIsHighlighted(true);
         }
@@ -116,11 +118,11 @@ void GameManager::reactToMouseClick(int mx, int my)
 {
     if(currentStatus == Intro)
     {
-        if(playButton.containsPoint(mx, my))
+        if(playButton.containsPoint(mx, screenHeight - my))
         {
             currentStatus = Playing;
         }
-        else if(quitButton.containsPoint(mx, my))
+        else if(quitButton.containsPoint(mx, screenHeight - my))
         {
             closeWindow = true;
         }
@@ -135,11 +137,11 @@ void GameManager::reactToMouseClick(int mx, int my)
     }
     else if(currentStatus == End)
     {
-        if(playAgainButton.containsPoint(mx, my))
+        if(playAgainButton.containsPoint(mx, screenHeight - my))
         {
             resetGame();
         }
-        else if(quitButton.containsPoint(mx, my))
+        else if(quitButton.containsPoint(mx,screenHeight -  my))
         {
             closeWindow = true;
         }
