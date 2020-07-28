@@ -81,6 +81,7 @@ private:
     Button quitButton;
 
     bool closeWindow = false;
+    bool showMouse = true;
 public:
     GameManager();
     GameManager(int inputScreenWidth, int inputScreenHeight, int inputChunkSize, int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize);
@@ -96,6 +97,7 @@ public:
     double getCursorAlpha() const;
     GameStatus getCurrentStatus() const;
     bool getCloseWindow() const;
+    bool getShowMouse() const;
 
     // Setters
     void setWKey(bool input);

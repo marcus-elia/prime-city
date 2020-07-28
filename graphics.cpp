@@ -197,6 +197,10 @@ void timer(int dummy)
     glutPostRedisplay();
     glutTimerFunc(30, timer, dummy);
     manager.tick();
+    if(manager.getShowMouse()) // If the user hasn't clicked, the cursor won't show
+    {
+        glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+    }
 }
 
 /* Main function: GLUT runs as a console application starting at main()  */

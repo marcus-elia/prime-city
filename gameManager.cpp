@@ -120,6 +120,7 @@ void GameManager::reactToMouseClick(int mx, int my)
     {
         if(playButton.containsPoint(mx, screenHeight - my))
         {
+            showMouse = false;
             currentStatus = Playing;
         }
         else if(quitButton.containsPoint(mx, screenHeight - my))
@@ -139,6 +140,7 @@ void GameManager::reactToMouseClick(int mx, int my)
     {
         if(playAgainButton.containsPoint(mx, screenHeight - my))
         {
+            showMouse = false;
             resetGame();
         }
         else if(quitButton.containsPoint(mx,screenHeight -  my))
@@ -380,6 +382,10 @@ void GameManager::setCKey(bool input)
 bool GameManager::getCloseWindow() const
 {
     return closeWindow;
+}
+bool GameManager::getShowMouse() const
+{
+    return showMouse;
 }
 
 // ============================
