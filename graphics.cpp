@@ -173,6 +173,11 @@ void mouse(int button, int state, int x, int y)
     if(state == GLUT_UP)
     {
         manager.reactToMouseClick(x, y);
+        if(manager.getCurrentStatus() == Playing)
+        {
+            // Make the cursor invisible
+            glutSetCursor(GLUT_CURSOR_NONE);
+        }
     }
     glutPostRedisplay();
 }
@@ -206,7 +211,7 @@ int main(int argc, char** argv)
     initGL();
 
     // Make the cursor invisible
-    glutSetCursor(GLUT_CURSOR_NONE);
+    //glutSetCursor(GLUT_CURSOR_NONE);
 
     // register keyboard press event processing function
     // works for numbers, letters, spacebar, etc.
