@@ -88,6 +88,7 @@ void Enemy::setNumber(int newNumber)
     number = newNumber;
     Point headCenter = {location.x, location.y + bodyHeight/2 + radius, location.z};
     dn = DigitalNumber(headCenter, {1,1,1,1}, headCenter, number, 1.5*radius, radius);
+    dn.setXZAngle(xzAngle);
 }
 
 
