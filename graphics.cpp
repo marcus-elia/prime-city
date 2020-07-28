@@ -51,7 +51,6 @@ void display()
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    //glOrtho(-width/2, width/2, -height/2, height/2, -width, width);
     gluPerspective(45, width/height, 1, 4096);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);   // Clear the color buffer with current clearing color
 
@@ -81,18 +80,8 @@ void display()
     glPushMatrix();
     glLoadIdentity();
 
-    // Draw the cursor
-    glBegin(GL_QUADS);
-    glColor4f(0.8, 0, 0, manager.getCursorAlpha());
-    glVertex3f(width/2 + 5,height/2 + 5,0);
-    glVertex3f(width/2 - 5,height/2 + 5,0);
-    glVertex3f(width/2 - 5,height/2 - 5,0);
-    glVertex3f(width/2 + 5,height/2 - 5,0);
-    glEnd();
-
     // Draw UI things
-    manager.drawPlayerDirection(width - height/10, 9*height/10);
-    manager.displayScores();
+    manager.drawUI();
 
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
@@ -165,12 +154,12 @@ void kbdS(int key, int x, int y)
 void cursor(int x, int y)
 {
     double theta = atan2(y - prevMouseY, x - prevMouseX);
-    manager.reactToMouseMovement(theta);
+    manager.reactToMouseMovement(x, y, theta);
     prevMouseX = x;
     prevMouseY = y;
 
-    // if the cursor gets close to the edge, put it back in the middle
-    if(x < 50 || x > width - 50 || y < 50 || y > height - 50)
+    // If the cursor gets close to the edge during the game, put it back in the middle.
+    if(manager.getCurrentStatus() == Playing && (x < 80 || x > width - 80 || y < 80 || y > height - 80))
     {
         glutWarpPointer(width/2,height/2);
     }
@@ -183,7 +172,7 @@ void mouse(int button, int state, int x, int y)
 {
     if(state == GLUT_UP)
     {
-        manager.reactToMouseClick();
+        manager.reactToMouseClick(x, y);
     }
     glutPostRedisplay();
 }

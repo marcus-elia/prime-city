@@ -2,6 +2,8 @@
 
 GameManager::GameManager()
 {
+    screenWidth = 800;
+    screenHeight = 500;
     perlinSize = 10;
     png = PerlinNoiseGenerator(10, 10, 1);
     chunkSize = 512;
@@ -22,10 +24,15 @@ GameManager::GameManager()
     ticksSinceLastPlayerMissile = PLAYER_MISSILE_COOLDOWN;
     cursorAlpha = 1.0;
 
-    computer = Computer({96, 12, 0}, 2, 0.03, &enemies, ENEMY_BLAST_RADIUS);
+    playButton = Button(screenWidth/2, screenHeight/2, 96, 40, 16, "Play", {0, 0.7, 0, 1}, {1,1,1,1}, {0, 1, 0, 0.5});
+
+    computer = Computer({96, 12, 0}, 2, 0.1, &enemies, ENEMY_BLAST_RADIUS);
 }
-GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize)
+GameManager::GameManager(int inputScreenWidth, int inputScreenHeight, int inputChunkSize,
+        int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize)
 {
+    screenWidth = inputScreenWidth;
+    screenHeight = inputScreenHeight;
     chunkSize = inputChunkSize;
     plotsPerSide = inputPlotsPerSide;
     network = PlotNetwork(chunkSize, plotsPerSide);
@@ -42,48 +49,82 @@ GameManager::GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRen
     enemySpeed = 1.5;
     currentStatus = Intro;
 
+    playButton = Button(screenWidth/2, screenHeight/2, 96, 40, 16, "Play", {0, 0.7, 0, 1}, {1,1,1,1}, {0, 1, 0, 0.5});
+
     frameNumberMod90 = 0;
     ticksSinceLastPlayerMissile = PLAYER_MISSILE_COOLDOWN;
     cursorAlpha = 1.0;
 
-    computer = Computer({96, 12, 0}, 2, 0.03, &enemies, ENEMY_BLAST_RADIUS);
+    computer = Computer({96, 12, 0}, 2, 0.1, &enemies, ENEMY_BLAST_RADIUS);
 }
 
-void GameManager::reactToMouseMovement(double theta)
+void GameManager::reactToMouseMovement(int mx, int my, double theta)
 {
-    player.updateAngles(theta);
-    player.updateSphericalDirectionBasedOnAngles();
-    player.setVelocity(wKey, aKey, sKey, dKey, rKey, cKey);
-}
-void GameManager::reactToMouseClick()
-{
-    if(ticksSinceLastPlayerMissile == PLAYER_MISSILE_COOLDOWN)
+    if(currentStatus == Intro)
     {
-        createPlayerMissile();
-        ticksSinceLastPlayerMissile = 0;
+        if(playButton.containsPoint(mx, my))
+        {
+            playButton.setIsHighlighted(true);
+        }
+        else
+        {
+            playButton.setIsHighlighted(false);
+        }
+    }
+    else if(currentStatus == Playing)
+    {
+
+        player.updateAngles(theta);
+        player.updateSphericalDirectionBasedOnAngles();
+        player.setVelocity(wKey, aKey, sKey, dKey, rKey, cKey);
+    }
+}
+void GameManager::reactToMouseClick(int mx, int my)
+{
+    if(currentStatus == Intro)
+    {
+        if(playButton.containsPoint(mx, my))
+        {
+            currentStatus = Playing;
+        }
+    }
+    else if(currentStatus == Playing)
+    {
+        if(ticksSinceLastPlayerMissile == PLAYER_MISSILE_COOLDOWN)
+        {
+            createPlayerMissile();
+            ticksSinceLastPlayerMissile = 0;
+        }
     }
 }
 
 
 void GameManager::draw() const
 {
-    // Draw in order because of transparency
-    for(std::shared_ptr<Chunk> c : currentChunks)
+    if(currentStatus == Intro)
     {
-        c->draw();
+        playButton.draw();
     }
-    for(std::shared_ptr<Enemy> e : enemies)
+    else if(currentStatus == Playing)
     {
-        e->draw();
-    }
-    computer.draw();
-    for(std::shared_ptr<Missile> m : missiles)
-    {
-        m->draw();
-    }
-    for(std::shared_ptr<Explosion> e : explosions)
-    {
-        e->draw();
+        // Draw in order because of transparency
+        for(std::shared_ptr<Chunk> c : currentChunks)
+        {
+            c->draw();
+        }
+        for(std::shared_ptr<Enemy> e : enemies)
+        {
+            e->draw();
+        }
+        computer.draw();
+        for(std::shared_ptr<Missile> m : missiles)
+        {
+            m->draw();
+        }
+        for(std::shared_ptr<Explosion> e : explosions)
+        {
+            e->draw();
+        }
     }
 }
 
@@ -252,6 +293,10 @@ bool GameManager::getCKey() const
 double GameManager::getCursorAlpha() const
 {
     return cursorAlpha;
+}
+GameStatus GameManager::getCurrentStatus() const
+{
+    return currentStatus;
 }
 
 void GameManager::setWKey(bool input)
@@ -646,6 +691,31 @@ void GameManager::printPlayerBuildingDebug()
         }
         std::cout<<"End of Building" << std::endl;
     }*/
+}
+
+void GameManager::drawUI() const
+{
+    if(currentStatus == Intro)
+    {
+        playButton.draw();
+    }
+    else if(currentStatus == Playing)
+    {
+        drawCursor();
+        drawPlayerDirection(screenWidth - screenHeight/10, 9*screenHeight/10);
+        displayScores();
+    }
+}
+
+void GameManager::drawCursor() const
+{
+    glBegin(GL_QUADS);
+    glColor4f(0.8, 0, 0, cursorAlpha);
+    glVertex3f(screenWidth/2 + 5,screenHeight/2 + 5,0);
+    glVertex3f(screenWidth/2 - 5,screenHeight/2 + 5,0);
+    glVertex3f(screenWidth/2 - 5,screenHeight/2 - 5,0);
+    glVertex3f(screenWidth/2 + 5,screenHeight/2 - 5,0);
+    glEnd();
 }
 
 void GameManager::drawPlayerDirection(double x, double y) const

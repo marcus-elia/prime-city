@@ -15,6 +15,7 @@
 #include "mathHelper.h"
 #include "explosion.h"
 #include "computer.h"
+#include "button.h"
 
 enum GameStatus {Intro, Playing, End, Paused};
 
@@ -72,10 +73,12 @@ private:
     int playerPlotID; // the plot the player is currently in
 
     // UI
+    int screenWidth, screenHeight;
     double cursorAlpha; // The cursor will be opaque when reloaded
+    Button playButton;
 public:
     GameManager();
-    GameManager(int inputChunkSize, int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize);
+    GameManager(int inputScreenWidth, int inputScreenHeight, int inputChunkSize, int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize);
 
     // Getters
     Player getPlayer() const;
@@ -128,8 +131,8 @@ public:
     Point getCameraUp() const;
 
     // Mouse
-    void reactToMouseMovement(double theta);
-    void reactToMouseClick();
+    void reactToMouseMovement(int mx, int my, double theta);
+    void reactToMouseClick(int mx, int my);
 
     void draw() const;
 
@@ -145,6 +148,8 @@ public:
     void printPlayerBuildingDebug();
 
     // UI
+    void drawUI() const;
+    void drawCursor() const;
     void drawPlayerDirection(double x, double y) const;
     void displayScores() const;
 };
