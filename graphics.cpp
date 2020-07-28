@@ -178,9 +178,15 @@ void mouse(int button, int state, int x, int y)
             // Make the cursor invisible
             glutSetCursor(GLUT_CURSOR_NONE);
         }
-        else
+        else // Keep arrow when not playing
         {
             glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+            // Check for if the quit button was hit
+            if(manager.getCloseWindow())
+            {
+                glutDestroyWindow(wd);
+                exit(0);
+            }
         }
     }
     glutPostRedisplay();

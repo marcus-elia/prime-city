@@ -26,7 +26,7 @@ GameManager::GameManager()
 
     playButton = Button(screenWidth/2, screenHeight/2, 128, 64, 16, "Play", {0, 0, 0.7, 1}, {1,1,1,1}, {0, .2, 1, 1});
     playAgainButton = Button(screenWidth/2, screenHeight/2, 128, 64, 16, "Play Again", {0, 0, 0.7, 1}, {1,1,1,1}, {0, .2, 1, 1});
-
+    quitButton = Button(screenWidth/2, screenHeight/2 - 64, 128, 64, 16, "Quit", {0.7, 0, 0, 1}, {1,1,1,1}, {1, 0.2, 0, 1});
 
     computer = Computer({96, 12, 0}, 2, 0.1, &enemies, ENEMY_BLAST_RADIUS);
 }
@@ -51,8 +51,10 @@ GameManager::GameManager(int inputScreenWidth, int inputScreenHeight, int inputC
     enemySpeed = 1.5;
     currentStatus = Intro;
 
-    playButton = Button(screenWidth/2, screenHeight/2, 96, 40, 16, "Play", {0, 0.7, 0, 1}, {1,1,1,1}, {0, 1, 0, 0.5});
+    playButton = Button(screenWidth/2, screenHeight/2, 128, 64, 16, "Play", {0, 0, 0.7, 1}, {1,1,1,1}, {0, .2, 1, 1});
     playAgainButton = Button(screenWidth/2, screenHeight/2, 128, 64, 16, "Play Again", {0, 0, 0.7, 1}, {1,1,1,1}, {0, .2, 1, 1});
+    quitButton = Button(screenWidth/2, screenHeight/2 - 64, 128, 64, 16, "Quit", {0.7, 0, 0, 1}, {1,1,1,1}, {1, 0.2, 0, 1});
+
 
     frameNumberMod90 = 0;
     ticksSinceLastPlayerMissile = PLAYER_MISSILE_COOLDOWN;
@@ -73,6 +75,15 @@ void GameManager::reactToMouseMovement(int mx, int my, double theta)
         {
             playButton.setIsHighlighted(false);
         }
+
+        if(quitButton.containsPoint(mx, my))
+        {
+            quitButton.setIsHighlighted(true);
+        }
+        else
+        {
+            quitButton.setIsHighlighted(false);
+        }
     }
     else if(currentStatus == Playing)
     {
@@ -90,6 +101,15 @@ void GameManager::reactToMouseMovement(int mx, int my, double theta)
         {
             playAgainButton.setIsHighlighted(false);
         }
+
+        if(quitButton.containsPoint(mx, my))
+        {
+            quitButton.setIsHighlighted(true);
+        }
+        else
+        {
+            quitButton.setIsHighlighted(false);
+        }
     }
 }
 void GameManager::reactToMouseClick(int mx, int my)
@@ -99,6 +119,10 @@ void GameManager::reactToMouseClick(int mx, int my)
         if(playButton.containsPoint(mx, my))
         {
             currentStatus = Playing;
+        }
+        else if(quitButton.containsPoint(mx, my))
+        {
+            closeWindow = true;
         }
     }
     else if(currentStatus == Playing)
@@ -115,17 +139,17 @@ void GameManager::reactToMouseClick(int mx, int my)
         {
             resetGame();
         }
+        else if(quitButton.containsPoint(mx, my))
+        {
+            closeWindow = true;
+        }
     }
 }
 
 
 void GameManager::draw() const
 {
-    if(currentStatus == Intro)
-    {
-        playButton.draw();
-    }
-    else if(currentStatus == Playing)
+    if(currentStatus == Playing)
     {
         // Draw in order because of transparency
         for(std::shared_ptr<Chunk> c : currentChunks)
@@ -350,6 +374,10 @@ void GameManager::setCKey(bool input)
 {
     cKey = input;
     player.setVelocity(wKey, aKey, sKey, dKey, rKey, cKey);
+}
+bool GameManager::getCloseWindow() const
+{
+    return closeWindow;
 }
 
 // ============================
@@ -753,6 +781,7 @@ void GameManager::drawUI() const
     if(currentStatus == Intro)
     {
         playButton.draw();
+        quitButton.draw();
     }
     else if(currentStatus == Playing)
     {
@@ -764,6 +793,7 @@ void GameManager::drawUI() const
     {
         playAgainButton.draw();
         displayGameResult();
+        quitButton.draw();
     }
 }
 

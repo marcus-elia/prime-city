@@ -78,6 +78,9 @@ private:
     Button playButton;
     Button playAgainButton;
     std::string gameResult;
+    Button quitButton;
+
+    bool closeWindow = false;
 public:
     GameManager();
     GameManager(int inputScreenWidth, int inputScreenHeight, int inputChunkSize, int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize);
@@ -92,6 +95,7 @@ public:
     bool getCKey() const;
     double getCursorAlpha() const;
     GameStatus getCurrentStatus() const;
+    bool getCloseWindow() const;
 
     // Setters
     void setWKey(bool input);
