@@ -79,6 +79,7 @@ private:
     Button playAgainButton;
     std::string gameResult;
     Button quitButton;
+    Button continueButton;
 
     bool closeWindow = false;
     bool showMouse = true;
@@ -106,6 +107,7 @@ public:
     void setDKey(bool input);
     void setRKey(bool input);
     void setCKey(bool input);
+    void setCurrentStatus(GameStatus input);
 
     // Chunks
     double getPerlinValue(Point2D p); // the value of the Perlin noise map at that point
@@ -155,6 +157,7 @@ public:
     // Game Management
     void checkForGameEnd();
     void resetGame();
+    void togglePaused();
 
     // Debug
     void printPlayerBuildingDebug();

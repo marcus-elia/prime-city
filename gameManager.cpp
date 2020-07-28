@@ -26,6 +26,7 @@ GameManager::GameManager()
 
     playButton = Button(screenWidth/2, screenHeight/2, 128, 64, 16, "Play", {0, 0, 0.7, 1}, {1,1,1,1}, {0, .2, 1, 1});
     playAgainButton = Button(screenWidth/2, screenHeight/2, 128, 64, 16, "Play Again", {0, 0, 0.7, 1}, {1,1,1,1}, {0, .2, 1, 1});
+    continueButton = Button(screenWidth/2, screenHeight/2, 128, 64, 16, "Continue", {0, 0, 0.7, 1}, {1,1,1,1}, {0, .2, 1, 1});
     quitButton = Button(screenWidth/2, screenHeight/2 - 64, 128, 64, 16, "Quit", {0.7, 0, 0, 1}, {1,1,1,1}, {1, 0.2, 0, 1});
 
     computer = Computer({96, 12, 0}, 2, 0.1, &enemies, ENEMY_BLAST_RADIUS);
@@ -53,6 +54,7 @@ GameManager::GameManager(int inputScreenWidth, int inputScreenHeight, int inputC
 
     playButton = Button(screenWidth/2, screenHeight/2, 128, 64, 16, "Play", {0, 0, 0.7, 1}, {1,1,1,1}, {0, .2, 1, 1});
     playAgainButton = Button(screenWidth/2, screenHeight/2, 128, 64, 16, "Play Again", {0, 0, 0.7, 1}, {1,1,1,1}, {0, .2, 1, 1});
+    continueButton = Button(screenWidth/2, screenHeight/2, 128, 64, 16, "Continue", {0, 0, 0.7, 1}, {1,1,1,1}, {0, .2, 1, 1});
     quitButton = Button(screenWidth/2, screenHeight/2 - 64, 128, 64, 16, "Quit", {0.7, 0, 0, 1}, {1,1,1,1}, {1, 0.2, 0, 1});
 
 
@@ -69,23 +71,9 @@ void GameManager::reactToMouseMovement(int mx, int my, double theta)
 {
     if(currentStatus == Intro)
     {
-        if(playButton.containsPoint(mx, screenHeight - my))
-        {
-            playButton.setIsHighlighted(true);
-        }
-        else
-        {
-            playButton.setIsHighlighted(false);
-        }
+        playButton.setIsHighlighted(playButton.containsPoint(mx, screenHeight - my));
 
-        if(quitButton.containsPoint(mx, screenHeight - my))
-        {
-            quitButton.setIsHighlighted(true);
-        }
-        else
-        {
-            quitButton.setIsHighlighted(false);
-        }
+        quitButton.setIsHighlighted(quitButton.containsPoint(mx, screenHeight - my));
     }
     else if(currentStatus == Playing)
     {
@@ -93,25 +81,17 @@ void GameManager::reactToMouseMovement(int mx, int my, double theta)
         player.updateSphericalDirectionBasedOnAngles();
         player.setVelocity(wKey, aKey, sKey, dKey, rKey, cKey);
     }
+    else if(currentStatus == Paused)
+    {
+        continueButton.setIsHighlighted(continueButton.containsPoint(mx, screenHeight - my));
+
+        quitButton.setIsHighlighted(quitButton.containsPoint(mx, screenHeight - my));
+    }
     else if(currentStatus == End)
     {
-        if(playAgainButton.containsPoint(mx, screenHeight - my))
-        {
-            playAgainButton.setIsHighlighted(true);
-        }
-        else
-        {
-            playAgainButton.setIsHighlighted(false);
-        }
+        playAgainButton.setIsHighlighted(playAgainButton.containsPoint(mx, screenHeight - my));
 
-        if(quitButton.containsPoint(mx, screenHeight - my))
-        {
-            quitButton.setIsHighlighted(true);
-        }
-        else
-        {
-            quitButton.setIsHighlighted(false);
-        }
+        quitButton.setIsHighlighted(quitButton.containsPoint(mx, screenHeight - my));
     }
 }
 void GameManager::reactToMouseClick(int mx, int my)
@@ -136,6 +116,18 @@ void GameManager::reactToMouseClick(int mx, int my)
             ticksSinceLastPlayerMissile = 0;
         }
     }
+    else if(currentStatus == Paused)
+    {
+        if(continueButton.containsPoint(mx, screenHeight - my))
+        {
+            showMouse = false;
+            currentStatus = Playing;
+        }
+        else if(quitButton.containsPoint(mx,screenHeight -  my))
+        {
+            closeWindow = true;
+        }
+    }
     else if(currentStatus == End)
     {
         if(playAgainButton.containsPoint(mx, screenHeight - my))
@@ -153,7 +145,7 @@ void GameManager::reactToMouseClick(int mx, int my)
 
 void GameManager::draw() const
 {
-    if(currentStatus == Playing)
+    if(currentStatus == Playing || currentStatus == Paused)
     {
         // Draw in order because of transparency
         for(std::shared_ptr<Chunk> c : currentChunks)
@@ -348,7 +340,20 @@ GameStatus GameManager::getCurrentStatus() const
 {
     return currentStatus;
 }
+bool GameManager::getCloseWindow() const
+{
+    return closeWindow;
+}
+bool GameManager::getShowMouse() const
+{
+    return showMouse;
+}
 
+// =============================
+//
+//           Setters
+//
+// =============================
 void GameManager::setWKey(bool input)
 {
     wKey = input;
@@ -379,14 +384,11 @@ void GameManager::setCKey(bool input)
     cKey = input;
     player.setVelocity(wKey, aKey, sKey, dKey, rKey, cKey);
 }
-bool GameManager::getCloseWindow() const
+void GameManager::setCurrentStatus(GameStatus input)
 {
-    return closeWindow;
+    currentStatus = input;
 }
-bool GameManager::getShowMouse() const
-{
-    return showMouse;
-}
+
 
 // ============================
 //
@@ -756,6 +758,20 @@ void GameManager::resetGame()
     currentStatus = Playing;
 }
 
+void GameManager::togglePaused()
+{
+    if(currentStatus == Paused)
+    {
+        currentStatus = Playing;
+        showMouse = false;
+    }
+    else if(currentStatus == Playing)
+    {
+        currentStatus = Paused;
+        showMouse = true;
+    }
+}
+
 int mod(int a, int m)
 {
     int x = a % m;
@@ -796,6 +812,13 @@ void GameManager::drawUI() const
         drawCursor();
         drawPlayerDirection(screenWidth - screenHeight/10, 9*screenHeight/10);
         displayScores();
+    }
+    else if(currentStatus == Paused)
+    {
+        drawPlayerDirection(screenWidth - screenHeight/10, 9*screenHeight/10);
+        displayScores();
+        continueButton.draw();
+        quitButton.draw();
     }
     else if(currentStatus == End)
     {
