@@ -73,13 +73,13 @@ void Chunk::makeBuildings()
             double height;
             if(perlinSeed < 1.0)
             {
-                height = 200 + r1*100 + perlinSeed*100 + rand() % 100;
+                height = 250 + r1*100 + perlinSeed*100 + rand() % 150;
             }
-            else // If we are at a max height seeded plot, make buidlings taller at the center
+            else // If we are at a max height seeded plot, make buildings taller at the center
             {
                 Point2D currentPlot = {i, j};
                 Point2D chunkCenter = {plotsPerSide/2,plotsPerSide/2};
-                height = 250 + r1*100 + perlinSeed*100 + 25*(1.4*plotsPerSide/2 - distance(currentPlot, chunkCenter));
+                height = 400 + r1*100 + perlinSeed*100 + 25*(1.4*plotsPerSide/2 - distance(currentPlot, chunkCenter));
             }
 
             if((r1 < BUILDING_DENSITY || perlinSeed == 1.0) && plotEmpty[i][j] && shouldConsiderBuilding(i,j))
