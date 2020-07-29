@@ -30,6 +30,8 @@ GameManager::GameManager()
     quitButton = Button(screenWidth/2, screenHeight/2 - 64, 128, 64, 16, "Quit", {0.7, 0, 0, 1}, {1,1,1,1}, {1, 0.2, 0, 1});
 
     computer = Computer({96, 12, 0}, 2, 0.1, &enemies, ENEMY_BLAST_RADIUS);
+
+    makeInstructions();
 }
 GameManager::GameManager(int inputScreenWidth, int inputScreenHeight, int inputChunkSize,
         int inputPlotsPerSide, int inputRenderRadius, int inputPerlinSize)
@@ -63,6 +65,8 @@ GameManager::GameManager(int inputScreenWidth, int inputScreenHeight, int inputC
     cursorAlpha = 1.0;
 
     computer = Computer({96, 12, 0}, 2, 0.1, &enemies, ENEMY_BLAST_RADIUS);
+
+    makeInstructions();
 }
 
 // You have to input screenHeight - my, because the mouse functions have positive y down, even though
@@ -819,6 +823,7 @@ void GameManager::drawUI() const
     {
         playButton.draw();
         quitButton.draw();
+        displayInstructions();
     }
     else if(currentStatus == Playing)
     {
@@ -908,5 +913,27 @@ void GameManager::displayGameResult() const
     for(const char &letter : gameResult)
     {
         glutBitmapCharacter(GLUT_BITMAP_9_BY_15, letter);
+    }
+}
+
+void GameManager::makeInstructions()
+{
+    instructions.push_back("Your goal is to get to 1000 points before the Computer does.");
+    instructions.push_back("When you shoot a prime number, you get points.");
+    instructions.push_back("If you shoot a composite number, it will add itself to nearby numbers.");
+    instructions.push_back("If you shoot the Computer, it loses one point.");
+    instructions.push_back("Use w,a,s,d to move, spacebar to jump, and click to shoot. Press p to pause.");
+}
+void GameManager::displayInstructions() const
+{
+    glColor4f(0, 0, 0, 1);
+    for(int i = 0; i < instructions.size(); i++)
+    {
+        std::string s = instructions[i];
+        glRasterPos2i(10, screenHeight - 15*i - 15);
+        for(const char &letter : s)
+        {
+            glutBitmapCharacter(GLUT_BITMAP_9_BY_15, letter);
+        }
     }
 }

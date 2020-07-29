@@ -5,6 +5,7 @@
 #include <memory>
 #include <iostream>
 #include <unordered_map>
+#include <fstream>
 #include "enemy.h"
 #include "player.h"
 #include "missile.h"
@@ -80,6 +81,7 @@ private:
     std::string gameResult;
     Button quitButton;
     Button continueButton;
+    std::vector<std::string> instructions;
 
     bool closeWindow = false;
     bool showMouse = true;
@@ -170,6 +172,8 @@ public:
     void drawPlayerDirection(double x, double y) const;
     void displayScores() const;
     void displayGameResult() const;
+    void makeInstructions();
+    void displayInstructions() const;
 };
 
 // Since % can return negatives
