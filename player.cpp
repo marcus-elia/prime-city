@@ -283,18 +283,22 @@ void Player::tick()
     // Keep player from going too far away
     if(location.x > 20*chunkSize)
     {
+        lookingAt.x -= 20*chunkSize - location.x;
         location.x = 20*chunkSize;
     }
     else if(location.x < -20*chunkSize)
     {
+        lookingAt.x += 20*chunkSize + location.x;
         location.x = -20*chunkSize;
     }
     if(location.z > 20*chunkSize)
     {
+        lookingAt.z -= 20*chunkSize - location.z;
         location.z = 20*chunkSize;
     }
     else if(location.z < -20*chunkSize)
     {
+        lookingAt.z += 20*chunkSize + location.z;
         location.z = -20*chunkSize;
     }
 }
