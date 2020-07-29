@@ -266,6 +266,8 @@ void Player::tick()
     lookingAt.y += velocity.y;
     location.z += velocity.z;
     lookingAt.z += velocity.z;
+
+    // Keep player above ground
     if(location.y < height/2)
     {
         lookingAt.y += height/2 - location.y;
@@ -276,6 +278,24 @@ void Player::tick()
     if(!isGrounded)
     {
         velocity.y += gravity;
+    }
+
+    // Keep player from going too far away
+    if(location.x > 20*chunkSize)
+    {
+        location.x = 20*chunkSize;
+    }
+    else if(location.x < -20*chunkSize)
+    {
+        location.x = -20*chunkSize;
+    }
+    if(location.z > 20*chunkSize)
+    {
+        location.z = 20*chunkSize;
+    }
+    else if(location.z < -20*chunkSize)
+    {
+        location.z = -20*chunkSize;
     }
 }
 
