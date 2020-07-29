@@ -189,7 +189,15 @@ void GameManager::draw() const
 
 void GameManager::tick()
 {
-    if(currentStatus == Playing)
+    if(currentStatus == Intro)
+    {
+        introAngle += introAngleSpeed;
+        if(introAngle > 2*PI)
+        {
+            introAngle -= 2*PI;
+        }
+    }
+    else if(currentStatus == Playing)
     {
         playerTick();
 
@@ -752,7 +760,7 @@ Point GameManager::getCameraLookingAt() const
 {
     if(currentStatus == Intro)
     {
-        return {100, 400, 50};
+        return {100*cos(introAngle), 400, 100*sin(introAngle)};
     }
     else
     {

@@ -82,6 +82,9 @@ private:
     Button quitButton;
     Button continueButton;
     std::vector<std::string> instructions;
+    // Have the view spin during the intro screen
+    double introAngle = 0;
+    double introAngleSpeed = .001;
 
     bool closeWindow = false;
     bool showMouse = true;
