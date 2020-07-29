@@ -19,6 +19,12 @@ private:
     double speed;     // how fast the player can move
     Point velocity; // current x y and z velocity
 
+    bool FLYING_ENABLED = false;
+
+    double jumpAmount;
+    double gravity;
+    bool isGrounded;
+
     double sensitivity; // turning speed for mouse movement
 
     int chunkSize;
@@ -64,6 +70,8 @@ public:
 
     // Use xzAngle, yAngle, and location to determine the spherical direction.
     void updateSphericalDirectionBasedOnAngles();
+
+    void tryToJump();
 
 
     // Chunks

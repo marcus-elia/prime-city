@@ -202,6 +202,11 @@ void GameManager::playerTick()
     // The player moves
     player.tick();
 
+    if(spacebar)
+    {
+        player.tryToJump();
+    }
+
     // Check for the player hitting a building
     Point2D curPlayerChunk = player.whatChunk();
     std::shared_ptr<Chunk> c = allSeenChunks[pointToInt(curPlayerChunk)];
@@ -332,6 +337,10 @@ bool GameManager::getCKey() const
 {
     return cKey;
 }
+bool GameManager::getSpacebar() const
+{
+    return spacebar;
+}
 double GameManager::getCursorAlpha() const
 {
     return cursorAlpha;
@@ -383,6 +392,10 @@ void GameManager::setCKey(bool input)
 {
     cKey = input;
     player.setVelocity(wKey, aKey, sKey, dKey, rKey, cKey);
+}
+void GameManager::setSpacebar(bool input)
+{
+    spacebar = input;
 }
 void GameManager::setCurrentStatus(GameStatus input)
 {

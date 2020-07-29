@@ -115,7 +115,7 @@ void kbd(unsigned char key, int x, int y)
             break;
         case 'c': manager.setCKey(true);
             break;
-        case 'v': manager.printPlayerBuildingDebug();
+        case 32: manager.setSpacebar(true);
             break;
     }
 
@@ -140,6 +140,8 @@ void kbu(unsigned char key, int x, int y)
         case 'c': manager.setCKey(false);
             break;
         case 'p' : manager.togglePaused();
+            break;
+        case 32 : manager.setSpacebar(false);
             break;
     }
 

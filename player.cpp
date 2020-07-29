@@ -15,6 +15,10 @@ Player::Player()
     chunkSize = 512;
     currentChunkCoords = whatChunk();
 
+    jumpAmount = 10;
+    gravity = -0.5;
+    isGrounded = true;
+
     height = 20;
     radius = 8;
 }
@@ -31,6 +35,10 @@ Player::Player(Point inputLocation, Point inputLookingAt, Point inputUp, double 
     sensitivity = 0.03;
     chunkSize = inputChunkSize;
     currentChunkCoords = whatChunk();
+
+    jumpAmount = 10;
+    gravity = -0.5;
+    isGrounded = true;
 
     height = 20;
     radius = 8;
@@ -130,17 +138,16 @@ void Player::setVelocity(bool wKey, bool aKey, bool sKey, bool dKey, bool rKey, 
     bool descending = !rKey && cKey;
 
     // First figure out the vertical (y) velocity, since that is independent
-    if(ascending)
+    if(FLYING_ENABLED)
     {
-        velocity.y = speed;
-    }
-    else if(descending)
-    {
-        velocity.y = -speed;
-    }
-    else
-    {
-        velocity.y = 0;
+        if(ascending)
+        {
+            velocity.y = speed;
+        }
+        else if(descending)
+        {
+            velocity.y = -speed;
+        }
     }
 
     // The angle the player is facing in the xz plane
@@ -241,7 +248,14 @@ void Player::updateSphericalDirectionBasedOnAngles()
     lookingAt.z = location.z + sphericalDirection.z;
 }
 
-
+void Player::tryToJump()
+{
+    if(isGrounded)
+    {
+        velocity.y = jumpAmount;
+        isGrounded = false;
+    }
+}
 
 
 void Player::tick()
@@ -252,10 +266,16 @@ void Player::tick()
     lookingAt.y += velocity.y;
     location.z += velocity.z;
     lookingAt.z += velocity.z;
-    if(location.y < 5)
+    if(location.y < height/2)
     {
-        lookingAt.y += 5 - location.y;
-        location.y = 5;
+        lookingAt.y += height/2 - location.y;
+        location.y = height/2;
+        isGrounded = true;
+        velocity.y = 0;
+    }
+    if(!isGrounded)
+    {
+        velocity.y += gravity;
     }
 }
 

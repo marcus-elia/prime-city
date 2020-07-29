@@ -27,7 +27,7 @@ private:
     int playerScore;
 
     // Controls
-    bool wKey, aKey, sKey, dKey, rKey, cKey;
+    bool wKey, aKey, sKey, dKey, rKey, cKey, spacebar;
 
     // The Computer
     Computer computer;
@@ -95,6 +95,7 @@ public:
     bool getDKey() const;
     bool getRKey() const;
     bool getCKey() const;
+    bool getSpacebar() const;
     double getCursorAlpha() const;
     GameStatus getCurrentStatus() const;
     bool getCloseWindow() const;
@@ -107,6 +108,7 @@ public:
     void setDKey(bool input);
     void setRKey(bool input);
     void setCKey(bool input);
+    void setSpacebar(bool input);
     void setCurrentStatus(GameStatus input);
 
     // Chunks
