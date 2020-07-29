@@ -106,6 +106,7 @@ void GameManager::reactToMouseClick(int mx, int my)
         {
             showMouse = false;
             currentStatus = Playing;
+            resetGame();
         }
         else if(quitButton.containsPoint(mx, screenHeight - my))
         {
@@ -149,6 +150,13 @@ void GameManager::reactToMouseClick(int mx, int my)
 
 void GameManager::draw() const
 {
+    if(currentStatus == Intro)
+    {
+        for(std::shared_ptr<Chunk> c : currentChunks)
+        {
+            c->draw();
+        }
+    }
     if(currentStatus == Playing || currentStatus == Paused)
     {
         // Draw in order because of transparency
@@ -731,11 +739,25 @@ void GameManager::checkExplosionForEnemies(std::shared_ptr<Explosion> ex)
 // Camera
 Point GameManager::getCameraLocation() const
 {
-    return player.getLocation();
+    if(currentStatus == Intro)
+    {
+        return {0, 400, 0};
+    }
+    else
+    {
+        return player.getLocation();
+    }
 }
 Point GameManager::getCameraLookingAt() const
 {
-    return player.getLookingAt();
+    if(currentStatus == Intro)
+    {
+        return {100, 400, 50};
+    }
+    else
+    {
+        return player.getLookingAt();
+    }
 }
 Point GameManager::getCameraUp() const
 {

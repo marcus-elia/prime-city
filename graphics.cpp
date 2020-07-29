@@ -32,9 +32,12 @@ void initGL()
     glEnable(GL_DEPTH_TEST);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    Point camLoc = manager.getCameraLocation();
+    /*Point camLoc = manager.getCameraLocation();
     Point camLook = manager.getCameraLookingAt();
-    Point camUp = manager.getCameraUp();
+    Point camUp = manager.getCameraUp();*/
+    Point camLoc = manager.getPlayer().getLocation();
+    Point camLook = manager.getPlayer().getLookingAt();
+    Point camUp = manager.getPlayer().getUp();
     gluLookAt(camLoc.x, camLoc.y, camLoc.z,  // eye position
               camLook.x, camLook.y, camLook.z,  // center position (not gaze direction)
               camUp.x, camUp.y, camUp.z); // up vector
