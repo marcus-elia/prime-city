@@ -32,9 +32,9 @@ void initGL()
     glEnable(GL_DEPTH_TEST);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    /*Point camLoc = manager.getCameraLocation();
-    Point camLook = manager.getCameraLookingAt();
-    Point camUp = manager.getCameraUp();*/
+    // Initialize the camera where the player is, because during the intro screen,
+    // the camera gets put in a different place and it would be messed up when the
+    // game starts if you initialize it to the intro location.
     Point camLoc = manager.getPlayer().getLocation();
     Point camLook = manager.getPlayer().getLookingAt();
     Point camUp = manager.getPlayer().getUp();
