@@ -17,4 +17,15 @@ Press p to pause. Move the mouse to look around, and click with
 either button to shoot a missile. If you hit a prime number, you 
 will gain that many points. If you hit a composite number, it will
 explode and add itself to any nearby numbers (but if the result is
-greater than 99, the leading digit disappears).
+greater than 99, the leading digit disappears). The Computer is also
+moving around and shooting at the numbers. The first to 1000 points
+win. You and the Computer can also cause each other to lose 1 point
+shooting their opponent.
+
+## Build Instructions
+If you are on windows, you need to download freeglut, make the
+directory C:/Program Files/Common Files/freeglut/, copy the 
+include/ and lib/ folders from freeglut into there, and copy
+freeglut.dll from freeglut/bin/ into the cmake-build-debug/ folder.
+
+If you are not on windows, maybe it will just work.
