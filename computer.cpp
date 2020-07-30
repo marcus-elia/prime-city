@@ -74,11 +74,54 @@ void Computer::initializeSolids()
     double armRadius = 4;
     double armLength = 20;
     center = {location.x + radius + armRadius, 2*bodyHeight/3, location.z + armLength/2};
-    std::shared_ptr<Capsule> leftArm = std::make_shared<Capsule>(Capsule(center, headColor,
+    std::shared_ptr<Capsule> leftArm = std::make_shared<Capsule>(Capsule(center, {0.75, 0.45, 0, 1},
                                                                          2*armRadius, armLength, 2*armRadius, edgeColor));
     leftArm->setOwnerCenter(location);
     leftArm->rotate(PI/2, 0, 0);
     solids.push_back(leftArm);
+
+    center = {location.x - radius - armRadius, bodyHeight/2, location.z};
+    std::shared_ptr<Capsule> rightArm = std::make_shared<Capsule>(Capsule(center, headColor,
+                                                                         2*armRadius, armLength, 2*armRadius, edgeColor));
+    rightArm->setOwnerCenter(location);
+    solids.push_back(rightArm);
+
+    // Infinity stones
+    center = {location.x + radius + armRadius, 2*bodyHeight/3 + armRadius, location.z + 3*armLength/4};
+    std::shared_ptr<Ellipsoid> gem1 = std::make_shared<Ellipsoid>(Ellipsoid(center, {1, 1, 0, 1},
+                                                                         3, 2, 3, edgeColor, true, 3, 6));
+    gem1->setOwnerCenter(location);
+    solids.push_back(gem1);
+
+    center = {location.x + radius + 1, 2*bodyHeight/3 + armRadius - 2, location.z + 7*armLength/8};
+    std::shared_ptr<Ellipsoid> gem2 = std::make_shared<Ellipsoid>(Ellipsoid(center, {0.5, 0, 0.5, 1},
+                                                                            2, 2, 2, edgeColor, true, 3, 6));
+    gem2->setOwnerCenter(location);
+    solids.push_back(gem2);
+
+    center = {location.x + radius + 3, 2*bodyHeight/3 + armRadius - 2, location.z + 9.5*armLength/10};
+    std::shared_ptr<Ellipsoid> gem3 = std::make_shared<Ellipsoid>(Ellipsoid(center, {0.2, 0.2, 1, 1},
+                                                                            2, 2, 2, edgeColor, true, 3, 6));
+    gem3->setOwnerCenter(location);
+    solids.push_back(gem3);
+
+    center = {location.x + radius + armRadius*2 - 3, 2*bodyHeight/3 + armRadius - 2, location.z + 9.5*armLength/10};
+    std::shared_ptr<Ellipsoid> gem4 = std::make_shared<Ellipsoid>(Ellipsoid(center, {1, 0.2, 0.2, 1},
+                                                                            2, 2, 2, edgeColor, true, 3, 6));
+    gem4->setOwnerCenter(location);
+    solids.push_back(gem4);
+
+    center = {location.x + radius + armRadius*2 - 1, 2*bodyHeight/3 + armRadius - 2, location.z + 7*armLength/8};
+    std::shared_ptr<Ellipsoid> gem5 = std::make_shared<Ellipsoid>(Ellipsoid(center, {1.0, 0.4, 0, 1},
+                                                                            2, 2, 2, edgeColor, true, 3, 6));
+    gem5->setOwnerCenter(location);
+    solids.push_back(gem5);
+
+    center = {location.x + radius, 2*bodyHeight/3, location.z + 3*armLength/4};
+    std::shared_ptr<Ellipsoid> gem6 = std::make_shared<Ellipsoid>(Ellipsoid(center, {0.3, 1.0, 0.3, 1},
+                                                                            2, 3, 3, edgeColor, true, 3, 6));
+    gem6->setOwnerCenter(location);
+    solids.push_back(gem6);
 }
 
 // Getters
@@ -355,12 +398,6 @@ void Computer::updateShootingTargetInfo()
 
 Point Computer::getActualTargetPoint() const
 {
-    /*double timeToGetThere = distance2d(missileTarget, location) / MISSILE_SPEED;
-    double targetSpeed = sqrt(missileTargetVelocity.x*missileTargetVelocity.x + missileTargetVelocity.z*missileTargetVelocity.z);
-    double targetAngle = atan2(missileTargetVelocity.z, missileTargetVelocity.x);
-    double x = missileTarget.x + cos(targetAngle)*targetSpeed*timeToGetThere;
-    double z = missileTarget.z + sin(targetAngle)*targetSpeed*timeToGetThere;
-    return {x, 0, z};*/
     return predictMovement(location, MISSILE_SPEED, missileTarget, missileTargetVelocity);
 }
 
