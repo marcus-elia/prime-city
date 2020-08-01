@@ -785,11 +785,13 @@ void GameManager::checkForGameEnd()
     {
         gameResult = "You won " + std::to_string(playerScore) + " to " + std::to_string(computerScore);
         currentStatus = End;
+        showMouse = true;
     }
     else if(computerScore > 999 && computerScore > playerScore)
     {
         gameResult = "You lost " + std::to_string(computerScore) + " to " + std::to_string(playerScore);
         currentStatus = End;
+        showMouse = true;
     }
 }
 
