@@ -10,6 +10,7 @@ int wd;
 GameManager manager;
 // Mouse variables
 int prevMouseX, prevMouseY;
+bool justClicked;
 
 void init()
 {
@@ -17,6 +18,7 @@ void init()
     height = 500;
     prevMouseX = width/2;
     prevMouseY = height/2;
+    justClicked = false;
 }
 
 /* Initialize OpenGL Graphics */
@@ -158,6 +160,11 @@ void kbdS(int key, int x, int y)
 
 void cursor(int x, int y)
 {
+    if(justClicked)
+    {
+        justClicked = false;
+        return;
+    }
     double theta = atan2(y - prevMouseY, x - prevMouseX);
     manager.reactToMouseMovement(x, y, theta);
     prevMouseX = x;
@@ -195,6 +202,7 @@ void mouse(int button, int state, int x, int y)
         }
     }
     glutPostRedisplay();
+    justClicked = true;
 }
 
 void timer(int dummy)
